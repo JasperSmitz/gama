@@ -36,7 +36,7 @@ Startup refuses a `data_dir` inside a library root, a library root inside
 Django settings come from the environment:
 
 - `GAMA_DEBUG=1`: development mode.
-- `GAMA_SECRET_KEY`: required when `GAMA_DEBUG` is not `1`.
+- `GAMA_SECRET_KEY`: required when `GAMA_DEBUG` is not `1`; must be at least 50 characters (e.g. `python -c "import secrets; print(secrets.token_urlsafe(50))"`).
 - `GAMA_ALLOWED_HOSTS`: comma-separated hosts, in addition to localhost.
 - `GAMA_SECURE_COOKIES=1`: use this behind TLS.
 
