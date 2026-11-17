@@ -1,13 +1,14 @@
 """Genre representation (pure; no mutagen, no Django).
 
-M2 provides parsing of stored values into a ``GenreField`` and the comparison
-key. The add/remove/replace operations and input validation follow in M3.
+Parsing of stored values into a ``GenreField``, the comparison key, input
+validation and the add/remove/replace operations (plan section 1.3).
 """
 from __future__ import annotations
 
 import re
 import unicodedata
 from collections.abc import Callable, Sequence
+from dataclasses import dataclass
 
 from gama.metadata.model import GenreField
 
@@ -63,3 +64,126 @@ def has_duplicates(g: GenreField) -> bool:
 
 def has_empty(g: GenreField) -> bool:
     return any(not c.strip() for c in g.components)
+
+
+# --------------------------------------------------------------------------- M3: validation and operations
+
+MAX_GENRE_LENGTH = 255
+MAX_REPLACE = 20
+OPERATIONS = ("add", "remove", "replace")
+
+
+class GenreError(ValueError):
+    """Invalid genre input."""
+
+
+def validate_genre(raw: str) -> str:
+    """Return the genre trimmed, or raise GenreError.
+
+    Refused: empty after trimming, ';' (Gama's only separator), NUL or any
+    other control character, more than 255 characters.
+    """
+    if not isinstance(raw, str):
+        raise GenreError("genre must be text")
+    # Checked before trimming: str.strip() would silently eat \t, \n, \x1c-\x1f.
+    if any(unicodedata.category(c) == "Cc" for c in raw):
+        raise GenreError("genre may not contain control characters")
+    g = raw.strip()
+    if not g:
+        raise GenreError("genre is empty")
+    if SEPARATOR in g:
+        raise GenreError("genre may not contain ';'")
+    if len(g) > MAX_GENRE_LENGTH:
+        raise GenreError(f"genre is longer than {MAX_GENRE_LENGTH} characters")
+    return g
+
+
+def validate_request(operation: str, raw: Sequence[str]) -> tuple[str, ...]:
+    """Validate the genres of one request. add/remove take exactly one genre;
+    replace takes 1..20, deduplicated by key (first spelling wins)."""
+    if operation not in OPERATIONS:
+        raise GenreError(f"unknown operation {operation!r}")
+    gs = [validate_genre(g) for g in raw]
+    if operation in ("add", "remove"):
+        if len(gs) != 1:
+            raise GenreError(f"{operation} takes exactly one genre")
+        return (gs[0],)
+    if not gs:
+        raise GenreError("replace needs at least one genre (use remove to delete genres)")
+    out: list[str] = []
+    seen: set[str] = set()
+    for g in gs:
+        if key(g) not in seen:
+            seen.add(key(g))
+            out.append(g)
+    if len(out) > MAX_REPLACE:
+        raise GenreError(f"replace takes at most {MAX_REPLACE} genres")
+    return tuple(out)
+
+
+@dataclass(frozen=True)
+class OpResult:
+    """Outcome of one operation on one file's GenreField.
+
+    values:     the new stored values (``()`` = delete the genre field).
+    components: what the user will see afterwards.
+    changed:    new values differ from the stored ones.
+    notes:      codes explaining a no-op or a side effect ("case-differs", ...).
+    """
+    values: tuple[str, ...]
+    components: tuple[str, ...]
+    changed: bool
+    notes: tuple[str, ...] = ()
+
+
+def apply(field: GenreField, operation: str, genres: Sequence[str]) -> OpResult:
+    """Apply a validated request to one file's genres. Pure; never touches files.
+
+    * add G:      append G unless a component has the same key (existing
+                  spelling wins; a case difference is noted).
+    * remove G:   drop every component with G's key (case variants and
+                  duplicates); nothing left means the field is deleted.
+    * replace Gs: the result is exactly Gs.
+    Unrelated components are kept exactly as stored. Native values keep their
+    stored form (an ID3 "(17)" stays "(17)"); delimited files stay delimited.
+    """
+    if field.style == "mixed":
+        raise GenreError("mixed-style genres are never edited")
+    genres = validate_request(operation, genres)
+    notes: list[str] = []
+    native = field.style != "delimited"
+    # Pair each stored entry with what the user sees: for native style one entry
+    # per stored value (so "(17)" survives untouched), for delimited one per component.
+    pairs = list(zip(field.values, field.components)) if native else [(c, c) for c in field.components]
+
+    if operation == "add":
+        g = genres[0]
+        match = [shown for _, shown in pairs if key(shown) == key(g)]
+        if match:
+            notes.append("already-present" if g in match else "case-differs")
+            new_pairs = pairs
+        else:
+            new_pairs = pairs + [(g, g)]
+    elif operation == "remove":
+        g = genres[0]
+        new_pairs = [(s, shown) for s, shown in pairs if key(shown) != key(g)]
+        if len(new_pairs) == len(pairs):
+            notes.append("not-present")
+        elif not new_pairs:
+            notes.append("field-deleted")
+    else:
+        new_pairs = [(g, g) for g in genres]
+
+    stored = [s for s, _ in new_pairs]
+    if native:
+        values = tuple(stored)
+    else:  # delimited files keep their single value and their delimiter
+        values = ((field.delimiter or SEPARATOR).join(stored),) if stored else ()
+    changed = values != field.values
+    # A numeric ID3 reference ("(17)") that is gone while its name ("Rock") is
+    # still wanted will now be stored as the name.
+    kept_keys = {key(shown) for _, shown in new_pairs}
+    if changed and any(st != shown and (st, shown) not in new_pairs and key(shown) in kept_keys
+                       for st, shown in pairs):
+        notes.append("numeric-reference-stored-as-name")
+    return OpResult(values, tuple(shown for _, shown in new_pairs), changed, tuple(notes))
