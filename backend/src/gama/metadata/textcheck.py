@@ -17,7 +17,39 @@ def _valid_vorbis_key(k: bytes) -> bool:
     return bool(k) and all(0x20 <= c <= 0x7D and c != 0x3D for c in k)
 
 
-def vorbis_comment_problem(body: bytes) -> str | None:
+def comment_tail(body: bytes) -> bytes | None:
+    """Bytes after the comment list (Vorbis framing byte + padding, Opus padding/extra data).
+
+    None if the structure cannot be walked."""
+    try:
+        n = int.from_bytes(body[0:4], "little")
+        i = 4 + n
+        count = int.from_bytes(body[i:i + 4], "little")
+        i += 4
+        for _ in range(count):
+            i += 4 + int.from_bytes(body[i:i + 4], "little")
+    except (IndexError, ValueError):
+        return None
+    return body[i:] if i <= len(body) else None
+
+
+def tail_problem(fmt: str, tail: bytes) -> str | None:
+    """lossy-comments if mutagen would not write ``tail`` back unchanged.
+
+    mutagen writes: FLAC - nothing after the list; Ogg Vorbis - the framing byte
+    plus zero padding (we keep its length); Opus - zero padding (length kept), or
+    the original extra data when its first byte has the low bit set.
+    """
+    if fmt == "flac":
+        ok = tail == b""
+    elif fmt == "ogg-vorbis":
+        ok = tail[:1] == b"\x01" and not tail[1:].strip(b"\x00")
+    else:
+        ok = not tail.strip(b"\x00") or bool(tail[0] & 1)
+    return None if ok else LOSSY_COMMENTS
+
+
+def vorbis_comment_problem(body: bytes, fmt: str | None = None) -> str | None:
     """Check a raw Vorbis comment structure (vendor + list, no packet prefix)."""
     try:
         n = int.from_bytes(body[0:4], "little")
@@ -38,7 +70,7 @@ def vorbis_comment_problem(body: bytes) -> str | None:
                 return LOSSY_COMMENTS
     except UnicodeDecodeError:
         return NON_UTF8
-    return None
+    return tail_problem(fmt, body[i:]) if fmt else None
 
 
 def flac_comment_block(path: str) -> bytes | None:

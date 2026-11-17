@@ -189,3 +189,21 @@ def read(path: str, fmt: str, trailers: dict, facts: dict | None = None) -> Trac
     part = {"items": items, "failed_atoms": failed_part, **raw}
     return TrackTags(fmt, fields, genres.parse_field(values), pictures, native,
                      snapshot.build(fmt, f.info, part, pictures, trailers))
+
+
+def apply_genres(path: str, values: list[str]) -> None:
+    """Set ©gen to exactly ``values`` (one data atom each; ``[]`` deletes it).
+
+    A numeric ``gnre`` atom is parsed by mutagen into ©gen and is not written
+    back, so the result contains only ©gen (with the name). Policy refuses
+    files whose gnre/©gen mutagen could not parse.
+    """
+    f = MP4(path)
+    if f.tags is None:
+        f.add_tags()
+    if values:
+        f.tags[GEN] = list(values)
+    else:
+        f.tags.pop(GEN, None)
+    f.tags.pop("gnre", None)
+    f.save()

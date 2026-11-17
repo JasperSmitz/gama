@@ -87,6 +87,25 @@ def upgrade_losses(path: str, loaded) -> list[str]:
     return sorted(lost)
 
 
+CONVERTED_TEXT = ("TYER", "TDAT", "TIME", "TDRC", "TORY", "TDOR")
+CONVERTED_PEOPLE = ("IPLS", "TIPL")
+
+
+def _conversion_inputs(tags) -> dict:
+    """Plain values of the frames a 2.3 -> 2.4 upgrade converts, so verify can
+    check the conversion exactly (the frame hashes alone cannot show that)."""
+    out: dict = {}
+    if tags is None:
+        return out
+    for fid in CONVERTED_TEXT:
+        if fid in tags:
+            out[fid] = [str(t) for t in tags[fid].text]
+    for fid in CONVERTED_PEOPLE:
+        if fid in tags:
+            out[fid] = [[str(a), str(b)] for a, b in tags[fid].people]
+    return out
+
+
 def read(path: str, fmt: str, trailers: dict) -> TrackTags:
     # translate=False: every frame exactly as stored (numeric TCON references kept,
     # v2.3 frames not converted).
@@ -134,7 +153,8 @@ def read(path: str, fmt: str, trailers: dict) -> TrackTags:
     # The snapshot is the tag as stored. A 2.3 -> 2.4 upgrade changes id3_version,
     # raw_frame_ids and the converted frames on purpose; the verifier (M4) must map
     # exactly the conversions upgrade_losses() allows, nothing else.
-    part = {"id3_version": version, "frames": frames, "unknown_frames": unknown, "raw_frame_ids": raw_ids}
+    part = {"id3_version": version, "frames": frames, "unknown_frames": unknown, "raw_frame_ids": raw_ids,
+            "converted": _conversion_inputs(tags)}
     native = {
         "id3_version": version,
         "has_id3v1": trailers["id3v1"] is not None,
@@ -144,3 +164,43 @@ def read(path: str, fmt: str, trailers: dict) -> TrackTags:
         "numeric_references": list(field.components) != list(field.values) and field.style == "native",
     }
     return TrackTags(fmt, fields, field, pictures, native, snapshot.build(fmt, f.info, part, pictures, trailers))
+
+
+def apply_genres(path: str, values: list[str]) -> None:
+    """Set TCON to exactly ``values`` (``[]`` deletes it) and save as ID3v2.4.
+
+    * Tag loaded as stored (``translate=False``); a 2.3 tag is upgraded with
+      ``update_to_v24`` (policy guarantees the upgrade is lossless), a 2.4 tag
+      is not touched otherwise.
+    * An untagged file gets a new ID3v2.4 tag containing only TCON.
+    * ``v1=1`` never creates or removes an ID3v1 trailer but rewrites an existing
+      one from the v2 frames, so the original 128 bytes are put back afterwards
+      (Q2: byte-identical). APEv2 is never touched by mutagen's ID3 save.
+    """
+    from mutagen.id3 import ID3NoHeaderError
+
+    from gama.metadata.policy import ID3_LOAD, ID3_SAVE
+
+    trailer = snapshot.read_trailers(path)["id3v1"]
+    try:
+        tags = ID3(path, **ID3_LOAD)
+    except ID3NoHeaderError:
+        tags = ID3()
+    major = tags.version[1]
+    if major == 3:
+        tags.update_to_v24()
+    elif major != 4:
+        raise ValueError(f"refusing to write ID3v2.{major}")
+    tags.delall("TCON")
+    if values:
+        tags.add(TCON(encoding=3, text=list(values)))
+    tags.save(path, **ID3_SAVE)
+    if trailer is not None:
+        with open(path, "r+b") as f:
+            f.seek(-128, 2)
+            if f.read(3) != b"TAG":
+                raise ValueError("ID3v1 trailer missing after save")
+            f.seek(-128, 2)
+            f.write(trailer)
+    elif snapshot.read_trailers(path)["id3v1"] is not None:
+        raise ValueError("an ID3v1 trailer appeared after save")

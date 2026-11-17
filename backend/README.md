@@ -122,3 +122,28 @@ boxes, including edit lists).
     and admin.
   - Fully synthetic corpus and ported oracle with self-tests.
   - The fixture builder and the oracle are stdlib-only by design.
+- **M2 (metadata read path): done.**
+  - `gama.metadata` detects formats from their content, reads genres exactly as stored, and decides which files may
+    be written. Each file gets a snapshot of everything except the genre.
+  - mutagen runs only in child processes with timeouts (`readproc`).
+  - Raw-byte checks refuse files that mutagen would rewrite with data lost: non-UTF-8 text, dropped or merged ID3
+    frames, a lossy ID3v2.3 upgrade, and MP4 genre atoms it cannot parse.
+- **M3 (genre operations and planner): done.**
+  - `genres.apply` implements add, remove and replace. Validation is in `genres.validate_request`.
+  - `planning.plan_files` reads each file fresh, fingerprints it, and builds a plan with a digest.
+  - `genres.py` has 100 % branch coverage, enforced by `tests/planning/test_coverage.py`.
+- **M4 (format writers): done.**
+  - `formats/*.apply_genres` writes the planned stored values and nothing else:
+    - Vorbis: GENRE fields in place, keeping key spelling and padding length;
+    - ID3: v2.4 TCON; a 2.3 tag is upgraded only when that is lossless; the ID3v1 trailer is restored
+      byte-for-byte; APEv2 is untouched;
+    - MP4: `©gen` data atoms; a numeric `gnre` atom is replaced by `©gen` with the same name.
+  - `safewrite.mutate` runs the write in a child process with a timeout. It refuses unless the temp file is still
+    in the planned state.
+  - `safewrite.verify` re-reads the backup and the temp file in a child and compares:
+    - genres, exactly;
+    - the snapshot, allowing only the listed 2.3→2.4 conversions;
+    - the raw ID3v1/APEv2 bytes;
+    - the ffmpeg audio packet md5.
+  - `tests/conformance/test_writers.py` runs every writable corpus file × add/remove/replace through the oracle and
+    the verifier.
