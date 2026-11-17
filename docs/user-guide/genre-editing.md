@@ -137,11 +137,29 @@ These files are shown in the preview as *skipped*, with the reason. They are nev
    - **nothing to do**: the file is already the original;
    - **conflict**: the file changed after Gama's edit (someone else edited it), is missing, or its backup is
      damaged. It is **not touched**.
-   To overwrite later changes anyway, tick *force*: the current version is backed up first, so nothing is lost.
+   To overwrite later changes anyway, tick *force*. Force replaces **exactly the version shown in the preview**: that
+   version is backed up first, and if the file changes again before the restore runs, it is left alone and reported
+   as a conflict (build a new preview).
 3. Confirm. The worker restores the files with the same safety steps as an edit. The result page shows the genres
    read back, and the index is updated.
 
 A restore can be repeated; files that are already the original are left alone.
+
+### Undoing a forced restore
+
+The job page of a forced restore shows, per file, where the replaced version was kept
+(`<data_dir>/backups/sha256/ab/<sha>`). Use **Undo this restore** on that page to bring those versions back, again
+through a preview.
+
+Without the web interface, copy the backup over the file by hand. The backup file is read-only, so copy its content
+rather than moving it:
+
+```sh
+cp <data_dir>/backups/sha256/<first two hex digits>/<sha> "<library root>/<file>"
+manage.py gama_scan
+```
+
+`cp` keeps the destination's owner and mode. Do this only while Gama's worker is idle.
 
 ### Restoring without the web interface
 
@@ -151,7 +169,10 @@ If the web UI or the database is not available, use the command line. It works f
 manage.py gama_restore JOB_ID --dry-run         # what would happen, per file
 manage.py gama_restore JOB_ID                   # restore every file the job changed
 manage.py gama_restore JOB_ID --items 0,2       # only some files (numbers from --dry-run)
-manage.py gama_restore JOB_ID --force           # also files changed after the edit (backed up first)
+manage.py gama_restore JOB_ID --force --expect-sha 1:<sha>
+                                                # replace exactly the version --dry-run showed for item 1
+                                                # (it is backed up first; anything else is left alone)
+manage.py gama_restore RESTORE_JOB_ID           # undo a forced restore (bring the replaced versions back)
 manage.py gama_scan                             # afterwards: refresh the index
 ```
 

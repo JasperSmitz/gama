@@ -3,7 +3,7 @@
 {% block title %}Preview · Gama{% endblock %}
 {% block content %}
 {% if plan.operation == "restore" %}
-<h2>Restore preview{% if plan.source_job_id %} for <a href="{% url 'edits:job' plan.source_job_id %}">job {{ plan.source_job_id|stringformat:"s"|slice:":8" }}</a>{% endif %}</h2>
+<h2>Restore preview{% if plan.source_job_id %} for <a href="{% url 'edits:job' plan.source_job_id %}">{% if plan.source_job.kind == "restore" %}restore {% endif %}job {{ plan.source_job_id|stringformat:"s"|slice:":8" }}</a>{% endif %}</h2>
 <p>Nothing has been written. <strong>{{ plan.n_change }}</strong> file(s) will be restored from their backups,
   <strong>{{ plan.n_nochange }}</strong> are already the original, <strong>{{ plan.n_skip }}</strong> are conflicts and stay untouched.</p>
 {% else %}

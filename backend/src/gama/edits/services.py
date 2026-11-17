@@ -108,6 +108,7 @@ def restore_digest(ep: EditPlan) -> str:
     import json
     rows = [{"seq": i.seq, "root": i.root_path, "relpath": i.relpath, "action": i.action, "reason": i.reason,
              "sha_before": i.sha_before, "sha_after_expected": i.sha_after_expected, "force": i.force,
+             "sha_current_seen": i.sha_current_seen,
              "genres_before": i.genres_before, "genres_after": i.genres_after, "warnings": list(i.warnings)}
             for i in ep.items.all()]
     blob = json.dumps({"op": "restore", "source_job": str(ep.source_job_id), "warnings": ep.warnings, "items": rows},
@@ -119,37 +120,59 @@ RESTORABLE_STATES = ("committed", "missing", "failed", "conflict")
 
 
 def restorable_items(job: EditJob):
-    """Items of an apply job whose file Gama may have changed (a sha_after was journaled)."""
-    return job.items.select_related("plan_item").exclude(sha_after="").filter(state__in=RESTORABLE_STATES)
+    """Items whose file Gama may have changed and that have a backup to go back to.
+
+    Edit jobs: items with a journaled sha_after (back to the original).
+    Restore jobs: items restored by force (back to the later version they replaced).
+    """
+    qs = job.items.select_related("plan_item")
+    if job.kind == "restore":
+        return qs.exclude(forced_backup_sha="").filter(state="restored")
+    return qs.exclude(sha_after="").filter(state__in=RESTORABLE_STATES)
+
+
+def _restore_target(job: EditJob, ji: JobItem) -> tuple[str, str]:
+    """(backup sha to bring back, sha the file must hold now) for one item."""
+    if job.kind == "restore":
+        return ji.forced_backup_sha, ji.plan_item.sha_before
+    return ji.plan_item.sha_before, ji.sha_after
 
 
 def create_restore_plan(user, job: EditJob, item_ids: list[int] | None = None, *, force: bool = False,
                         reader=None) -> EditPlan:
     """Restore preview: for each selected file, check the backup and the current file.
 
-    restore  - the file still holds Gama's edit (or force: a later version, backed up first)
-    nothing  - the file is already the original
-    conflict - the file changed after the edit, is missing, or the backup is bad: not touched
+    restore  - the file still holds what the job wrote (or force: a later version,
+               which is backed up first; only exactly the version seen here)
+    nothing  - the file already holds the version to bring back
+    conflict - the file changed, is missing, or the backup is bad: not touched
     Nothing is written; the restore runs only after confirmation, in the worker.
     """
     from gama.metadata.readproc import read_files
     from gama.safewrite import fsutil
 
-    if job.kind != "apply":
-        raise PlanError("only edit jobs can be restored")
+    if item_ids is not None and len(item_ids) == 0:
+        raise PlanError("no files selected: tick at least one file")
     items = list(restorable_items(job))
     if item_ids is not None:
         items = [ji for ji in items if ji.id in set(item_ids)]
     if not items:
-        raise PlanError("nothing to restore: no file of this job was changed")
+        raise PlanError("nothing to restore: no file of this job was changed"
+                        if job.kind == "apply" else "nothing to undo: this restore replaced no later version")
     stray = {ji.plan_item.root_path for ji in items} - set(configured_root_paths())
     if stray:
         raise PlanError(f"files under library roots that are not configured: {sorted(stray)}")
     env = make_env()
     paths = [os.path.join(ji.plan_item.root_path, ji.plan_item.relpath) for ji in items]
+    targets = [_restore_target(job, ji) for ji in items]
     reads = (reader or read_files)(paths)
+    if job.kind == "restore":  # what the forced backups hold (the later versions)
+        target_reads = (reader or read_files)([env.store.path_for(t) for t, _ in targets])
+        target_genres = [list(r.genre.values) if r.ok and r.genre else None for r in target_reads]
+    else:
+        target_genres = [ji.plan_item.genres_before for ji in items]
     rows = []
-    for seq, (ji, path, rr) in enumerate(zip(items, paths, reads)):
+    for seq, (ji, path, rr, (target, expected), tg) in enumerate(zip(items, paths, reads, targets, target_genres)):
         pi = ji.plan_item
         cur = None
         try:
@@ -159,28 +182,29 @@ def create_restore_plan(user, job: EditJob, item_ids: list[int] | None = None, *
         except OSError:
             cur = "unreadable"
         warnings: list[str] = []
-        if not env.store.verify(pi.sha_before):
+        if not env.store.verify(target):
             action, reason = "conflict", "backup-bad"
         elif cur is None:
             action, reason = "conflict", "missing"
         elif cur == "unreadable":
             action, reason = "conflict", "unreadable"
-        elif cur == pi.sha_before:
+        elif cur == target:
             action, reason = "nothing", None
-        elif cur == ji.sha_after:
+        elif cur == expected:
             action, reason = "restore", None
         elif force:
             action, reason = "restore", None
-            warnings.append("forced: the later version is backed up before it is replaced")
+            warnings.append("forced: the version shown is backed up before it is replaced")
         else:
             action, reason = "conflict", "changed-since-edit"
         rows.append(PlanItem(seq=seq, album=pi.album, album_key=pi.album_key, album_label=pi.album_label,
                              root_path=pi.root_path, relpath=pi.relpath, format=pi.format,
-                             sha_before=pi.sha_before, sha_after_expected=ji.sha_after,
+                             sha_before=target, sha_after_expected=expected,
+                             sha_current_seen=cur if cur not in (None, "unreadable") else None,
                              genres_before=list(rr.genre.values) if rr.ok and rr.genre else None,
-                             genres_after=pi.genres_before, style=rr.genre.style if rr.ok and rr.genre else None,
+                             genres_after=tg, style=rr.genre.style if rr.ok and rr.genre else None,
                              action=action, reason=reason, warnings=warnings,
-                             force=force and action == "restore" and cur != ji.sha_after, source_item=ji))
+                             force=force and action == "restore" and cur != expected, source_item=ji))
     with transaction.atomic():
         ep = EditPlan.objects.create(created_by=user, operation="restore", genres=[], album_ids=job.plan.album_ids,
                                      album_labels=job.plan.album_labels, source_job=job, digest="",
@@ -259,6 +283,13 @@ def next_queued() -> EditJob | None:
     return EditJob.objects.filter(status="queued").order_by("created_at").first()
 
 
+def _record_backup(env: WriteEnv, sha: str) -> None:
+    path = env.store.path_for(sha)
+    Backup.objects.update_or_create(sha256=sha, defaults={
+        "size": os.path.getsize(path), "store_relpath": env.store.relpath_for(sha),
+        "last_verified_at": timezone.now()})
+
+
 class _Mirror:
     """Journal observer: mirrors each durable journal record into the DB (progress)."""
 
@@ -284,10 +315,10 @@ class _Mirror:
                 ji.verification = rec["verification"]
             if rec.get("state") == "backed_up":
                 ji.backup_sha = ji.sha_before
-                path = self.env.store.path_for(ji.sha_before)
-                Backup.objects.update_or_create(sha256=ji.sha_before, defaults={
-                    "size": os.path.getsize(path), "store_relpath": rec.get("backup") or "",
-                    "last_verified_at": now})
+                _record_backup(self.env, ji.sha_before)
+            if rec.get("forced_backup"):  # a forced restore kept the version it replaced
+                ji.forced_backup_sha = rec["forced_backup"]
+                _record_backup(self.env, rec["forced_backup"])
             ji.save()
             done = sum(1 for x in self.by_seq.values()
                        if x.state in ("committed", "failed", "conflict", "skipped", "missing", "restored",
@@ -387,14 +418,19 @@ def _run_restore_job(job: EditJob, env: WriteEnv, reader) -> EditJob:
     stray = {i.root_path for i in items} - set(configured_root_paths())
     if stray:
         return _finish(job, "failed", f"library roots no longer configured: {sorted(stray)}")
-    ritems = [RestoreItem(i.seq, i.root_path, i.relpath, i.sha_before, i.sha_after_expected, force=i.force)
+    # A forced item only replaces exactly the version the user saw in the preview.
+    ritems = [RestoreItem(i.seq, i.root_path, i.relpath, i.sha_before, i.sha_after_expected, force=i.force,
+                          sha_expected_current=i.sha_current_seen if i.force else None)
               for i in items]
     res = run_restore(ritems, env, job_id=job.journal_id, observer=_Mirror(job, env))
     if res.lock_busy:
         return requeue(job, "another write or restore job was running; will retry")
     sync_recovered(res.recovered, reader=reader)
     for o in res.items:
-        JobItem.objects.filter(job=job, plan_item__seq=o.n).update(state=o.state, error=o.error or "")
+        JobItem.objects.filter(job=job, plan_item__seq=o.n).update(
+            state=o.state, error=o.error or "", forced_backup_sha=o.forced_backup_sha or "")
+        if o.forced_backup_sha:
+            _record_backup(env, o.forced_backup_sha)
     EditJob.objects.filter(id=job.id).update(journal_path=res.journal_path or "")
     job = _finish_result(job, res.status, res.error or "")
     safe_reindex(job, reader=reader)

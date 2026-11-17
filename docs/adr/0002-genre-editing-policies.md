@@ -89,7 +89,9 @@ would see its own normalisation as "unchanged".
     finds the write lock busy is requeued, not failed.
 23. **Restore is a planned, previewed, confirmed job.**
     - The backup is verified before anything is touched.
-    - A file changed after the edit is a conflict unless forced; forcing backs up the current version first.
+    - A file changed after the edit is a conflict unless forced. Forcing replaces only the exact version seen in
+      the restore preview (its hash is part of the plan digest; the CLI needs `--expect-sha`), backs it up first,
+      and records that backup on the restore job, which can itself be undone.
     - A missing file is never recreated.
     - `gama_restore` works from the journal alone, without the database.
 

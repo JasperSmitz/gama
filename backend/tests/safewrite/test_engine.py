@@ -454,7 +454,9 @@ def test_force_restore_backs_up_current_bytes_first(corpus, env):
     p = corpus.path(ritems[0].relpath)
     subprocess.run(["metaflac", "--set-tag=COMMENT=later edit", str(p)], check=True)
     later_sha = fsutil.sha256_file(p)
-    forced = RestoreItem(**{**ritems[0].__dict__, "force": True})
+    unbound = RestoreItem(**{**ritems[0].__dict__, "force": True})  # force without naming the version: refused
+    assert run_restore([unbound], env).items[0].state == "restore_conflict"
+    forced = RestoreItem(**{**ritems[0].__dict__, "force": True, "sha_expected_current": later_sha})
     res = run_restore([forced], env)
     assert res.items[0].state == "restored" and res.items[0].forced_backup_sha == later_sha
     assert env.store.verify(later_sha)

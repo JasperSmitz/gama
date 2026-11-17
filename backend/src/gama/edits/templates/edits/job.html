@@ -53,6 +53,8 @@
         {% else %}—{% endif %}</td>
       <td class="muted">{% if ji.backup %}{{ data_dir }}/backups/{{ ji.backup.store_relpath }}{% elif ji.backup_sha %}{{ ji.backup_sha|slice:":12" }}…{% else %}—{% endif %}
         <details><summary>hashes</summary>before {{ ji.sha_before|default:"—" }}<br>after {{ ji.sha_after|default:"—" }}</details>
+        {% if ji.forced_backup_sha %}<br><strong>Later version replaced by force, kept as</strong>
+          {{ data_dir }}/backups/sha256/{{ ji.forced_backup_sha|slice:":2" }}/{{ ji.forced_backup_sha }}{% endif %}
         {% if ji.snapshot_before %}<details><summary>original metadata snapshot</summary><pre>{{ ji.snapshot_before|pretty_json }}</pre></details>{% endif %}</td>
       <td class="bad">{{ ji.error }}</td>
     </tr>
@@ -66,12 +68,18 @@
 {% endif %}
 
 {% if restorable and not auto_refresh %}
+{% if job.kind == "restore" %}
+<h3>Undo this restore</h3>
+<p class="muted">This restore replaced later versions by force. They were backed up first and can be brought back.
+  A preview shows each file first.</p>
+{% else %}
 <h3>Restore from backups</h3>
 <p class="muted">Builds a restore preview first: each file is checked against its backup and its current content.
-  Files changed by someone else after this edit are not overwritten unless you force it (their current version is
-  backed up first).</p>
+  Files changed by someone else after this edit are not overwritten unless you force it (the version shown in the
+  preview is backed up first, and only exactly that version is replaced).</p>
+{% endif %}
 <form method="post" action="{% url 'edits:restore' job.id %}">{% csrf_token %}
-  <p><label><input type="radio" name="scope" value="all" checked> all changed files of this job</label>
+  <p><label><input type="radio" name="scope" value="all" checked> all {% if job.kind == "restore" %}forced files{% else %}changed files{% endif %} of this job</label>
      <label><input type="radio" name="scope" value="selected"> only these:</label></p>
   <ul>{% for ji in items %}{% if ji.id in restorable %}<li><label><input type="checkbox" name="item" value="{{ ji.id }}"> {{ ji.plan_item.relpath }}</label></li>{% endif %}{% endfor %}</ul>
   <p><label><input type="checkbox" name="force" value="yes"> force: also restore files changed after this edit</label></p>

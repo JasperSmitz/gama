@@ -33,6 +33,9 @@ class RestoreItem:
     sha_before: str
     sha_after: str | None
     force: bool = False
+    # With force: the exact version that may be replaced (seen at the preview). Anything
+    # else on disk is a conflict. None = force without binding (refused by the callers).
+    sha_expected_current: str | None = None
 
     @property
     def path(self) -> str:
@@ -98,6 +101,8 @@ def _restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str, 
     if cur != it.sha_after:
         if not it.force:
             return done("restore_conflict", "file changed after the edit; not overwritten (use force)")
+        if it.sha_expected_current is None or cur != it.sha_expected_current:
+            return done("restore_conflict", "file changed since the restore preview; build a new preview")
         try:
             store.ensure(it.path, cur)  # keep the newer bytes before replacing them
         except Exception as e:  # noqa: BLE001

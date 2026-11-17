@@ -7,7 +7,7 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 
 from gama.edits import services
-from gama.edits.models import EditJob, EditPlan, JobItem
+from gama.edits.models import Backup, EditJob, EditPlan, JobItem
 from gama.library.models import Track
 from gama.metadata.reader import read_file
 from tests.edits.test_workflow import (KC, YES, applier, confirm, lib, preview, select, viewer,  # noqa: F401
@@ -46,7 +46,7 @@ def test_history_and_job_page_hold_every_required_record_field(applier, settings
         assert ji.plan_item.relpath in page                                   # affected files
         assert " | ".join(ji.plan_item.genres_before) in page                 # original genres
         assert ji.snapshot_before                                              # full original metadata
-        assert f"backups/{ji.plan_item.sha_before and ''}" or True
+        assert f"backups/{Backup.objects.get(sha256=ji.backup_sha).store_relpath}" in page  # its backup location
     assert "original metadata snapshot" in page
     assert "Add genre: Symphonic Prog" in page                                 # requested modification
     assert page.count("committed") >= 3                                        # successful writes
@@ -214,7 +214,10 @@ def test_gama_restore_cli_from_the_journal(applier, corpus, capsys):
         call_command("gama_restore", job.journal_id)
     out = capsys.readouterr().out
     assert "restore_conflict" in out and out.count(": restored") == 2
-    call_command("gama_restore", str(job.id), "--items", "0", "--force")
+    from gama.safewrite.fsutil import sha256_file
+    with pytest.raises(CommandError, match="expect-sha"):
+        call_command("gama_restore", str(job.id), "--items", "0", "--force")
+    call_command("gama_restore", str(job.id), "--items", "0", "--force", "--expect-sha", f"0:{sha256_file(p)}")
     assert p.read_bytes() == (corpus.master / first.plan_item.relpath).read_bytes()
     assert compare_tree(corpus.master, corpus.root, check_mtime=False) == {}
 

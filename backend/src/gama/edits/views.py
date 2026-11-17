@@ -115,7 +115,7 @@ def job(request, job_id):
     backups = {b.sha256: b for b in Backup.objects.filter(sha256__in=[i.backup_sha for i in items if i.backup_sha])}
     for ji in items:
         ji.backup = backups.get(ji.backup_sha)
-    restorable = set(services.restorable_items(j).values_list("id", flat=True)) if j.kind == "apply" else set()
+    restorable = set(services.restorable_items(j).values_list("id", flat=True))
     return render(request, "edits/job.html", {
         "job": j, "items": items, "stale": services.heartbeat_stale(j), "explain": _explain(),
         "auto_refresh": j.status in ("queued", "running") and not j.recovery_pending,
@@ -140,6 +140,9 @@ def restore(request, job_id):
     ids = None
     if request.POST.get("scope") == "selected":
         ids = [int(v) for v in request.POST.getlist("item") if v.isdigit()]
+        if not ids:
+            messages.error(request, "Tick at least one file to restore.")
+            return redirect("edits:job", job_id=j.id)
     try:
         ep = services.create_restore_plan(request.user, j, ids, force=request.POST.get("force") == "yes")
     except PlanError as e:

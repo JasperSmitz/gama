@@ -50,6 +50,9 @@ class PlanItem(models.Model):
     inode = models.BigIntegerField(null=True, blank=True)
     sha_before = models.CharField(max_length=64, null=True, blank=True)
     sha_after_expected = models.CharField(max_length=64, null=True, blank=True)  # restore plans
+    sha_current_seen = models.CharField(max_length=64, null=True, blank=True,
+                                        help_text="Restore plans: the file's hash when the preview was built; a "
+                                                  "forced restore only replaces exactly this version")
     genres_before = models.JSONField(null=True, blank=True)
     genres_after = models.JSONField(null=True, blank=True)
     components_before = models.JSONField(null=True, blank=True)
@@ -118,6 +121,8 @@ class JobItem(models.Model):
     sha_before = models.CharField(max_length=64, blank=True)
     sha_after = models.CharField(max_length=64, blank=True)
     backup_sha = models.CharField(max_length=64, blank=True)
+    forced_backup_sha = models.CharField(max_length=64, blank=True,
+                                         help_text="Restore jobs: backup of the later version a forced restore replaced")
     snapshot_before = models.JSONField(null=True, blank=True)
     genres_requested = models.JSONField(default=list)
     genres_read_back = models.JSONField(null=True, blank=True)

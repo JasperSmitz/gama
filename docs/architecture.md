@@ -66,7 +66,7 @@ gama/
 │   │   │   ├── policy.py         ID3 version, v1 load/update/never-add, APEv2, genre splitting
 │   │   │   └── snapshot.py       canonical snapshot for before/after comparison
 │   │   ├── safewrite/            PURE PYTHON, no Django: the only writer of user files
-│   │   │   ├── backups.py        content-addressed (sha256) store, O_EXCL, retention
+│   │   │   ├── backups.py        content-addressed (sha256) store, O_EXCL, kept forever (no retention)
 │   │   │   ├── journal.py        per-item state machine, fsync'd
 │   │   │   ├── writer.py         preflight → backup → temp-from-backup → write → fsync
 │   │   │   │                     → verify → re-hash original → rename → commit
@@ -111,7 +111,7 @@ gama/
 - **Configuration.** All configuration lives in a TOML file plus environment overrides:
   - `library_roots` (initially `/storage/music`)
   - `data_dir` (database, backups, thumbnails, logs; e.g. `/var/lib/gama` or `$XDG_DATA_HOME/gama`)
-  - backup retention
+  - (backups are kept forever; there is no retention setting)
   - format policies
 - **Scanning.** Each scan does a full walk, diffs the results against the database by `(root, relpath, size, mtime)`, and parses only the changed files. A watcher triggers incremental scans, and a periodic full scan backstops it, because inotify can overflow and misses network filesystems.
 
@@ -127,7 +127,7 @@ gama/
    - re-hashes the original to detect concurrent changes;
    - renames the temp copy over the original and fsyncs the directory;
    - journals each step (`backed_up → written → verified → renaming → committed`).
-4. **Batch policy.** All-or-nothing by default, with rollback by hash comparison. Continue-on-error is opt-in, and each failure is reported.
+4. **Batch policy.** Stop and roll back by default, with rollback by hash comparison. This is **not atomic**: other programs can see a half-applied job, and a rollback that cannot restore every file ends as `failed_partial`. Continue-on-error is opt-in, and each failure is reported.
 5. **Undo.** A batch can be rolled back later. A file is restored only if its current hash still equals `sha256_after`. Otherwise Gama reports a conflict.
 6. **Re-index.** Changed files are rescanned.
 
