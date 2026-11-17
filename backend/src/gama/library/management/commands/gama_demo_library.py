@@ -14,17 +14,23 @@ class Command(BaseCommand):
 
     def handle(self, *args, dir, **opts):
         out = Path(dir).expanduser().resolve()
-        if out.exists() and any(out.iterdir()):
-            raise CommandError(f"{out} is not empty; refusing to write into it.")
-        for r in settings.GAMA.library_roots:
-            if out.is_relative_to(Path(r).resolve()):
-                raise CommandError(f"{out} is inside the configured library root {r}; choose another place.")
         tools = Path(settings.BASE_DIR).resolve().parents[2] / "tools"
         sys.path.insert(0, str(tools))
         try:
-            from fixtures.build import build, tools_available
+            from fixtures.build import build, tools_available, unsafe_output_dir
         except ImportError as e:
             raise CommandError(f"fixture builder not found in {tools}: {e}") from e
+        # Safety checks come before anything touches the target (not even a listing).
+        bad = unsafe_output_dir(out)
+        if bad is not None:
+            raise CommandError(f"{out} is inside the production or library root {bad}; refusing.")
+        for r in settings.GAMA.library_roots:
+            if out.is_relative_to(Path(r).resolve()):
+                raise CommandError(f"{out} is inside the configured library root {r}; choose another place.")
+        if out.exists() and not out.is_dir():
+            raise CommandError(f"{out} exists and is not a directory; refusing.")
+        if out.exists() and any(out.iterdir()):
+            raise CommandError(f"{out} is not empty; refusing to write into it.")
         missing = tools_available()
         if missing:
             raise CommandError(f"missing tools: {missing}")

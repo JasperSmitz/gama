@@ -10,6 +10,9 @@ pythonpath = ["src", "../tools"]
 testpaths = ["tests"]
 # --ds outranks an exported DJANGO_SETTINGS_MODULE (the ini key above does not).
 addopts = "-ra --strict-markers --ds=gama.settings_test"
+# Each test copies the synthetic corpus; keep temp dirs only for failed tests of the latest run.
+tmp_path_retention_policy = "failed"
+tmp_path_retention_count = 1
 markers = [
     "slow: builds or inspects real audio files with ffmpeg",
 ]

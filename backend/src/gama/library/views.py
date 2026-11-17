@@ -6,14 +6,14 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 from . import basket
-from .models import Album
+from .models import visible_albums
 
 PAGE_SIZE = 100
 
 
 def album_list(request):
     q = request.GET.get("q", "").strip()
-    qs = Album.objects.all()
+    qs = visible_albums()
     if q:
         qs = qs.filter(Q(album__icontains=q) | Q(albumartist__icontains=q) | Q(album_dir__icontains=q))
     page = Paginator(qs, PAGE_SIZE).get_page(request.GET.get("page"))
@@ -22,10 +22,11 @@ def album_list(request):
 
 
 def album_detail(request, album_id: int):
-    album = get_object_or_404(Album, id=album_id)
+    album = get_object_or_404(visible_albums(), id=album_id)
     tracks = album.tracks.select_related("file").order_by("discnumber", "tracknumber", "file__relpath")
     return render(request, "library/album_detail.html",
-                  {"album": album, "tracks": tracks, "in_basket": album.id in basket.ids(request)})
+                  {"album": album, "tracks": tracks, "unreadable": album.unreadable_files(),
+                   "in_basket": album.id in basket.ids(request)})
 
 
 def basket_view(request):
@@ -52,8 +53,11 @@ def _back(request, default: str):
 
 @require_POST
 def basket_add(request):
-    n = basket.add(request, _ids(request))
+    n, refused = basket.add(request, _ids(request))
     messages.info(request, f"{n} album(s) added to the selection.")
+    if refused:
+        messages.warning(request, f"{refused} album(s) were not added: the selection is limited to "
+                                  f"{basket.MAX_ALBUMS} albums.")
     return _back(request, "library:basket")
 
 

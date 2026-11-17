@@ -12,8 +12,9 @@ pytestmark = [pytest.mark.slow, pytest.mark.django_db]
 
 
 @pytest.fixture
-def scanned(corpus):
-    root = LibraryRoot.objects.create(path=str(corpus.root), name="corpus")
+def scanned(corpus, settings, tmp_path):
+    settings.GAMA = Config((corpus.root.resolve(),), tmp_path / "data")
+    root = LibraryRoot.objects.create(path=str(corpus.root.resolve()), name="corpus")
     scan_root(root, reader=lambda ps: [read_file(p) for p in ps])
     return root
 

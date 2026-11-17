@@ -62,6 +62,7 @@ class ScanStats:
     removed: int = 0
     unchanged: int = 0
     skipped_paths: list[str] = field(default_factory=list)  # e.g. names that are not valid Unicode
+    unlisted_dirs: list[str] = field(default_factory=list)  # rows under these were kept, not deleted
     albums: int = 0
 
 
@@ -70,16 +71,26 @@ def _default_reader(paths: list[str]) -> list[ReadResult]:
     return read_files(paths)
 
 
-def walk(root: str) -> tuple[dict[str, os.stat_result], list[str]]:
-    """{relpath: lstat} for indexable files, plus relpaths that cannot be stored."""
+class ScanError(RuntimeError):
+    """The scan was aborted without changing the index."""
+
+
+def walk(root: str) -> tuple[dict[str, os.stat_result], list[str], list[str]]:
+    """({relpath: stat} for indexable files, relpaths that cannot be stored,
+    relpaths of directories that could not be listed). Raises ScanError if the
+    root itself cannot be listed."""
     found: dict[str, os.stat_result] = {}
     bad: list[str] = []
+    unlisted: list[str] = []
     stack = [root]
     while stack:
         d = stack.pop()
         try:
             entries = list(os.scandir(d))
-        except OSError:
+        except OSError as e:
+            if d == root:
+                raise ScanError(f"cannot list the library root {root}: {e}") from e
+            unlisted.append(os.path.relpath(d, root))
             continue
         for e in entries:
             if e.is_dir(follow_symlinks=False):
@@ -100,7 +111,7 @@ def walk(root: str) -> tuple[dict[str, os.stat_result], list[str]]:
                 found[rel] = e.stat(follow_symlinks=e.is_symlink())
             except OSError:
                 continue
-    return found, bad
+    return found, bad, unlisted
 
 
 def _track_fields(r: ReadResult) -> dict:
@@ -118,6 +129,9 @@ def _store_result(mf: MediaFile, r: ReadResult, now) -> None:
     st = r.stat
     if st is not None:
         mf.size, mf.mtime_ns, mf.inode = st.size, st.mtime_ns, st.inode
+    else:
+        mf.size = -1  # the read failed before a stat (crash, timeout): never looks unchanged
+    mf.album_dir = album_dir_of(mf.relpath)
     mf.format = r.format
     mf.detected_by = r.detected_by
     mf.read_ok = r.ok
@@ -131,9 +145,17 @@ def _store_result(mf: MediaFile, r: ReadResult, now) -> None:
         Track.objects.filter(file=mf).delete()
 
 
-def scan_root(root: LibraryRoot, *, reader: Callable[[list[str]], list[ReadResult]] | None = None) -> ScanStats:
+def _under(rel: str, dirs: list[str]) -> bool:
+    return any(rel == d or rel.startswith(d.rstrip(os.sep) + os.sep) for d in dirs)
+
+
+def scan_root(root: LibraryRoot, *, reader: Callable[[list[str]], list[ReadResult]] | None = None,
+              allow_empty: bool = False) -> ScanStats:
+    """Scan one root. Raises ScanError (index untouched) if the root cannot be listed,
+    or if it looks empty while the index has files for it (not mounted?) unless
+    ``allow_empty``."""
     stats = ScanStats()
-    found, stats.skipped_paths = walk(root.path)
+    found, stats.skipped_paths, stats.unlisted_dirs = walk(root.path)
     existing = {mf.relpath: mf for mf in MediaFile.objects.filter(root=root)}
     to_read: list[str] = []
     for rel, st in found.items():
@@ -142,7 +164,13 @@ def scan_root(root: LibraryRoot, *, reader: Callable[[list[str]], list[ReadResul
             stats.unchanged += 1
         else:
             to_read.append(rel)
-    gone = [mf for rel, mf in existing.items() if rel not in found]
+    # Never delete rows below a directory that could not be listed: absence is unknown, not proven.
+    gone = [mf for rel, mf in existing.items() if rel not in found and not _under(rel, stats.unlisted_dirs)]
+    if existing and len(gone) == len(existing) and not allow_empty:
+        # Every indexed file would disappear at once: much more likely an unmounted or
+        # empty mountpoint than a deleted collection.
+        raise ScanError(f"{root.path}: none of the {len(existing)} indexed files are there any more; refusing to "
+                        "drop them (is it mounted?). Use --allow-empty if the files really are gone.")
 
     results = (reader or _default_reader)([os.path.join(root.path, rel) for rel in to_read]) if to_read else []
     now = timezone.now()
@@ -154,8 +182,8 @@ def scan_root(root: LibraryRoot, *, reader: Callable[[list[str]], list[ReadResul
             mf = existing.get(rel)
             if mf is None:
                 st = found[rel]
-                mf = MediaFile(root=root, relpath=rel, size=st.st_size, mtime_ns=st.st_mtime_ns, inode=st.st_ino,
-                               scanned_at=now)
+                mf = MediaFile(root=root, relpath=rel, album_dir=album_dir_of(rel), size=st.st_size,
+                               mtime_ns=st.st_mtime_ns, inode=st.st_ino, scanned_at=now)
                 stats.added += 1
             else:
                 stats.updated += 1
@@ -165,11 +193,14 @@ def scan_root(root: LibraryRoot, *, reader: Callable[[list[str]], list[ReadResul
 
 
 def _disc_key(t: Track) -> str:
+    """Disc number from the tag, else from a CD1/Disc 2 folder, else 1 (same key either way)."""
     m = re.match(r"\s*(\d+)", t.discnumber or "")
     if m:
         return str(int(m.group(1)))
     parent = os.path.basename(os.path.dirname(t.file.relpath))
-    return parent.casefold() if DISC_DIR_RE.match(parent) else "1"
+    if DISC_DIR_RE.match(parent):
+        return str(int(re.search(r"(\d+)$", parent).group(1)))
+    return "1"
 
 
 def rebuild_albums(root: LibraryRoot) -> int:
