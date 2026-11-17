@@ -197,7 +197,8 @@ def test_apply_validates_input():
 # --------------------------------------------------------------------------- idempotence (table-driven)
 
 FIELDS = [(), ("Rock",), ("Rock", "Blues"), ("rock", "Rock", "Jazz"), ("Rock;Progressive Rock",),
-          ("Rock; Pop; Jazz",), ("(17)", "Jazz"), ("", "Pop"), ("Jazz",)]
+          ("Rock; Pop; Jazz",), ("(17)", "Jazz"), ("", "Pop"), ("Jazz",), ("Rock", ""),
+          ("Rock ; ",), ("Jazz ; rock ;  ; Café",), ("Rock;",)]
 REQUESTS = [("add", ["Jazz"]), ("add", ["ROCK"]), ("add", ["Progressive Rock"]), ("remove", ["Rock"]),
             ("remove", ["jazz"]), ("remove", ["Nope"]), ("replace", ["Jazz", "Fusion"]), ("replace", ["Rock"]),
             ("replace", ["Pop", "pop", "Rock"])]
@@ -207,8 +208,62 @@ REQUESTS = [("add", ["Jazz"]), ("add", ["ROCK"]), ("add", ["Progressive Rock"]),
 @pytest.mark.parametrize("op,genres", REQUESTS, ids=[f"{o}:{g}" for o, g in REQUESTS])
 def test_idempotence(values, op, genres):
     once = apply(F(*values), op, genres)
+    if once.refused:
+        # Gama refuses results it could not read back the same way (review M3 #1).
+        assert once.refused == "would-not-round-trip"
+        return
     # Planning the same operation on the stored result gives no change.
     twice = apply(F(*once.values), op, genres)
     assert not twice.changed, (once, twice)
     assert twice.values == once.values
     assert F(*once.values).components == once.components
+
+
+# --------------------------------------------------------------------------- review M3 fixes
+
+def test_delimited_result_that_would_not_round_trip_is_refused():
+    r = apply(F("Rock ; "), "add", ["Jazz"])
+    assert r.changed and r.refused == "would-not-round-trip" and r.values == ("Rock ;  ; Jazz",)
+    assert apply(F("Jazz ; rock ;  ; Café"), "remove", ["rock"]).refused == "would-not-round-trip"
+    assert apply(F("Rock ; Pop"), "add", ["Jazz"]).refused is None
+
+
+@pytest.mark.parametrize("bad", ["\ud800", "Rock\u200b", "\ufeffRock", "\u202eRock", "\U000E0001x", "x\u2028y",
+                                 "x\u2029y", "\ue000", "\u0378x", "Ro\u00adck", "\u200dab", "ab\u200d",
+                                 "a \u200db", "a\u200d\u200db", "a\u200d b"])
+def test_invisible_and_unencodable_characters_refused(bad):
+    with pytest.raises(GenreError):
+        validate_genre(bad)
+
+
+@pytest.mark.parametrize("good", ["a\u200db", "\u0915\u094d\u200d\u0937", "\U0001F468\u200d\U0001F3A4",
+                                  "Rock\u00a0Pop"])
+def test_joiners_inside_words_allowed(good):
+    assert validate_genre(good) == good
+
+
+@pytest.mark.parametrize("raw", ["Rock", b"Rock", bytearray(b"Rock"), {"Rock"}, (g for g in ["Rock"]), ["Rock", 5]])
+def test_genres_must_be_a_list_of_text(raw):
+    with pytest.raises(GenreError):
+        validate_request("replace", raw)
+
+
+def test_tuple_accepted():
+    assert validate_request("replace", ("Rock", "Jazz")) == ("Rock", "Jazz")
+
+
+@pytest.mark.parametrize("a,b", [("\u0390", "\u03aa\u0301"), ("\u03b0", "\u03ab\u0301"), ("\u015a", "\u017f\u0301")])
+def test_key_closed_under_canonical_equivalence(a, b):
+    from gama.metadata.genres import key
+    assert key(a) == key(b)
+    assert not apply(F(a), "add", [b]).changed
+
+
+@pytest.mark.parametrize("values", [("Rock", ""), ("", "Rock", " "), ("Rock;",)])
+def test_remove_leaving_only_empty_values_deletes_field(values):
+    r = apply(F(*values), "remove", ["rock"])
+    assert r.values == () and "field-deleted" in r.notes and "empty-values-dropped" in r.notes
+
+
+def test_remove_keeps_empty_values_next_to_real_ones():
+    assert apply(F("", "Pop", "Rock"), "remove", ["Rock"]).values == ("", "Pop")

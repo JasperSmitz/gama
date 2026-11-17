@@ -18,8 +18,13 @@ _WS_RE = re.compile(r"\s+")
 
 
 def key(genre: str) -> str:
-    """Comparison key: NFC, trimmed, whitespace collapsed, casefolded."""
-    return _WS_RE.sub(" ", unicodedata.normalize("NFC", genre).strip()).casefold()
+    """Comparison key: NFC, trimmed, whitespace collapsed, casefolded, NFC again.
+
+    casefold() can produce non-NFC text (e.g. Greek ΐ vs Ϊ́), so the result is
+    normalised once more to keep canonically equivalent spellings equal.
+    """
+    folded = _WS_RE.sub(" ", unicodedata.normalize("NFC", genre).strip()).casefold()
+    return unicodedata.normalize("NFC", folded)
 
 
 def parse_field(values: Sequence[str], resolve: Callable[[str], str] | None = None) -> GenreField:
@@ -69,6 +74,7 @@ def has_empty(g: GenreField) -> bool:
 # --------------------------------------------------------------------------- M3: validation and operations
 
 MAX_GENRE_LENGTH = 255
+_JOINERS = ("\u200c", "\u200d")  # ZWNJ, ZWJ
 MAX_REPLACE = 20
 OPERATIONS = ("add", "remove", "replace")
 
@@ -86,8 +92,19 @@ def validate_genre(raw: str) -> str:
     if not isinstance(raw, str):
         raise GenreError("genre must be text")
     # Checked before trimming: str.strip() would silently eat \t, \n, \x1c-\x1f.
-    if any(unicodedata.category(c) == "Cc" for c in raw):
-        raise GenreError("genre may not contain control characters")
+    for i, c in enumerate(raw):
+        cat = unicodedata.category(c)
+        if cat == "Cc":
+            raise GenreError("genre may not contain control characters")
+        if cat in ("Cs", "Co", "Cn", "Zl", "Zp"):  # Cs (lone surrogates) is also all that UTF-8 cannot encode
+            raise GenreError(f"genre may not contain U+{ord(c):04X} (unassigned, private-use, surrogate or "
+                             "line/paragraph separator)")
+        if cat == "Cf" and not (c in _JOINERS and 0 < i < len(raw) - 1 and not raw[i - 1].isspace()
+                                and not raw[i + 1].isspace() and raw[i - 1] not in _JOINERS):
+            # Invisible format characters (zero-width space, BOM, bidi overrides,
+            # tag characters) would create look-alike duplicates. ZWNJ/ZWJ are
+            # allowed only inside a word, where some scripts and emoji need them.
+            raise GenreError(f"genre may not contain the invisible character U+{ord(c):04X}")
     g = raw.strip()
     if not g:
         raise GenreError("genre is empty")
@@ -103,6 +120,9 @@ def validate_request(operation: str, raw: Sequence[str]) -> tuple[str, ...]:
     replace takes 1..20, deduplicated by key (first spelling wins)."""
     if operation not in OPERATIONS:
         raise GenreError(f"unknown operation {operation!r}")
+    # A bare string is a Sequence[str] too: "Rock" must never become R, o, c, k.
+    if isinstance(raw, (str, bytes, bytearray)) or not isinstance(raw, (list, tuple)):
+        raise GenreError("genres must be given as a list")
     gs = [validate_genre(g) for g in raw]
     if operation in ("add", "remove"):
         if len(gs) != 1:
@@ -129,11 +149,13 @@ class OpResult:
     components: what the user will see afterwards.
     changed:    new values differ from the stored ones.
     notes:      codes explaining a no-op or a side effect ("case-differs", ...).
+    refused:    a reason code when the result is unsafe to write.
     """
     values: tuple[str, ...]
     components: tuple[str, ...]
     changed: bool
     notes: tuple[str, ...] = ()
+    refused: str | None = None  # the result must not be written (planner turns it into a skip)
 
 
 def apply(field: GenreField, operation: str, genres: Sequence[str]) -> OpResult:
@@ -169,8 +191,14 @@ def apply(field: GenreField, operation: str, genres: Sequence[str]) -> OpResult:
         new_pairs = [(s, shown) for s, shown in pairs if key(shown) != key(g)]
         if len(new_pairs) == len(pairs):
             notes.append("not-present")
-        elif not new_pairs:
-            notes.append("field-deleted")
+        else:
+            if new_pairs and all(not shown.strip() for _, shown in new_pairs):
+                # Only empty values would remain: the user sees no genres, so do not
+                # leave an explicit empty genre field behind.
+                new_pairs = []
+                notes.append("empty-values-dropped")
+            if not new_pairs:
+                notes.append("field-deleted")
     else:
         new_pairs = [(g, g) for g in genres]
 
@@ -186,4 +214,9 @@ def apply(field: GenreField, operation: str, genres: Sequence[str]) -> OpResult:
     if changed and any(st != shown and (st, shown) not in new_pairs and key(shown) in kept_keys
                        for st, shown in pairs):
         notes.append("numeric-reference-stored-as-name")
-    return OpResult(values, tuple(shown for _, shown in new_pairs), changed, tuple(notes))
+    refused = None
+    if changed and not native and values and not delimited_round_trips(parse_field(values)):
+        # e.g. "Rock ; " + Jazz -> "Rock ;  ; Jazz", which the parser would read with a
+        # different delimiter: after the write Gama itself would refuse the file.
+        refused = "would-not-round-trip"
+    return OpResult(values, tuple(shown for _, shown in new_pairs), changed, tuple(notes), refused)

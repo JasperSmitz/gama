@@ -233,13 +233,17 @@ def test_outside_root_is_skipped(corpus, tmp_path):
 
 def test_unindexed_audio_warning(corpus):
     rs = refs(corpus, KC)
-    p = plan_files(rs[:2], "add", ["Jazz"], reader=inproc)
-    assert len(p.warnings) == 1 and p.warnings[0].startswith("unindexed-audio:") and "1 audio file" in p.warnings[0]
-    assert plan_files(rs, "add", ["Jazz"], reader=inproc).warnings == []
+    known = [r.path for r in rs]
+    # Without the index's paths the planner makes no claim.
+    assert plan_files(rs[:2], "add", ["Jazz"], reader=inproc).warnings == []
+    # Unselected but indexed files are not "unindexed".
+    assert plan_files(rs[:2], "add", ["Jazz"], reader=inproc, known_paths=known).warnings == []
     d = corpus.root / KC
+    (d / "04 Bonus.flac").write_bytes(b"")
     (d / ".gama-tmp-job-0-x.flac").write_bytes(b"")
     (d / "cover.jpg").write_bytes(b"")
-    assert plan_files(rs, "add", ["Jazz"], reader=inproc).warnings == []
+    w = plan_files(rs, "add", ["Jazz"], reader=inproc, known_paths=known).warnings
+    assert len(w) == 1 and w[0].startswith("unindexed-audio:") and "1 audio file(s) not in the index" in w[0]
 
 
 @pytest.mark.parametrize("op,genres", [("add", ["Rock;Pop"]), ("add", []), ("replace", []), ("move", ["x"])])

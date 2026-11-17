@@ -42,6 +42,13 @@ def resolve_reference(value: str) -> str:
     return g[0] if len(g) == 1 else value
 
 
+def _plain_sizes(frame_data: bytes) -> bool:
+    """mutagen's own choice between synchsafe and plain v2.4 frame sizes."""
+    from mutagen.id3 import Frames
+    from mutagen.id3._tags import determine_bpi
+    return determine_bpi(frame_data, Frames) is int
+
+
 def _canon(fr) -> str:
     return snapshot.sha256(save_frame(fr, config=_CANON))
 
@@ -122,7 +129,7 @@ def read(path: str, fmt: str, trailers: dict) -> TrackTags:
     fields: dict[str, str | None] = {k: None for k in FIELDS}
     if tags is not None:
         unknown_raw = list(getattr(tags, "unknown_frames", []))
-        raw_frames = textcheck.id3_raw_frames(path)
+        raw_frames = textcheck.id3_raw_frames(path, plain_sizes=_plain_sizes)
         if raw_frames is not None:
             raw_ids = sorted(fid for fid, _ in raw_frames if fid != "TCON")
             problem = textcheck.id3_text_problem(raw_frames)

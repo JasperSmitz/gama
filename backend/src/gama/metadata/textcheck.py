@@ -8,6 +8,8 @@ change, so the policy refuses to write it. These checks read the raw bytes
 """
 from __future__ import annotations
 
+from collections.abc import Callable
+
 NON_UTF8 = "non-utf8-text"
 LOSSY_COMMENTS = "lossy-comments"
 ID3_DROPPED = "id3-frames-dropped"
@@ -133,7 +135,8 @@ def _decode_strict(raw: bytes, enc: int) -> None:
     raw.decode(codec)
 
 
-def id3_raw_frames(path: str) -> list[tuple[str, bytes]] | None:
+def id3_raw_frames(path: str, plain_sizes: Callable[[bytes], bool] | None = None
+                   ) -> list[tuple[str, bytes]] | None:
     """(frame id, raw body) of an ID3v2.3/2.4 tag; None if absent or v2.2.
 
     Bodies of v2.4 frames with unsync/data-length flags are not unpacked;
@@ -151,13 +154,17 @@ def id3_raw_frames(path: str) -> list[tuple[str, bytes]] | None:
     pos = 0
     if flags & 0x40:
         pos = ((tag[0] << 21) | (tag[1] << 14) | (tag[2] << 7) | tag[3]) if ver == 4 else 4 + int.from_bytes(tag[0:4], "big")
+    # iTunes wrote v2.4 frame sizes as plain integers; mutagen decides per tag
+    # (determine_bpi) and the caller passes that decision in, so both walks split
+    # the frames identically.
+    plain = ver == 3 or (plain_sizes is not None and plain_sizes(tag[pos:]))
     frames = []
     while pos + 10 <= len(tag):
         fid = tag[pos:pos + 4]
         if fid[0] == 0:
             break  # padding
         b = tag[pos + 4:pos + 8]
-        fsize = ((b[0] << 21) | (b[1] << 14) | (b[2] << 7) | b[3]) if ver == 4 else int.from_bytes(b, "big")
+        fsize = int.from_bytes(b, "big") if plain else ((b[0] << 21) | (b[1] << 14) | (b[2] << 7) | b[3])
         fflags = int.from_bytes(tag[pos + 8:pos + 10], "big")
         body = tag[pos + 10:pos + 10 + fsize]
         # Every non-padding header counts, even an invalid ID or an empty body:
