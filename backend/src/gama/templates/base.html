@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Gama{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 60rem; margin: 1rem auto; padding: 0 1rem; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; }
+    header form { display: inline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><a href="{% url 'home' %}">Gama</a></h1>
+    {% if user.is_authenticated %}
+      <div>{{ user.get_username }}
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Log out</button></form>
+      </div>
+    {% endif %}
+  </header>
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

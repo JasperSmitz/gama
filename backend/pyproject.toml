@@ -1,0 +1,14 @@
+[project]
+name = "gama"
+version = "0.1.0"
+description = "Self-hosted media collection manager (bulk genre editing)"
+requires-python = ">=3.14"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "gama.settings_test"
+pythonpath = ["src", "../tools"]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "slow: builds or inspects real audio files with ffmpeg",
+]
