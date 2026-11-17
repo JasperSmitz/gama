@@ -245,3 +245,23 @@ def ensure_roots(paths) -> list[LibraryRoot]:
         root, _ = LibraryRoot.objects.get_or_create(path=p, defaults={"name": os.path.basename(p.rstrip(os.sep)) or p})
         out.append(root)
     return out
+
+
+def reindex_paths(root: LibraryRoot, relpaths: list[str], *,
+                  reader: Callable[[list[str]], list[ReadResult]] | None = None) -> dict[str, ReadResult]:
+    """Re-read exactly these files from disk (whatever their stat says) and update the
+    index; albums are rebuilt. Returns {relpath: ReadResult}. Used after a write job."""
+    rels = sorted(set(relpaths))
+    results = (reader or _default_reader)([os.path.join(root.path, r) for r in rels]) if rels else []
+    now = timezone.now()
+    with transaction.atomic():
+        for rel, r in zip(rels, results):
+            mf = MediaFile.objects.filter(root=root, relpath=rel).first()
+            if mf is None:
+                if r.stat is None:
+                    continue
+                mf = MediaFile(root=root, relpath=rel, size=r.stat.size, mtime_ns=r.stat.mtime_ns,
+                               inode=r.stat.inode, scanned_at=now)
+            _store_result(mf, r, now)
+        rebuild_albums(root)
+    return dict(zip(rels, results))

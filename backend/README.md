@@ -177,6 +177,26 @@ boxes, including edit lists).
     - `/library/albums/` lists albums with search over album, album artist and folder, and checkboxes;
     - `/library/albums/<id>/` shows the tracks, their stored genres and writability;
     - `/library/basket/` shows the selection, which is kept in the session and shown on every page.
+- **M7 (edit workflow): done.**
+  - The `gama.edits` app has EditPlan, PlanItem, EditJob, JobItem and Backup, plus the permission
+    `edits.apply_edits`.
+  - Flow:
+    - `/edits/` offers Add and Remove; `/edits/replace/` is a separate page with a warning and a required
+      confirmation;
+    - the preview (`/edits/plans/<id>/`) shows every album and file, the stored genres before and after, change /
+      no change / skip counts, reasons and warnings;
+    - Confirm needs the permission, the digest of what was shown (recomputed from the stored rows), a second tick for
+      replace, and works once per plan;
+    - the job page refreshes every 2 s while queued or running and shows "worker not running" when stale. Results show
+      requested and read-back genres, rollback outcomes, errors and the verification summary;
+    - a conflict offers "Refresh preview".
+  - Commands:
+    - `manage.py gama_worker [--once]` runs recovery at start (it settles jobs a dead worker left `running`), then
+      claims queued jobs in order, runs them, and re-reads every touched file into the index;
+    - `manage.py gama_grant USER [--revoke]` grants or revokes the apply permission.
+  - Development: run `manage.py runserver` and `manage.py gama_worker` in two terminals.
+  - The worker mirrors journal progress into the database synchronously (local SQLite). A slow database would slow
+    the write engine down, but cannot affect its correctness.
 - **Recovery details (M5 reviews).**
   - Rollback outcomes are recorded in `restore_state`; `state` always says what the edit did.
   - A file that is not found after a crash becomes `missing` (its `sha_after` is kept), never `failed`.

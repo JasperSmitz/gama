@@ -244,9 +244,19 @@ def _unindexed_audio(refs: Sequence[FileRef], known_paths: Collection[str] | Non
 
 def plan_files(files: Iterable[FileRef], operation: str, genres: Sequence[str], *,
                reader: Callable[[list[str]], list[ReadResult]] | None = None,
-               max_files: int = MAX_FILES, known_paths: Collection[str] | None = None) -> EditPlan:
-    """Build an EditPlan. Raises PlanError for invalid input; never writes."""
+               max_files: int = MAX_FILES, known_paths: Collection[str] | None = None,
+               allowed_roots: Collection[str] | None = None) -> EditPlan:
+    """Build an EditPlan. Raises PlanError for invalid input; never writes.
+
+    ``allowed_roots``: the configured library roots. A file under any other root
+    is refused (PlanError) before anything is read.
+    """
     refs = list(files)
+    if allowed_roots is not None:
+        allowed = {os.path.realpath(r) for r in allowed_roots}
+        stray = sorted({r.root for r in refs if os.path.realpath(r.root) not in allowed})
+        if stray:
+            raise PlanError(f"files under library roots that are not configured: {stray}")
     try:
         wanted = genres_mod.validate_request(operation, genres)
     except genres_mod.GenreError as e:

@@ -18,6 +18,7 @@
   </table>
   <button type="submit">Remove checked</button>
 </form>
+<p><a href="{% url 'edits:operation' %}"><strong>Edit the genres of these albums</strong></a></p>
 <form method="post" action="{% url 'library:basket_clear' %}">{% csrf_token %}<button type="submit">Clear selection</button></form>
 {% else %}
 <p>No albums selected. <a href="{% url 'library:albums' %}">Browse albums</a>.</p>

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Replace genres · Gama{% endblock %}
+{% block content %}
+<h2>Replace genres</h2>
+<p class="bad"><strong>Warning:</strong> this sets the genres of every track of the {{ albums|length }} selected album(s)
+  to exactly the list below. All existing genres of those tracks are removed. To add or remove a single genre, use
+  <a href="{% url 'edits:operation' %}">add or remove</a> instead.</p>
+{% if albums %}
+<form method="post" action="{% url 'edits:create_plan' %}">{% csrf_token %}
+  <input type="hidden" name="operation" value="replace">
+  <label>New genres, one per line (at most 20)<br><textarea name="genres" rows="6" cols="40" required></textarea></label>
+  <p><label><input type="checkbox" name="replace_ack" value="yes" required>
+    I understand that all existing genres of these tracks will be replaced.</label></p>
+  <button type="submit">Preview replacing</button>
+</form>
+{% else %}
+<p>No albums selected. <a href="{% url 'library:albums' %}">Select albums</a> first.</p>
+{% endif %}
+{% endblock %}

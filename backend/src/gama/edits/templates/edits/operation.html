@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Edit genres · Gama{% endblock %}
+{% block content %}
+<h2>Edit genres of the selected albums</h2>
+{% if not albums %}
+  <p>No albums selected. <a href="{% url 'library:albums' %}">Select albums</a> first.</p>
+{% else %}
+<p>{{ albums|length }} album(s) selected. Nothing is written yet: the next step shows a preview of every file.</p>
+<section>
+  <h3>Add a genre</h3>
+  <p class="muted">Adds the genre to every track that does not have it yet. Existing genres are kept.</p>
+  <form method="post" action="{% url 'edits:create_plan' %}">{% csrf_token %}
+    <input type="hidden" name="operation" value="add">
+    <label>Genre to add <input name="genre" required maxlength="255"></label>
+    <button type="submit">Preview adding</button>
+  </form>
+</section>
+<section>
+  <h3>Remove a genre</h3>
+  <p class="muted">Removes the genre (any capitalisation) from every track that has it. Other genres are kept.</p>
+  <form method="post" action="{% url 'edits:create_plan' %}">{% csrf_token %}
+    <input type="hidden" name="operation" value="remove">
+    <label>Genre to remove <input name="genre" required maxlength="255"></label>
+    <button type="submit">Preview removing</button>
+  </form>
+</section>
+<section>
+  <h3>Replace all genres</h3>
+  <p class="warn">Replacing overwrites every existing genre. It has <a href="{% url 'edits:replace' %}">its own page</a>.</p>
+</section>
+{% endif %}
+{% endblock %}

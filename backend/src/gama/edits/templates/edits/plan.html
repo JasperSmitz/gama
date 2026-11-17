@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load gama_extras %}
+{% block title %}Preview · Gama{% endblock %}
+{% block content %}
+<h2>Preview: {{ plan.get_operation_display }}{% if plan.genres %} “{{ plan.genres|join:"”, “" }}”{% endif %}</h2>
+<p>Nothing has been written. <strong>{{ plan.n_change }}</strong> file(s) will change,
+  <strong>{{ plan.n_nochange }}</strong> need no change, <strong>{{ plan.n_skip }}</strong> will be skipped.</p>
+{% if plan.status == "superseded" %}<p class="warn">This preview is out of date and was replaced by a newer one.</p>{% endif %}
+{% if job %}<p>Confirmed: <a href="{% url 'edits:job' job.id %}">see the job</a>.</p>{% endif %}
+{% for w in plan.warnings %}<p class="warn">{{ w }}</p>{% endfor %}
+
+{% for g in groups %}
+<h3>{{ g.label }}</h3>
+<table>
+  <thead><tr><th>File</th><th>Genres now (as stored)</th><th>Genres after</th><th>Action</th><th>Notes</th></tr></thead>
+  <tbody>
+  {% for it in g.items %}
+    <tr>
+      <td class="muted">{{ it.relpath }}</td>
+      <td>{% if it.genres_before is not None %}{{ it.genres_before|join:" | "|default:"(none)" }}
+          <span class="muted">({{ it.style }})</span>{% else %}—{% endif %}</td>
+      <td>{% if it.action == "change" %}<strong>{{ it.genres_after|join:" | "|default:"(field deleted)" }}</strong>
+          {% elif it.action == "nochange" %}unchanged{% else %}—{% endif %}</td>
+      <td>{% if it.action == "change" %}change{% elif it.action == "nochange" %}no change{% else %}<span class="bad">skipped</span>{% endif %}</td>
+      <td>{% if it.reason %}<span class="bad">{{ it.reason }}:</span> {{ explain|get_item:it.reason|default:"" }}<br>{% endif %}
+        {% for w in it.warnings %}<span class="warn" title="{{ explain|get_item:w|default:w }}">{{ w }}</span> {% endfor %}
+        {% if it.error %}<span class="muted">{{ it.error }}</span>{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endfor %}
+
+{% if plan.status == "draft" %}
+  {% if can_apply and plan.n_change %}
+  <form method="post" action="{% url 'edits:confirm' plan.id %}">{% csrf_token %}
+    <input type="hidden" name="digest" value="{{ plan.digest }}">
+    {% if plan.operation == "replace" %}
+      <p><label><input type="checkbox" name="replace_ack" value="yes" required>
+        Replace all genres of {{ plan.n_change }} file(s) as shown above.</label></p>
+    {% endif %}
+    <p><label><input type="checkbox" name="continue_on_error" value="yes">
+      Continue with the other files if one fails (default: stop and restore the files already changed).</label></p>
+    <p class="muted">Each file is backed up, edited on a copy, verified and then swapped in. A job with several files is
+      not atomic: other programs can see it half done while it runs, and a failure is undone from the backups.</p>
+    <button type="submit">Apply {{ plan.n_change }} change(s)</button>
+  </form>
+  {% elif not can_apply %}
+  <p class="muted">You can preview edits, but your account may not apply them.</p>
+  {% endif %}
+  <form method="post" action="{% url 'edits:refresh' plan.id %}">{% csrf_token %}<button type="submit">Refresh preview</button></form>
+{% endif %}
+{% endblock %}

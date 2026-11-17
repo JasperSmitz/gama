@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load gama_extras %}
+{% block title %}Job · Gama{% endblock %}
+{% block content %}
+{% if auto_refresh %}<meta http-equiv="refresh" content="2">{% endif %}
+<h2>Job: {{ job.plan.get_operation_display }}{% if job.plan.genres %} “{{ job.plan.genres|join:"”, “" }}”{% endif %}</h2>
+<p>Status: <strong>{{ job.status }}</strong> · {{ job.done }} of {{ job.total }} file(s) done
+  {% if job.current and auto_refresh %}· now: <span class="muted">{{ job.current }}</span>{% endif %}</p>
+{% if auto_refresh %}<progress max="{{ job.total }}" value="{{ job.done }}"></progress>{% endif %}
+{% if stale %}<p class="bad">Worker not running: start it with <code>manage.py gama_worker</code>.</p>{% endif %}
+{% if job.status == "conflict" %}
+  <p class="warn">Files changed on disk after the preview. Nothing was written. Build a new preview from the files as they are now:</p>
+  <form method="post" action="{% url 'edits:refresh' job.plan.id %}">{% csrf_token %}<button type="submit">Refresh preview</button></form>
+{% elif job.status == "rolled_back" %}
+  <p class="warn">A file failed, so the files already changed were restored from their backups.</p>
+{% elif job.status == "failed_partial" %}
+  <p class="bad">A file failed and not every changed file could be restored. See the items below.</p>
+{% elif job.status == "interrupted" %}
+  <p class="bad">The job was interrupted. Gama checked every file by its content; see the states below.</p>
+{% endif %}
+{% if job.error %}<pre class="muted">{{ job.error }}</pre>{% endif %}
+<table>
+  <thead><tr><th>File</th><th>State</th><th>Requested genres</th><th>Genres read back from disk</th><th>Verification</th><th>Error</th></tr></thead>
+  <tbody>
+  {% for ji in items %}
+    <tr>
+      <td class="muted">{{ ji.plan_item.relpath }}</td>
+      <td>{{ ji.state }}{% if ji.stage %} <span class="muted">({{ ji.stage }})</span>{% endif %}
+        {% if ji.restore_state %}<br>rollback: {{ ji.restore_state }}{% endif %}</td>
+      <td>{{ ji.genres_requested|join:" | "|default:"(none)" }}</td>
+      <td>{% if ji.genres_read_back is not None %}{{ ji.genres_read_back|join:" | "|default:"(none)" }}{% else %}—{% endif %}</td>
+      <td>{% if ji.verification %}{% if ji.verification.ok %}ok{% else %}<span class="bad">failed</span>{% endif %},
+          audio {{ ji.verification.audio }}{% endif %}</td>
+      <td class="bad">{{ ji.error }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
