@@ -63,65 +63,118 @@ def _children(buf: bytes, start: int, end: int):
         i += size
 
 
-def _relative_offsets(body: bytes, width: int) -> bytes:
-    """stco/co64 body with offsets made relative to the first chunk."""
-    head, count = body[:8], int.from_bytes(body[4:8], "big")
-    offs = [int.from_bytes(body[8 + k * width:8 + (k + 1) * width], "big") for k in range(count)]
-    base = offs[0] if offs else 0
-    return head + b"".join((o - base).to_bytes(8, "big", signed=True) for o in offs)
+def _mdat_relative(body: bytes, width: int, mdats: list[tuple[int, int]]) -> bytes:
+    """stco/co64 body with every offset rewritten as (mdat index, offset into its payload).
+
+    A table that was not updated after the tag grew points at the wrong bytes and
+    so changes here; offsets outside every mdat are kept absolute and flagged.
+    """
+    count = int.from_bytes(body[4:8], "big")
+    out = [body[:8]]
+    for k in range(count):
+        off = int.from_bytes(body[8 + k * width:8 + (k + 1) * width], "big")
+        for i, (start, end) in enumerate(mdats):
+            if start <= off < end:
+                out.append(b"m" + i.to_bytes(4, "big") + (off - start).to_bytes(8, "big"))
+                break
+        else:
+            out.append(b"x" + off.to_bytes(8, "big"))
+    return b"".join(out)
+
+
+def _top_atoms(f, size: int) -> list[tuple[bytes, int, int, int]]:
+    atoms, pos = [], 0
+    while pos + 8 <= size:
+        f.seek(pos)
+        hdr = f.read(16)
+        asize, typ, hlen = int.from_bytes(hdr[:4], "big"), hdr[4:8], 8
+        if asize == 1:
+            asize, hlen = int.from_bytes(hdr[8:16], "big"), 16
+        elif asize == 0:
+            asize = size - pos
+        if asize < hlen or pos + asize > size:
+            raise ValueError("MP4 atom runs past end of file")
+        atoms.append((typ, pos, pos + hlen, pos + asize))
+        pos += asize
+    return atoms
 
 
 def structure(path: str) -> dict:
-    """Raw container view: [[box path, sha256]] for moov outside ilst, plus mdat sha256."""
+    """Raw container view.
+
+    boxes: [[box path, sha256]] for moov outside udta/meta/ilst, chunk offsets
+           made relative to the mdat payload they point into;
+    mdat:  sha256 of all mdat payloads;
+    ilst:  the raw ilst child atoms (bytes) except ©gen/gnre, for the snapshot
+           multiset and the read-time re-render check.
+    """
     boxes: list[list[str]] = []
+    ilst: list[bytes] = []
     mdat = hashlib.sha256()
     with open(path, "rb") as f:
         f.seek(0, 2)
         size = f.tell()
-        pos = 0
-        while pos + 8 <= size:
-            f.seek(pos)
-            hdr = f.read(16)
-            asize, typ, hlen = int.from_bytes(hdr[:4], "big"), hdr[4:8], 8
-            if asize == 1:
-                asize, hlen = int.from_bytes(hdr[8:16], "big"), 16
-            elif asize == 0:
-                asize = size - pos
-            if asize < hlen or pos + asize > size:
-                raise ValueError("MP4 atom runs past end of file")
-            if typ == b"mdat":
-                f.seek(pos + hlen)
-                left = asize - hlen
+        atoms = _top_atoms(f, size)
+        mdats = [(ps, e) for t, s, ps, e in atoms if t == b"mdat"]
+        for t, s, ps, e in atoms:
+            if t == b"mdat":
+                f.seek(ps)
+                left = e - ps
                 while left:
                     chunk = f.read(min(left, 1 << 20))
                     if not chunk:
                         raise ValueError("short read in mdat")
                     mdat.update(chunk)
                     left -= len(chunk)
-            elif typ == b"moov":
-                f.seek(pos)
-                moov = f.read(asize)
-                _walk(moov, hlen, len(moov), "moov", boxes)
-            pos += asize
-    return {"boxes": boxes, "mdat": mdat.hexdigest()}
+            elif t == b"moov":
+                f.seek(s)
+                moov = f.read(e - s)
+                _walk(moov, ps - s, len(moov), "moov", boxes, ilst, mdats)
+    return {"boxes": boxes, "mdat": mdat.hexdigest(), "ilst": ilst}
 
 
-def _walk(buf: bytes, start: int, end: int, path: str, out: list) -> None:
+def _walk(buf: bytes, start: int, end: int, path: str, out: list, ilst: list, mdats: list) -> None:
     for t, s, ps, e in _children(buf, start, end):
         if t in (b"free", b"skip"):
             continue
         name = f"{path}/{t.decode('latin-1')}"
         if t == b"meta" and path == "moov/udta":
-            # ilst is covered by the parsed items; hdlr is created by writers when missing.
+            # hdlr is created by writers when missing; ilst items are collected raw.
             for t2, s2, ps2, e2 in _children(buf, ps + 4, e):
-                if t2 not in (b"ilst", b"hdlr", b"free", b"skip"):
+                if t2 == b"ilst":
+                    ilst.extend(buf[s3:e3] for t3, s3, _, e3 in _children(buf, ps2, e2)
+                                if t3 not in (b"\xa9gen", b"gnre"))
+                elif t2 not in (b"hdlr", b"free", b"skip"):
                     out.append([f"{name}/{t2.decode('latin-1')}", snapshot.sha256(buf[s2:e2])])
         elif t in CONTAINERS:
-            _walk(buf, ps, e, name, out)
+            _walk(buf, ps, e, name, out, ilst, mdats)
         elif t in (b"stco", b"co64"):
-            out.append([name, snapshot.sha256(_relative_offsets(buf[ps:e], 4 if t == b"stco" else 8))])
+            out.append([name, snapshot.sha256(_mdat_relative(buf[ps:e], 4 if t == b"stco" else 8, mdats))])
         else:
             out.append([name, snapshot.sha256(buf[s:e])])
+
+
+def _render_problem(tags, raw_items: list[bytes]) -> str | None:
+    """mp4-items-normalised if mutagen would not write the non-genre items back byte-for-byte.
+
+    mutagen re-renders every ilst item on save (unknown covr types become JPEG,
+    locales are zeroed, duplicate atoms are merged, ...). Render them in memory
+    the way MP4Tags.save does and compare with the raw atoms as a multiset.
+    """
+    from mutagen.mp4 import _key2name
+    from mutagen.mp4._atom import Atom
+
+    if tags is None:
+        return None if not raw_items else "mp4-items-normalised"
+    try:
+        rendered = [bytes(tags._render(k, v)) for k, v in tags.items() if k not in (GEN, "gnre")]
+        for k, failed in getattr(tags, "_failed_atoms", {}).items():
+            if k in (GEN, "gnre") or k in tags:
+                continue
+            rendered += [bytes(Atom.render(_key2name(k), d)) for d in failed]
+    except Exception:  # noqa: BLE001 - if mutagen cannot render it, it cannot save it either
+        return "mp4-items-normalised"
+    return None if sorted(rendered) == sorted(raw_items) else "mp4-items-normalised"
 
 
 def _genre_problem(failed: dict, facts: dict, values: list[str]) -> str | None:
@@ -183,8 +236,12 @@ def read(path: str, fmt: str, trailers: dict, facts: dict | None = None) -> Trac
     try:
         raw = structure(path)
     except ValueError as e:  # truncated or malformed container: readable, never writable
-        raw = {"boxes": [], "mdat": None, "structure_error": str(e)}
+        raw = {"boxes": [], "mdat": None, "ilst": [], "structure_error": str(e)}
         problem = problem or "mp4-truncated"
+    raw_items = raw.pop("ilst")
+    # Raw item atoms as a multiset (mutagen re-sorts items on save): any re-render shows.
+    raw["ilst_items"] = sorted(snapshot.sha256(b) for b in raw_items)
+    problem = problem or _render_problem(f.tags, raw_items)
     native["text_problem"] = problem
     part = {"items": items, "failed_atoms": failed_part, **raw}
     return TrackTags(fmt, fields, genres.parse_field(values), pictures, native,

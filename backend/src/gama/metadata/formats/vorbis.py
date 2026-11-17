@@ -62,7 +62,8 @@ def read(path: str, fmt: str, trailers: dict) -> TrackTags:
     if fmt == "flac":
         # Every metadata block except PADDING (1) and VORBIS_COMMENT (4), in order.
         part["blocks"] = [[b.code, snapshot.sha256(b.write())] for b in f.metadata_blocks if b.code not in (1, 4)]
-    native = {"genre_keys": genre_keys, "has_comment_block": f.tags is not None, "text_problem": text_problem}
+    native = {"genre_keys": genre_keys, "has_comment_block": f.tags is not None, "text_problem": text_problem,
+              "genre_key_list": [k for k, _ in comments if k.upper() == GENRE]}
     return TrackTags(fmt, fields, genres.parse_field(values), pictures, native,
                      snapshot.build(fmt, f.info, part, pictures, trailers))
 

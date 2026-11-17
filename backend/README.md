@@ -147,3 +147,10 @@ boxes, including edit lists).
     - the ffmpeg audio packet md5.
   - `tests/conformance/test_writers.py` runs every writable corpus file × add/remove/replace through the oracle and
     the verifier.
+
+### Known, accepted limitations
+- **Frames hidden after ID3 padding.** An ID3v2 frame placed after zero padding is invisible to mutagen and to Gama's
+  raw frame walk (both stop at the padding), so a write drops it without notice. Tags written this way are malformed.
+  The case is accepted rather than detected.
+- **MP4 writes are refused when mutagen would re-render other items** (`mp4-items-normalised`): unknown cover types,
+  non-zero locales, or duplicate atoms. Those files can be edited with another tool, or left as they are.

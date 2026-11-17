@@ -42,6 +42,52 @@ def resolve_reference(value: str) -> str:
     return g[0] if len(g) == 1 else value
 
 
+def audio_region_sha(path: str, trailers: dict) -> str:
+    """sha256 of the bytes between the ID3v2 tag (incl. footer) and APEv2/ID3v1.
+
+    Independent of the tag's size, so it compares across a write. Catches what
+    ffmpeg's packet md5 resyncs past: a stale footer, junk between frames, a
+    changed Xing/LAME frame.
+    """
+    import hashlib
+    import os
+
+    size = os.path.getsize(path)
+    with open(path, "rb") as f:
+        head = f.read(10)
+        start = 0
+        if head[:3] == b"ID3" and len(head) == 10:
+            start = 10 + ((head[6] << 21) | (head[7] << 14) | (head[8] << 7) | head[9])
+            if head[3] == 4 and head[5] & 0x10:
+                start += 10
+        end = size - (128 if trailers["id3v1"] is not None else 0) - len(trailers["apev2"] or b"")
+        h = hashlib.sha256()
+        f.seek(start)
+        left = max(0, end - start)
+        while left:
+            chunk = f.read(min(left, 1 << 20))
+            if not chunk:
+                break
+            h.update(chunk)
+            left -= len(chunk)
+    return h.hexdigest()
+
+
+def _misplaced_v1(path: str, trailers: dict) -> str | None:
+    """id3v1-misplaced if mutagen's find_id3v1 would treat bytes other than the last 128 as ID3v1.
+
+    mutagen accepts a "TAG" up to 5 bytes before the usual place; its v1=1 save
+    would then write a full 128-byte tag over the end of the audio.
+    """
+    from mutagen.id3._id3v1 import find_id3v1
+
+    with open(path, "rb") as fo:
+        found, offset = find_id3v1(fo)
+    if found is not None and (offset != -128 or trailers["id3v1"] is None):
+        return "id3v1-misplaced"
+    return None
+
+
 def _plain_sizes(frame_data: bytes) -> bool:
     """mutagen's own choice between synchsafe and plain v2.4 frame sizes."""
     from mutagen.id3 import Frames
@@ -137,6 +183,7 @@ def read(path: str, fmt: str, trailers: dict) -> TrackTags:
             parsed.update(bytes(u[:4]).decode("latin-1") for u in unknown_raw)
             if problem is None and parsed != Counter(fid for fid, _ in raw_frames):
                 problem = textcheck.ID3_DROPPED  # junk, empty, invalid-ID or merged (#754) frames
+            problem = problem or textcheck.id3_tag_problem(path, plain_sizes=_plain_sizes)
         if problem is None and version == "2.3":
             if unknown_raw:
                 problem = UNKNOWN_V23  # mutagen writes unknown frames back only in their own version
@@ -160,8 +207,9 @@ def read(path: str, fmt: str, trailers: dict) -> TrackTags:
     # The snapshot is the tag as stored. A 2.3 -> 2.4 upgrade changes id3_version,
     # raw_frame_ids and the converted frames on purpose; the verifier (M4) must map
     # exactly the conversions upgrade_losses() allows, nothing else.
+    problem = problem or _misplaced_v1(path, trailers)  # also for untagged files
     part = {"id3_version": version, "frames": frames, "unknown_frames": unknown, "raw_frame_ids": raw_ids,
-            "converted": _conversion_inputs(tags)}
+            "converted": _conversion_inputs(tags), "audio_region": audio_region_sha(path, trailers)}
     native = {
         "id3_version": version,
         "has_id3v1": trailers["id3v1"] is not None,

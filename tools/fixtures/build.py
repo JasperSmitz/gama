@@ -275,12 +275,15 @@ def ogg_header_packets(data: bytes) -> tuple[str, list[bytes], int]:
     raise ValueError("truncated Ogg headers")
 
 
-def vorbis_comment_packet(codec: str, vendor: str, comments: list[str]) -> bytes:
+def vorbis_comment_packet(codec: str, vendor: str, comments: list[str], padding: int = 0) -> bytes:
+    """A comment packet; ``padding`` zero bytes follow (after the framing byte for Vorbis),
+    as mutagen, Picard and others write them."""
     body = struct.pack("<I", len(vendor.encode())) + vendor.encode() + struct.pack("<I", len(comments))
     for c in comments:
         cb = c.encode("utf-8")
         body += struct.pack("<I", len(cb)) + cb
-    return (b"OpusTags" + body) if codec == "opus" else (b"\x03vorbis" + body + b"\x01")
+    pad = b"\0" * padding
+    return (b"OpusTags" + body + pad) if codec == "opus" else (b"\x03vorbis" + body + b"\x01" + pad)
 
 
 def ogg_vendor(packet: bytes) -> str:
@@ -289,7 +292,7 @@ def ogg_vendor(packet: bytes) -> str:
     return packet[i + 4:i + 4 + n].decode("utf-8")
 
 
-def ogg_set_comments(path: Path, comments: list[str], vendor: str | None = None) -> None:
+def ogg_set_comments(path: Path, comments: list[str], vendor: str | None = None, padding: int = 0) -> None:
     """Replace the whole comment list of an Ogg Vorbis/Opus file, raw.
 
     Audio pages are copied byte-for-byte except for their sequence numbers
@@ -297,7 +300,7 @@ def ogg_set_comments(path: Path, comments: list[str], vendor: str | None = None)
     """
     codec, packets, _ = ogg_header_packets(path.read_bytes())
     vendor = ogg_vendor(packets[1]) if vendor is None else vendor
-    ogg_set_comment_packet(path, vorbis_comment_packet(codec, vendor, comments))
+    ogg_set_comment_packet(path, vorbis_comment_packet(codec, vendor, comments, padding))
 
 
 def ogg_set_comment_packet(path: Path, new_comment: bytes) -> None:
@@ -535,14 +538,14 @@ class Builder:
             run("metaflac", "--remove", "--block-type=PADDING", "--dont-use-padding", str(p))
         return p
 
-    def ogg(self, rel: str, t: dict, codec: str, picture: bool = True) -> Path:
+    def ogg(self, rel: str, t: dict, codec: str, picture: bool = True, padding: int = 0) -> Path:
         p = self._dest(rel)
         shutil.copyfile(self.base["opus" if codec == "opus" else "ogg"], p)
         comments = self.vorbis_comments(t)
         if picture:
             pic = flac_picture_block(self.front, "image/jpeg", 3, "front cover")
             comments.append("METADATA_BLOCK_PICTURE=" + base64.b64encode(pic).decode())
-        ogg_set_comments(p, comments)
+        ogg_set_comments(p, comments, padding=padding)
         return p
 
     def mp3(self, rel: str, t: dict, *, version: int = 4, enc: int = 3, extra_frames: list | None = None,
@@ -759,6 +762,24 @@ class Builder:
         self.record(rel, "ogg-opus", "format", ["Electronic", "Ambient"], "multi-genre-fields", "picture")
 
         # ---- Unsupported format
+        # Padded comment packets (mutagen/Picard style), one spanning many pages.
+        rel = F + "ogg_vorbis_padded.ogg"
+        self.ogg(rel, t(genres=["Electronic"]), "vorbis", padding=3000)
+        self.record(rel, "ogg-vorbis", "format", ["Electronic"], "padded-comments")
+        rel = F + "ogg_vorbis_big_comment.ogg"
+        self.ogg(rel, t(genres=["Electronic", "Ambient"], extra_comments=["CUSTOM_BIG=" + "x" * 100_000]), "vorbis",
+                 padding=1032)
+        self.record(rel, "ogg-vorbis", "format", ["Electronic", "Ambient"], "padded-comments", "multi-page-comments")
+        rel = F + "opus_padded.opus"
+        self.ogg(rel, t(genres=["Electronic"]), "opus", padding=512)
+        self.record(rel, "ogg-opus", "format", ["Electronic"], "padded-comments")
+        # FLAC without any VORBIS_COMMENT block.
+        rel = F + "flac_no_comment_block.flac"
+        p = self._dest(rel)
+        shutil.copyfile(self.base["flac"], p)
+        run("metaflac", "--remove", "--block-type=VORBIS_COMMENT", "--dont-use-padding", str(p))
+        self.record(rel, "flac", "format", None, "no-comment-block")
+
         rel = F + "unsupported.wav"
         shutil.copyfile(self.base["wav"], self._dest(rel))
         self.record(rel, "wav", "format", None, "unsupported")

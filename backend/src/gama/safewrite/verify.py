@@ -122,6 +122,10 @@ def _compare_id3(before: dict, after: dict, out: list[str]) -> list[str]:
     _diff("ID3 frames (excl. TCON)", sorted(fb), sorted(fa), out)
     _diff("ID3 raw frame ids (excl. TCON)", sorted(ids_b), sorted(after["raw_frame_ids"]), out)
     _diff("ID3 unknown frames", before.get("unknown_frames"), after.get("unknown_frames"), out)
+    # Every other key (e.g. audio_region) must be equal; nothing is skipped by omission.
+    handled = {"id3_version", "frames", "raw_frame_ids", "converted", "unknown_frames"}
+    for k in sorted((set(before) | set(after)) - handled):
+        _diff(f"tags.{k}", before.get(k), after.get(k), out)
     return notes
 
 
@@ -140,8 +144,12 @@ def compare_snapshots(before: dict, after: dict) -> tuple[list[str], list[str]]:
     return probs, notes
 
 
+VORBIS_FORMATS = ("flac", "ogg-vorbis", "ogg-opus")
+
+
 def verify_temp(backup: str | Path, temp: str | Path, expected_values: Sequence[str], *, audio: str = "auto",
-                reader: Callable[[list[str]], list[ReadResult]] | None = None) -> VerifyResult:
+                reader: Callable[[list[str]], list[ReadResult]] | None = None,
+                expected_genre_key: str | None = None) -> VerifyResult:
     """Check ``temp`` (mutated) against ``backup`` (original bytes). Never raises."""
     res = VerifyResult(ok=False)
     try:
@@ -158,6 +166,12 @@ def verify_temp(backup: str | Path, temp: str | Path, expected_values: Sequence[
     res.genres_read_back = list(rt.genre.values)
     if res.genres_read_back != list(expected_values):
         res.problems.append(f"genres read back {res.genres_read_back} != expected {list(expected_values)}")
+    if rb.format in VORBIS_FORMATS:
+        # Every genre field must use the expected key spelling: the first existing one, else GENRE.
+        key = expected_genre_key or (rb.tags.native.get("genre_keys") or ["GENRE"])[0]
+        got_keys = rt.tags.native.get("genre_key_list", [])
+        if got_keys != [key] * len(expected_values):
+            res.problems.append(f"genre field keys {got_keys} != expected {[key] * len(expected_values)}")
     p, n = compare_snapshots(rb.tags.snapshot, rt.tags.snapshot)
     res.problems += p
     res.notes += n

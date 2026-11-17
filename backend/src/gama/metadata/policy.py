@@ -28,6 +28,13 @@ SKIP = {
                             "TRDA, or a date mutagen cannot convert exactly)",
     "id3v2.3-unknown-frames": "ID3v2.3 tag has frames mutagen does not know; they would be lost in the v2.4 upgrade",
     "mp4-genre-unparsed": "MP4 genre atom (©gen/gnre) could not be parsed; a write would leave or hide it",
+    "id3-footer": "ID3v2.4 tag has a footer, which mutagen would leave behind in front of the audio",
+    "id3-extended-header": "ID3 extended header with CRC or tag restrictions would be dropped",
+    "id3-frame-flags": "ID3 frames carry status flags (alter preservation, read-only) that would be reset",
+    "id3v1-misplaced": "Something that looks like an ID3v1 tag is not in the last 128 bytes; mutagen would "
+                       "overwrite audio with a new one",
+    "mp4-items-normalised": "mutagen would rewrite other MP4 tag items differently (type, locale or merged atoms)",
+    "flac-no-comment-block": "FLAC file has no VORBIS_COMMENT block; creating one would change the vendor string",
     "symlink": "Symbolic links are not written",
     "hardlink": "File has several hard links; replacing it would split them",
     "not-owner": "File is not owned by the Gama user, so ownership cannot be preserved",
@@ -82,6 +89,8 @@ def classify(det: Detection, tags: TrackTags, st: FileStat, euid: int) -> tuple[
         skip = "extension-mismatch"
     elif det.format == "flac" and det.id3_prefix:
         skip = "flac-id3-prefix"
+    elif det.format == "flac" and not native.get("has_comment_block", True):
+        skip = "flac-no-comment-block"
     elif det.format == "mp3" and det.id3v2_version == 2:
         skip = "id3v2.2"
     elif det.format == "mp3" and native.get("id3_version") is None and native.get("has_id3v1"):

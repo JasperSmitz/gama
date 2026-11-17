@@ -135,13 +135,13 @@ def _decode_strict(raw: bytes, enc: int) -> None:
     raw.decode(codec)
 
 
-def id3_raw_frames(path: str, plain_sizes: Callable[[bytes], bool] | None = None
-                   ) -> list[tuple[str, bytes]] | None:
-    """(frame id, raw body) of an ID3v2.3/2.4 tag; None if absent or v2.2.
+ID3_FOOTER = "id3-footer"
+ID3_EXT_HEADER = "id3-extended-header"
+ID3_FRAME_FLAGS = "id3-frame-flags"
 
-    Bodies of v2.4 frames with unsync/data-length flags are not unpacked;
-    only the text check below looks inside bodies, and it skips such frames.
-    """
+
+def _walk_id3(path: str, plain_sizes: Callable[[bytes], bool] | None):
+    """(version, tag flags, ext header bytes, [(id, frame flags, raw body)]) or None."""
     with open(path, "rb") as f:
         head = f.read(10)
         if head[:3] != b"ID3" or head[3] not in (3, 4):
@@ -152,8 +152,10 @@ def id3_raw_frames(path: str, plain_sizes: Callable[[bytes], bool] | None = None
     if flags & 0x80 and ver == 3:
         tag = tag.replace(b"\xff\x00", b"\xff")
     pos = 0
+    ext = b""
     if flags & 0x40:
         pos = ((tag[0] << 21) | (tag[1] << 14) | (tag[2] << 7) | tag[3]) if ver == 4 else 4 + int.from_bytes(tag[0:4], "big")
+        ext = tag[:pos]
     # iTunes wrote v2.4 frame sizes as plain integers; mutagen decides per tag
     # (determine_bpi) and the caller passes that decision in, so both walks split
     # the frames identically.
@@ -162,16 +164,54 @@ def id3_raw_frames(path: str, plain_sizes: Callable[[bytes], bool] | None = None
     while pos + 10 <= len(tag):
         fid = tag[pos:pos + 4]
         if fid[0] == 0:
-            break  # padding
+            break  # padding (frames hidden after padding are an accepted limitation, see README)
         b = tag[pos + 4:pos + 8]
         fsize = int.from_bytes(b, "big") if plain else ((b[0] << 21) | (b[1] << 14) | (b[2] << 7) | b[3])
         fflags = int.from_bytes(tag[pos + 8:pos + 10], "big")
-        body = tag[pos + 10:pos + 10 + fsize]
-        # Every non-padding header counts, even an invalid ID or an empty body:
-        # mutagen drops those, and the count comparison must notice.
-        frames.append((fid.decode("latin-1"), body if not (ver == 4 and fflags & 0x000F) else b""))
+        frames.append((fid.decode("latin-1"), fflags, tag[pos + 10:pos + 10 + fsize]))
         pos += 10 + fsize
-    return frames
+    return ver, flags, ext, frames
+
+
+def id3_raw_frames(path: str, plain_sizes: Callable[[bytes], bool] | None = None
+                   ) -> list[tuple[str, bytes]] | None:
+    """(frame id, raw body) of an ID3v2.3/2.4 tag; None if absent or v2.2.
+
+    Every non-padding header counts, even an invalid ID or an empty body:
+    mutagen drops those, and the caller's count comparison must notice.
+    Bodies of v2.4 frames with grouping/compression/encryption/unsync/data-length
+    flags are returned empty (not unpacked); the text check skips them.
+    """
+    w = _walk_id3(path, plain_sizes)
+    if w is None:
+        return None
+    ver, _, _, frames = w
+    return [(fid, body if not (ver == 4 and fflags & 0x004F) else b"") for fid, fflags, body in frames]
+
+
+def id3_tag_problem(path: str, plain_sizes: Callable[[bytes], bool] | None = None) -> str | None:
+    """Tag features mutagen silently drops on save.
+
+    * v2.4 footer: mutagen replaces header + body and leaves the old 10-byte
+      footer in front of the audio;
+    * extended header with CRC or tag restrictions (mutagen writes none);
+    * frame status flags (tag/file alter preservation, read-only), reset to 0.
+    """
+    w = _walk_id3(path, plain_sizes)
+    if w is None:
+        return None
+    ver, flags, ext, frames = w
+    if ver == 4 and flags & 0x10:
+        return ID3_FOOTER
+    if ext:
+        if ver == 4 and len(ext) >= 6 and ext[5] & 0x30:
+            return ID3_EXT_HEADER
+        if ver == 3 and len(ext) >= 6 and int.from_bytes(ext[4:6], "big") & 0x8000:
+            return ID3_EXT_HEADER
+    status_mask = 0x7000 if ver == 4 else 0xE000
+    if any(fflags & status_mask for _, fflags, _ in frames):
+        return ID3_FRAME_FLAGS
+    return None
 
 
 def id3_text_problem(frames: list[tuple[str, bytes]]) -> str | None:

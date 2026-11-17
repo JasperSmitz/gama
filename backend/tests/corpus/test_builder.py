@@ -16,7 +16,7 @@ from verify.verify import (ape_parse, detect, flac_parse, id3v1_parse, id3v2_par
 
 pytestmark = pytest.mark.slow
 
-EXPECTED_FILES = 60
+EXPECTED_FILES = 64
 
 
 def top_atoms(data: bytes) -> list[bytes]:
@@ -36,6 +36,10 @@ CHECKS = {
     "multi-genre-fields": lambda d, g: len(g) >= 2 and all(";" not in x for x in g),
     "duplicate-genre": lambda d, g: len(g) != len(set(g)),
     "no-genre": lambda d, g: g == [],
+    "padded-comments": lambda d, g: len(ogg_parse(d)["comment_tail"]) > 100
+    and not ogg_parse(d)["comment_tail"][1:].strip(b"\0"),
+    "multi-page-comments": lambda d, g: build_mod.ogg_header_packets(d)[2] >= 3,
+    "no-comment-block": lambda d, g: all(t != 4 for t, _ in flac_parse(d)["blocks"]),
     "lowercase-key": lambda d, g: any(c.startswith("genre=") for c in flac_parse(d)["comments"]),
     # Raw bytes \xe9 survive the oracle's lossless decode as a surrogate escape.
     "non-utf8-comment": lambda d, g: any("\udce9" in c for c in flac_parse(d)["comments"]),
@@ -87,7 +91,7 @@ def test_file_count_and_manifest(corpus_master):
     files = sorted(str(p.relative_to(corpus_master.master)) for p in corpus_master.master.rglob("*") if p.is_file())
     assert len(files) == EXPECTED_FILES
     assert files == sorted(corpus_master.manifest)
-    assert Counter(e["group"] for e in corpus_master.manifest.values()) == {"album": 29, "format": 24, "broken": 7}
+    assert Counter(e["group"] for e in corpus_master.manifest.values()) == {"album": 29, "format": 28, "broken": 7}
 
 
 def test_build_is_fast(corpus_master):

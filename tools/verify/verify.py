@@ -804,8 +804,11 @@ def _compare_ogg(m: bytes, w: bytes) -> tuple[list[str], list[str]]:
     if pm["comment_tail"] != pw["comment_tail"]:
         probs.append(f"Ogg comment packet trailing bytes changed: {pm['comment_tail'][:16]!r} -> "
                      f"{pw['comment_tail'][:16]!r}")
-    if pw["codec"] == "vorbis" and not (pw["comment_tail"][-1:] or b"\0")[0] & 1:
-        probs.append("Vorbis comment packet lacks its framing bit")
+    tail = pw["comment_tail"]
+    # The framing byte follows the comment list directly; writers such as mutagen
+    # add zero padding after it.
+    if pw["codec"] == "vorbis" and not ((tail[:1] or b"\0")[0] & 1 and not tail[1:].strip(b"\0")):
+        probs.append("Vorbis comment packet lacks its framing bit (or has non-zero bytes after it)")
     if pw["seqs"] != list(range(len(pw["seqs"]))):
         probs.append("Ogg page sequence numbers are not contiguous from 0")
     fl = pw["flags"]
