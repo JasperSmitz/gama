@@ -42,7 +42,7 @@ class WriteEnv:
     def __post_init__(self):
         self.data_dir = os.fspath(self.data_dir)
         for d in (self.journal_dir, self.lock_dir):
-            os.makedirs(d, mode=0o700, exist_ok=True)
+            fsutil.makedirs_durable(d)
         self.store = BackupStore(os.path.join(self.data_dir, "backups"))
 
     @property

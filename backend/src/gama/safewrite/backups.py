@@ -28,8 +28,8 @@ class BackupStore:
     def __init__(self, root: str | os.PathLike):
         self.root = os.fspath(root)
         self.tmp = os.path.join(self.root, "tmp")
-        os.makedirs(os.path.join(self.root, "sha256"), mode=0o700, exist_ok=True)
-        os.makedirs(self.tmp, mode=0o700, exist_ok=True)
+        fsutil.makedirs_durable(os.path.join(self.root, "sha256"))
+        fsutil.makedirs_durable(self.tmp)
 
     def path_for(self, sha: str) -> str:
         if not _SHA_RE.fullmatch(sha):
@@ -38,6 +38,17 @@ class BackupStore:
 
     def relpath_for(self, sha: str) -> str:
         return os.path.relpath(self.path_for(sha), self.root)
+
+    def sweep_tmp(self) -> list[str]:
+        """Delete leftover ``*.part`` files (a crash during a copy). Call under the write lock."""
+        removed = []
+        for name in sorted(os.listdir(self.tmp)):
+            if name.endswith(".part"):
+                os.unlink(os.path.join(self.tmp, name))
+                removed.append(name)
+        if removed:
+            fsutil.fsync_dir(self.tmp)
+        return removed
 
     def has(self, sha: str) -> bool:
         return os.path.exists(self.path_for(sha))
@@ -59,7 +70,7 @@ class BackupStore:
             if not self.verify(sha):
                 raise BackupError(f"existing backup {final} does not match its hash; refusing to touch it")
             return final, False
-        os.makedirs(os.path.dirname(final), mode=0o700, exist_ok=True)
+        fsutil.makedirs_durable(os.path.dirname(final))
         tmp = os.path.join(self.tmp, f"{sha}.{secrets.token_hex(6)}.part")
         fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         try:

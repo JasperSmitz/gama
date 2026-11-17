@@ -56,12 +56,22 @@ def _temp_path(path: str, job_id: str, n: int, tag: str) -> str:
 
 
 def restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str) -> RestoreOutcome:
-    """Restore one file. Never raises for file problems; journals every step."""
+    """Restore one file. Never raises: every exception becomes ``restore_failed``,
+    and once the rename has happened the outcome is decided by hash."""
     out = RestoreOutcome(it.n, it.relpath, "restore_failed")
+    try:
+        return _restore_one(it, env, journal, job_id, out)
+    except Exception as e:  # noqa: BLE001 - e.g. a journal write error; the file state is decided later by hash
+        out.state, out.error = "restore_failed", f"{type(e).__name__}: {e}"
+        return out
 
-    def done(state: str, error: str | None = None) -> RestoreOutcome:
+
+def _restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str, out: RestoreOutcome
+                 ) -> RestoreOutcome:
+    def done(state: str, error: str | None = None, **extra) -> RestoreOutcome:
         out.state, out.error = state, error
-        journal.item(it.n, state, error=error, sha_found=out.sha_found, forced_backup=out.forced_backup_sha)
+        journal.item(it.n, state, error=error, sha_found=out.sha_found, forced_backup=out.forced_backup_sha,
+                     sha_before=it.sha_before, sha_after=it.sha_after, **extra)
         return out
 
     store = env.store
@@ -90,9 +100,13 @@ def restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str) -
                                       env.free_space)
     except preflight.PreflightError as e:
         return done("restore_failed", f"{e.code}: {e}")
+    except OSError as e:
+        return done("restore_failed", f"{type(e).__name__}: {e}")
 
     temp = _temp_path(it.path, job_id, it.n, "r")
-    journal.item(it.n, "restoring", temp=temp, sha_expected_current=cur)
+    # Journaled before the temp exists. If this write fails, nothing is touched.
+    journal.item(it.n, "restoring", temp=temp, sha_expected_current=cur, sha_before=it.sha_before,
+                 sha_after=it.sha_after)
     try:
         fd = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         try:
@@ -102,32 +116,41 @@ def restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str) -
         if got != it.sha_before or fsutil.sha256_file(temp) != it.sha_before:
             raise RuntimeError("temp copy of the backup does not match sha_before")
         fsutil.copy_attrs(it.path, temp)
+        fsutil.fsync_file(temp)  # make the attribute changes durable before the rename
         fsutil.failpoint("restore_before_rename", n=it.n, path=it.path)
         if fsutil.sha256_file(it.path) != cur:
-            _unlink(temp)
-            return done("restore_conflict", "file changed during the restore; not overwritten")
+            return _fail_before_rename(done, temp, "restore_conflict", "file changed during the restore; not overwritten")
         os.replace(temp, it.path)
     except Exception as e:  # noqa: BLE001
-        _unlink(temp)
-        return done("restore_failed", f"{type(e).__name__}: {e}")
-    fsutil.fsync_dir(os.path.dirname(it.path))
-    fsutil.failpoint("restore_after_rename", n=it.n, path=it.path)
-    if fsutil.sha256_file(it.path) != it.sha_before:
-        return done("restore_failed", "file does not match the backup after the restore")
-    return done("restored")
+        return _fail_before_rename(done, temp, "restore_failed", f"{type(e).__name__}: {e}")
 
-
-def _unlink(path: str) -> None:
+    # After the rename the hash decides, whatever else fails.
+    note = None
     try:
-        os.unlink(path)
-    except FileNotFoundError:
-        pass
+        fsutil.fsync_dir(os.path.dirname(it.path))
+        fsutil.failpoint("restore_after_rename", n=it.n, path=it.path)
+    except Exception as e:  # noqa: BLE001
+        note = f"after the rename: {type(e).__name__}: {e}"
+    try:
+        now = fsutil.sha256_file(it.path)
+    except OSError as e:
+        return done("restore_failed", f"cannot re-read the file after the restore: {e}")
+    if now != it.sha_before:
+        return done("restore_failed", "file does not match the backup after the restore")
+    return done("restored", note)
+
+
+def _fail_before_rename(done, temp: str, state: str, error: str) -> RestoreOutcome:
+    leak = fsutil.remove_temp(temp)
+    if leak:  # recovery removes it once it can (journaled as temp_leaked)
+        return done(state, f"{error}; temp file could not be removed ({leak})", temp_leaked=temp)
+    return done(state, error)
 
 
 @dataclass
 class RestoreResult:
     job_id: str
-    status: str                     # succeeded | completed_with_errors | failed
+    status: str                     # succeeded | completed_with_errors | failed | aborted (recovery pending)
     items: list[RestoreOutcome]
     journal_path: str | None = None
     error: str | None = None
@@ -135,23 +158,36 @@ class RestoreResult:
 
 def run_restore(items: list[RestoreItem], env: WriteEnv, *, job_id: str | None = None) -> RestoreResult:
     """A restore job: locked, recovered, journaled like an apply."""
-    from gama.safewrite.recovery import recover_locked
+    from gama.safewrite.recovery import blocked_paths, recover_locked
 
     job_id = job_id or uuid.uuid4().hex
     try:
         with env.write_lock():
-            recover_locked(env)
+            recovered = recover_locked(env)
+            # Files of a job whose recovery is pending are not touched. A journal whose
+            # header is unreadable does not block restores of other jobs.
+            blocked, _ = blocked_paths(recovered)
             try:
                 j = Journal.create(env.journal_dir, job_id)
             except JournalError as e:
                 return RestoreResult(job_id, "failed", [], None, str(e))
+            outs: list[RestoreOutcome] = []
             try:
                 j.write({"t": "header", "job": job_id, "kind": "restore",
                          "items": [asdict(i) for i in items]})
-                outs = [restore_one(i, env, j, job_id) for i in items]
+                for i in items:
+                    if os.path.normpath(i.path) in blocked:
+                        outs.append(RestoreOutcome(i.n, i.relpath, "restore_failed",
+                                                   "recovery of an earlier job is pending for this file"))
+                        j.item(i.n, "restore_failed", error=outs[-1].error)
+                    else:
+                        outs.append(restore_one(i, env, j, job_id))
                 status = "succeeded" if all(o.state in RESTORED_OK for o in outs) else "completed_with_errors"
                 j.job(status)
                 return RestoreResult(job_id, status, outs, j.path)
+            except Exception as e:  # noqa: BLE001 - e.g. the journal cannot be written
+                # No terminal status: the next recovery resolves the open items by hash.
+                return RestoreResult(job_id, "aborted", outs, j.path, f"{type(e).__name__}: {e}")
             finally:
                 j.close()
     except LockBusy as e:

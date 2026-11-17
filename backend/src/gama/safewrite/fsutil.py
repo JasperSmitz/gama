@@ -36,6 +36,40 @@ def fsync_dir(path: str | os.PathLike) -> None:
         os.close(fd)
 
 
+def makedirs_durable(path: str | os.PathLike, mode: int = 0o700) -> None:
+    """os.makedirs, then fsync the parent of every directory it created, so the new
+    entries survive a power loss (plan 1.6: directories are fsynced)."""
+    path = os.path.abspath(os.fspath(path))
+    missing = []
+    p = path
+    while not os.path.isdir(p):
+        missing.append(p)
+        parent = os.path.dirname(p)
+        if parent == p:
+            break
+        p = parent
+    os.makedirs(path, mode=mode, exist_ok=True)
+    for d in reversed(missing):
+        fsync_dir(os.path.dirname(d))
+
+
+def remove_temp(path: str | os.PathLike) -> str | None:
+    """Best-effort removal of a temp file plus a directory fsync.
+
+    Returns None when the temp is gone (or never existed), else the error text.
+    Never raises: a cleanup failure must not hide the original failure.
+    """
+    try:
+        try:
+            os.unlink(path)
+        except FileNotFoundError:
+            return None
+        fsync_dir(os.path.dirname(os.fspath(path)))
+        return None
+    except OSError as e:
+        return f"{type(e).__name__}: {e}"
+
+
 def free_space(path: str | os.PathLike) -> int:
     """Bytes available to an unprivileged writer on the filesystem holding ``path``."""
     st = os.statvfs(path)
