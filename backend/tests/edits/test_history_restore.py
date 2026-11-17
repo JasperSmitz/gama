@@ -119,12 +119,19 @@ def test_restore_selected_items_only(applier, corpus):
     assert rplan.items.count() == 1 and rplan.items.get().relpath == items[1].plan_item.relpath
 
 
-def test_restore_needs_permission_to_confirm(applier, viewer, django_user_model, client):
+def test_restore_needs_permission_to_confirm(applier, django_user_model):
+    from django.test import Client
     job = applied(applier, KC)
-    client.logout()
-    client.login(username="viewer", password="s3cret-pass")
-    rplan = restore_preview(client, job)
-    assert confirm(client, rplan).status_code == 403
+    # Other users cannot even see the job (plans and jobs are personal) ...
+    other = Client()
+    other.force_login(django_user_model.objects.create_user("other", password="x"))
+    assert other.post(f"/edits/jobs/{job.id}/restore/", {"scope": "all"}).status_code == 404
+    # ... and confirming a restore needs the apply permission.
+    rplan = restore_preview(applier, job)
+    owner = django_user_model.objects.get(username="applier")
+    owner.user_permissions.clear()
+    applier.force_login(django_user_model.objects.get(id=owner.id))
+    assert confirm(applier, rplan).status_code == 403
     assert not EditJob.objects.filter(plan=rplan).exists()
 
 
@@ -170,6 +177,10 @@ def test_pending_recovery_is_surfaced_and_resolves(applier, corpus, settings):
     r = subprocess.run([sys.executable, str(child), str(data_dir / "req.json")], capture_output=True,
                        env=dict(os.environ, GAMA_ENABLE_FAILPOINTS="1", GAMA_FAILPOINTS="after_commit:1"))
     assert r.returncode == fsutil.EXIT_CODE
+    from datetime import timedelta
+
+    from django.utils import timezone
+    EditJob.objects.filter(id=job.id).update(worker_pid=None, heartbeat_at=timezone.now() - timedelta(minutes=5))
     offline = corpus.root.with_name("offline")
     os.rename(corpus.root, offline)
     try:

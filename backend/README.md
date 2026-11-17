@@ -197,6 +197,17 @@ boxes, including edit lists).
   - Development: run `manage.py runserver` and `manage.py gama_worker` in two terminals.
   - The worker mirrors journal progress into the database synchronously (local SQLite). A slow database would slow
     the write engine down, but cannot affect its correctness.
+- **M8 (history, restore, end-to-end, docs): done.**
+  - `/edits/history/` lists jobs and the backup store size. The job page holds every record field of requirements §5:
+    timestamp and id, files, original genres and the full metadata snapshot, the request, per-file outcome and
+    rollback, backup locations, hashes and verification.
+  - **Restore:** on the job page choose all or some files, then a restore preview (restore / nothing to do /
+    conflict, optional force), then confirm; the worker runs it.
+  - `manage.py gama_restore JOB [--items] [--force] [--dry-run]` restores from the journal alone.
+  - "Recovery pending" jobs are shown on History and the job page, with how to resolve them.
+  - `tests/e2e` drives the UI in its own process against a real `gama_worker --once` subprocess and a file database.
+  - Docs: [user guide](../docs/user-guide/genre-editing.md), [ADR 0002](../docs/adr/0002-genre-editing-policies.md),
+    and the "As built" section of [architecture.md](../docs/architecture.md).
 - **Recovery details (M5 reviews).**
   - Rollback outcomes are recorded in `restore_state`; `state` always says what the edit did.
   - A file that is not found after a crash becomes `missing` (its `sha_after` is kept), never `failed`.

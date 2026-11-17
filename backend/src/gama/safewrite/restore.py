@@ -16,7 +16,7 @@ from __future__ import annotations
 import os
 import secrets
 import uuid
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 
 from gama.safewrite import fsutil, preflight
 from gama.safewrite.env import LockBusy, WriteEnv
@@ -172,6 +172,8 @@ class RestoreResult:
     items: list[RestoreOutcome]
     journal_path: str | None = None
     error: str | None = None
+    recovered: list = field(default_factory=list)
+    lock_busy: bool = False
 
 
 def run_restore(items: list[RestoreItem], env: WriteEnv, *, job_id: str | None = None,
@@ -205,11 +207,12 @@ def run_restore(items: list[RestoreItem], env: WriteEnv, *, job_id: str | None =
                         outs.append(restore_one(i, env, j, job_id))
                 status = "succeeded" if all(o.state in RESTORED_OK for o in outs) else "completed_with_errors"
                 j.job(status)
-                return RestoreResult(job_id, status, outs, j.path)
+                return RestoreResult(job_id, status, outs, j.path, recovered=recovered)
             except Exception as e:  # noqa: BLE001 - e.g. the journal cannot be written
                 # No terminal status: the next recovery resolves the open items by hash.
-                return RestoreResult(job_id, "aborted", outs, j.path, f"{type(e).__name__}: {e}")
+                return RestoreResult(job_id, "aborted", outs, j.path, f"{type(e).__name__}: {e}",
+                                     recovered=recovered)
             finally:
                 j.close()
     except LockBusy as e:
-        return RestoreResult(job_id, "failed", [], None, str(e))
+        return RestoreResult(job_id, "failed", [], None, str(e), lock_busy=True)

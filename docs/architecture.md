@@ -1,6 +1,8 @@
 # Gama: initial repository architecture
 
-*Status: proposal, 2026-11-17. It follows from the [backend evaluation](backend-evaluation.md). Nothing here is implemented yet.*
+*Status: proposal, 2026-11-17, from the [backend evaluation](backend-evaluation.md). The bulk genre editing feature
+is now built. Where it differs from this proposal, the "As built" section below is authoritative; the proposal is kept
+for reference.*
 
 ## Principles
 
@@ -11,7 +13,46 @@
 5. **The metadata core has no Django imports.** That keeps it testable in isolation, and it can be replaced if mutagen ever has to be.
 6. **Location independence.** Paths are stored relative to a configured library root. The data directory (database, backups, caches) lives outside the library.
 
-## Layout
+## As built: bulk genre editing (2026-11-17)
+
+Implemented per [plan/bulk-genre-editing.md](plan/bulk-genre-editing.md).
+- Decisions: [ADR 0002](adr/0002-genre-editing-policies.md).
+- How to use it and how to recover: [user guide](user-guide/genre-editing.md).
+
+### Deviations from the proposal below
+
+| Proposal | As built | Why |
+|---|---|---|
+| uv + uv.lock | `python -m venv` + `pip install -r requirements*.txt`, everything pinned exactly | uv is not installed. An Arch Python upgrade needs a venv rebuild (backend/README) |
+| Django Ninja API + separate `frontend/` | Server-rendered Django templates, no JavaScript (progress pages use a meta refresh) | No npm, so no build step, and fewer moving parts |
+| `jobs/` (Django Tasks) + `worker/` pool | One `EditJob` table + `manage.py gama_worker`, a single process guarded by a lifetime `worker.lock`. mutagen runs only in short-lived child processes with timeouts: `metadata/readproc.py` for reads, `safewrite/mutate.py` for writes | One job type does not justify a task framework. A DB row is inspectable and survives restarts |
+| `accounts/` app, argon2 | `django.contrib.auth` + `LoginRequiredMiddleware` + the permission `edits.apply_edits` (`gama_grant`). Plans and jobs are personal (staff see all) | No extra dependency |
+| (none) | `planning/`: a framework-free planner (fresh read, hash before and after the read, digest) | "Change planning and preview" is a separate responsibility in the requirements |
+| `library/` with Artist, Genre M2M, Picture, watcher | LibraryRoot, MediaFile (incl. `album_dir`), Album (identity key), Track. A scandir scanner (`gama_scan`) without a watcher | Only what genre editing needs |
+| `EditBatch` / `EditItem` | `EditPlan` / `PlanItem` (the digested preview) and `EditJob` / `JobItem` (outcome, read-back genres, verification, rollback outcome); `Backup` | A plan is confirmed once; a job mirrors its journal |
+| Journal states `backed_up → written → verified → renaming → committed` | `planned → backed_up → temp_created → temp_written → verified → renaming → committed`, or failed / conflict / skipped / missing. Rollback outcomes go in a separate `restore_state` | Recovery and the UI need the finer states |
+| Recovery: "resolve non-terminal entries on startup" | Runs at worker start **and before every job**. It decides by **current hash**. It **defers** ("recovery pending") when a library root is absent or is not the filesystem the job wrote to (the root's `st_dev`/`st_ino` is in the journal header), or a file cannot be read. New jobs touching those files are refused. An operator can resolve a pending job explicitly: `manage.py gama_recover --resolve JOB [--confirm-missing]`. A damaged journal blocks only the files it names | "Never guess" after a crash, and an unmounted disk must not turn edited files into "failed" |
+| Undo via API | A restore preview (restore / nothing to do / conflict, optional force that backs up the current version), confirmed and run as a job by the worker. Also `manage.py gama_restore JOB` from the journal alone, when the UI or DB is down | Restores need the same review and safety as edits |
+
+### Commands
+
+- `gama_scan [--root] [--allow-empty]`: index the configured roots.
+- `gama_demo_library DIR`: build a synthetic library.
+- `gama_worker [--once]`: the write worker.
+- `gama_grant USER [--revoke]`: grant or revoke the apply permission.
+- `gama_recover [--resolve JOB [--confirm-missing]]`: run recovery, or resolve a pending job.
+- `gama_restore JOB [--items] [--force] [--dry-run]`: restore from the command line.
+
+### As-built layout (backend/src/gama)
+
+- `metadata/`, `planning/`, `safewrite/`: no Django.
+- `library/` (index, selection basket).
+- `edits/` (plans, jobs, history, restore).
+- `tests/`: unit, conformance (oracle per format), safewrite (crash tests in real subprocesses), web, library, edits,
+  and e2e (real `gama_worker --once` subprocesses).
+- `tools/fixtures` (synthetic corpus) and `tools/verify` (oracle).
+
+## Layout (original proposal)
 
 ```
 gama/

@@ -98,13 +98,112 @@ def file_plans(ep: EditPlan) -> list[FilePlan]:
 
 def recompute_digest(ep: EditPlan) -> str:
     """The digest of exactly what is stored (and therefore shown)."""
+    if ep.operation == "restore":
+        return restore_digest(ep)
     return digest(ep.operation, ep.genres, file_plans(ep), ep.warnings)
+
+
+def restore_digest(ep: EditPlan) -> str:
+    import hashlib
+    import json
+    rows = [{"seq": i.seq, "root": i.root_path, "relpath": i.relpath, "action": i.action, "reason": i.reason,
+             "sha_before": i.sha_before, "sha_after_expected": i.sha_after_expected, "force": i.force,
+             "genres_before": i.genres_before, "genres_after": i.genres_after, "warnings": list(i.warnings)}
+            for i in ep.items.all()]
+    blob = json.dumps({"op": "restore", "source_job": str(ep.source_job_id), "warnings": ep.warnings, "items": rows},
+                      sort_keys=True, ensure_ascii=True, separators=(",", ":"))
+    return hashlib.sha256(blob.encode("ascii")).hexdigest()
+
+
+RESTORABLE_STATES = ("committed", "missing", "failed", "conflict")
+
+
+def restorable_items(job: EditJob):
+    """Items of an apply job whose file Gama may have changed (a sha_after was journaled)."""
+    return job.items.select_related("plan_item").exclude(sha_after="").filter(state__in=RESTORABLE_STATES)
+
+
+def create_restore_plan(user, job: EditJob, item_ids: list[int] | None = None, *, force: bool = False,
+                        reader=None) -> EditPlan:
+    """Restore preview: for each selected file, check the backup and the current file.
+
+    restore  - the file still holds Gama's edit (or force: a later version, backed up first)
+    nothing  - the file is already the original
+    conflict - the file changed after the edit, is missing, or the backup is bad: not touched
+    Nothing is written; the restore runs only after confirmation, in the worker.
+    """
+    from gama.metadata.readproc import read_files
+    from gama.safewrite import fsutil
+
+    if job.kind != "apply":
+        raise PlanError("only edit jobs can be restored")
+    items = list(restorable_items(job))
+    if item_ids is not None:
+        items = [ji for ji in items if ji.id in set(item_ids)]
+    if not items:
+        raise PlanError("nothing to restore: no file of this job was changed")
+    stray = {ji.plan_item.root_path for ji in items} - set(configured_root_paths())
+    if stray:
+        raise PlanError(f"files under library roots that are not configured: {sorted(stray)}")
+    env = make_env()
+    paths = [os.path.join(ji.plan_item.root_path, ji.plan_item.relpath) for ji in items]
+    reads = (reader or read_files)(paths)
+    rows = []
+    for seq, (ji, path, rr) in enumerate(zip(items, paths, reads)):
+        pi = ji.plan_item
+        cur = None
+        try:
+            cur = fsutil.sha256_file(path)
+        except FileNotFoundError:
+            pass
+        except OSError:
+            cur = "unreadable"
+        warnings: list[str] = []
+        if not env.store.verify(pi.sha_before):
+            action, reason = "conflict", "backup-bad"
+        elif cur is None:
+            action, reason = "conflict", "missing"
+        elif cur == "unreadable":
+            action, reason = "conflict", "unreadable"
+        elif cur == pi.sha_before:
+            action, reason = "nothing", None
+        elif cur == ji.sha_after:
+            action, reason = "restore", None
+        elif force:
+            action, reason = "restore", None
+            warnings.append("forced: the later version is backed up before it is replaced")
+        else:
+            action, reason = "conflict", "changed-since-edit"
+        rows.append(PlanItem(seq=seq, album=pi.album, album_key=pi.album_key, album_label=pi.album_label,
+                             root_path=pi.root_path, relpath=pi.relpath, format=pi.format,
+                             sha_before=pi.sha_before, sha_after_expected=ji.sha_after,
+                             genres_before=list(rr.genre.values) if rr.ok and rr.genre else None,
+                             genres_after=pi.genres_before, style=rr.genre.style if rr.ok and rr.genre else None,
+                             action=action, reason=reason, warnings=warnings,
+                             force=force and action == "restore" and cur != ji.sha_after, source_item=ji))
+    with transaction.atomic():
+        ep = EditPlan.objects.create(created_by=user, operation="restore", genres=[], album_ids=job.plan.album_ids,
+                                     album_labels=job.plan.album_labels, source_job=job, digest="",
+                                     n_change=sum(r.action == "restore" for r in rows),
+                                     n_nochange=sum(r.action == "nothing" for r in rows),
+                                     n_skip=sum(r.action == "conflict" for r in rows))
+        for r in rows:
+            r.plan = ep
+        PlanItem.objects.bulk_create(rows)
+        ep.digest = restore_digest(ep)
+        ep.save(update_fields=["digest"])
+    return ep
 
 
 def refresh_plan(ep: EditPlan, user, *, reader=None) -> EditPlan:
     """A new plan for the same albums and request. The old one is superseded when it is
     a draft, or when its job ended in a conflict (plan 1.5.4)."""
-    new = create_plan(user, list(ep.album_ids), ep.operation, list(ep.genres), reader=reader)
+    if ep.operation == "restore":
+        sources = [i.source_item_id for i in ep.items.all() if i.source_item_id]
+        new = create_restore_plan(user, ep.source_job, sources, force=any(i.force for i in ep.items.all()),
+                                  reader=reader)
+    else:
+        new = create_plan(user, list(ep.album_ids), ep.operation, list(ep.genres), reader=reader)
     job = EditJob.objects.filter(plan=ep).first()
     if ep.status == "draft" or (job is not None and job.status == "conflict"):
         EditPlan.objects.filter(id=ep.id).update(status="superseded")
@@ -265,8 +364,39 @@ def _run_job(job: EditJob, *, env: WriteEnv | None = None, reader=None) -> EditJ
             state=r.state, restore_state=r.restore_state or "", stage=r.stage or "", error=r.error or "",
             sha_after=r.sha_after or "", backup_sha=r.backup_sha or "", verification=r.verification)
     EditJob.objects.filter(id=job.id).update(journal_path=res.journal_path or "")
-    status = "interrupted" if res.status == "aborted" else res.status
-    job = _finish(job, status, res.error or "")
+    job = _finish_result(job, res.status, res.error or "")
+    safe_reindex(job, reader=reader)
+    return job
+
+
+def _finish_result(job: EditJob, status: str, error: str) -> EditJob:
+    if status == "aborted":
+        # The journal stays open; the next recovery resolves every file by hash.
+        EditJob.objects.filter(id=job.id).update(
+            recovery_pending=True,
+            recovery_note="The job stopped because its journal could not be written (disk full?). "
+                          "Restart the worker after fixing that; recovery then checks every file by its content.")
+        return _finish(job, "interrupted", error)
+    return _finish(job, status, error)
+
+
+def _run_restore_job(job: EditJob, env: WriteEnv, reader) -> EditJob:
+    from gama.safewrite.restore import RestoreItem, run_restore
+
+    items = list(job.plan.items.filter(action="restore"))
+    stray = {i.root_path for i in items} - set(configured_root_paths())
+    if stray:
+        return _finish(job, "failed", f"library roots no longer configured: {sorted(stray)}")
+    ritems = [RestoreItem(i.seq, i.root_path, i.relpath, i.sha_before, i.sha_after_expected, force=i.force)
+              for i in items]
+    res = run_restore(ritems, env, job_id=job.journal_id, observer=_Mirror(job, env))
+    if res.lock_busy:
+        return requeue(job, "another write or restore job was running; will retry")
+    sync_recovered(res.recovered, reader=reader)
+    for o in res.items:
+        JobItem.objects.filter(job=job, plan_item__seq=o.n).update(state=o.state, error=o.error or "")
+    EditJob.objects.filter(id=job.id).update(journal_path=res.journal_path or "")
+    job = _finish_result(job, res.status, res.error or "")
     safe_reindex(job, reader=reader)
     return job
 
@@ -469,7 +599,9 @@ def worker_startup(env: WriteEnv | None = None, *, reader=None) -> list[dict]:
             sync_from_journal(job, str(path))
             job.refresh_from_db()
             if job.status == "running":  # journal still open: recovery is pending (e.g. root not mounted)
-                _append_error(job, "recovery pending; see the worker log")
+                EditJob.objects.filter(id=job.id).update(
+                    status="interrupted", recovery_pending=True,
+                    recovery_note=job.recovery_note or "recovery could not finish; see the worker log")
                 continue
         else:
             _finish(job, "interrupted", "the worker stopped before the job started writing; nothing was written")
