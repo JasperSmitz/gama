@@ -177,8 +177,21 @@ boxes, including edit lists).
     - `/library/albums/` lists albums with search over album, album artist and folder, and checkboxes;
     - `/library/albums/<id>/` shows the tracks, their stored genres and writability;
     - `/library/basket/` shows the selection, which is kept in the session and shown on every page.
+- **Recovery details (M5 reviews).**
+  - Rollback outcomes are recorded in `restore_state`; `state` always says what the edit did.
+  - A file that is not found after a crash becomes `missing` (its `sha_after` is kept), never `failed`.
+  - Recovery is **deferred** ("pending") while a library root is absent, or is not the filesystem the job wrote to
+    (an empty mountpoint). New jobs that touch those files are refused.
+  - `manage.py gama_recover` runs recovery and reports. `manage.py gama_recover --resolve JOB [--confirm-missing]`
+    closes a job whose recovery stays pending (a retired root, a renamed folder), after re-checking every file.
+  - **After a journal-write failure** (for example a full disk), no rollback is possible, because a rollback could
+    not be journaled. The job stays open (`aborted`), and the next recovery resolves every file by its hash. The
+    files changed so far can then be restored from their backups.
 
 ### Known, accepted limitations
+- **Temp file of a crash in a tiny window.** If the process dies between creating a temp file (O_EXCL) and
+  journaling it, recovery does not know the file and leaves it. It is named `.gama-tmp-<job id>-…`; the scanner
+  ignores it and it can be deleted by hand. Recovery never deletes a file the engine did not create.
 - **Frames hidden after ID3 padding.** An ID3v2 frame placed after zero padding is invisible to mutagen and to Gama's
   raw frame walk (both stop at the padding), so a write drops it without notice. Tags written this way are malformed.
   The case is accepted rather than detected.

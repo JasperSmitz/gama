@@ -44,7 +44,10 @@ class BackupStore:
         removed = []
         for name in sorted(os.listdir(self.tmp)):
             if name.endswith(".part"):
-                os.unlink(os.path.join(self.tmp, name))
+                try:
+                    os.unlink(os.path.join(self.tmp, name))
+                except OSError:
+                    continue  # best effort (e.g. a directory or no permission); reported by size checks later
                 removed.append(name)
         if removed:
             fsutil.fsync_dir(self.tmp)

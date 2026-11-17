@@ -163,3 +163,21 @@ def failpoint(name: str, **ctx) -> None:
     if action == "exit":
         os._exit(EXIT_CODE)
     action(dict(ctx, name=name))
+
+
+def root_identity(root: str) -> list[int] | None:
+    """(st_dev, st_ino) of a library root directory, or None if it cannot be stat'ed.
+
+    An empty mountpoint (disk not mounted) has a different identity than the
+    mounted filesystem's root, so recovery can tell "file deleted" from "disk absent".
+    """
+    try:
+        st = os.stat(root)
+    except OSError:
+        return None
+    return [st.st_dev, st.st_ino]
+
+
+def real_target(root: str, relpath: str) -> str:
+    """Canonical path used to compare files across jobs (root aliases resolved)."""
+    return os.path.normpath(os.path.join(os.path.realpath(root), relpath))

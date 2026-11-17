@@ -205,7 +205,8 @@ def test_library_space_shortage_before_file_n_fails_that_item_cleanly(corpus, tm
     items = items_for(corpus, rels(corpus, KC))
     res = run_apply(items, env)
     assert res.items[1].state == "failed" and "no-space-library" in res.items[1].error
-    assert res.status == "rolled_back" and res.items[0].state == "restored" and res.items[2].state == "skipped"
+    assert res.status == "rolled_back" and res.items[2].state == "skipped"
+    assert (res.items[0].state, res.items[0].restore_state) == ("committed", "restored")
     assert {p.relative_to(corpus.root) for p in temps_left(corpus)} == set()
     for it in items:
         assert fsutil.sha256_file(corpus.path(it.relpath)) == it.sha_before
@@ -236,7 +237,7 @@ def test_S7_change_between_temp_write_and_rename(corpus, env):
     res = run_apply(items, env)
     assert res.items[1].state == "conflict" and res.items[1].stage == "recheck"
     assert target.read_bytes().endswith(b"\0newer")  # the other program's bytes survive
-    assert res.status == "rolled_back" and res.items[0].state == "restored"
+    assert res.status == "rolled_back" and res.items[0].restore_state == "restored"
     assert fsutil.sha256_file(corpus.path(items[0].relpath)) == items[0].sha_before
     assert temps_left(corpus) == []
 
@@ -276,7 +277,8 @@ def test_partial_failure_stop_and_rollback(corpus, env):
     items = items_for(corpus, rels(corpus, KC))
     fsutil.set_failpoint("item_start", _make_readonly(corpus.path(items[1].relpath)))
     res = run_apply(items, env)
-    assert [i.state for i in res.items] == ["restored", "failed", "skipped"], [i.restore for i in res.items]
+    assert [i.state for i in res.items] == ["committed", "failed", "skipped"]
+    assert [i.restore_state for i in res.items] == ["restored", None, None]
     assert res.status == "rolled_back" and "not-writable" in res.items[1].error
     for it in items:
         assert fsutil.sha256_file(corpus.path(it.relpath)) == it.sha_before
@@ -293,15 +295,17 @@ def test_partial_failure_continue_on_error(corpus, env):
     assert fsutil.sha256_file(corpus.path(items[1].relpath)) == items[1].sha_before
 
 
-def test_S3_failure_after_rename_is_rolled_back_by_hash(corpus, env):
+def test_S3_error_after_rename_is_decided_by_hash(corpus, env):
+    """An error after the rename (EIO on the directory fsync) does not make the item
+    "failed": the file holds the verified edit, so it is committed, with a note."""
     items = items_for(corpus, rels(corpus, KC))
     fsutil.set_failpoint("after_rename", lambda ctx: (_ for _ in ()).throw(OSError(5, "EIO on dir fsync"))
                          if ctx["n"] == 1 else None)
     res = run_apply(items, env)
-    assert res.items[1].stage == "after-rename" and res.items[1].state == "restored"
-    assert res.status == "rolled_back"
-    for it in items:
-        assert fsutil.sha256_file(corpus.path(it.relpath)) == it.sha_before
+    assert res.status == "succeeded" and [i.state for i in res.items] == ["committed"] * 3
+    assert "after the rename" in res.items[1].error
+    s = journal_of(res)
+    assert s["items"][1]["state"] == "committed" and "after the rename" in s["items"][1]["error"]
 
 
 def test_S6_hanging_writer_is_killed(corpus, tmp_path):
@@ -531,8 +535,8 @@ def test_interrupted_rollback_is_recovered(corpus, env):
     reports = recover(env)
     assert reports and reports[0]["status"] == "interrupted"
     s = summarize(load(reports[0]["journal"]))
-    states = {n: s["items"][n]["state"] for n in range(3)}
-    assert states[1] == "restored" and states[0] in ("restored", "committed")
+    assert [s["items"][n]["state"] for n in range(3)] == ["committed", "committed", "failed"]
+    assert s["items"][0]["restore_state"] == "restored" and s["items"][1]["restore_state"] == "restored"
     assert temps_left(corpus) == []
 
 

@@ -62,9 +62,10 @@ def test_P1_unreadable_file_mid_batch_rolls_back(corpus, env):
     res = run_apply(items, env)
     os.chmod(corpus.path(items[1].relpath), 0o644)
     assert res.status == "rolled_back", (res.error, [(i.state, i.error) for i in res.items])
-    assert [i.state for i in res.items] == ["restored", "failed", "skipped"]
-    assert res.items[1].stage == "preflight"
-    assert journal_state(res) == ("rolled_back", {0: "restored", 1: "failed", 2: "skipped"})
+    assert [i.state for i in res.items] == ["committed", "failed", "skipped"]
+    assert res.items[0].restore_state == "restored" and res.items[1].stage == "preflight"
+    assert journal_state(res) == ("rolled_back", {0: "committed", 1: "failed", 2: "skipped"})
+    assert summarize(load(res.journal_path))["items"][0]["restore_state"] == "restored"
     assert originals_back(corpus, items) and temps_left(corpus) == []
 
 
@@ -199,8 +200,9 @@ def test_P7_rollback_continues_after_an_error_in_one_restore(corpus, env):
     res = run_apply(items, env)
     os.chmod(corpus.path(items[2].relpath), 0o644)
     assert res.status == "rolled_back"
-    assert [i.state for i in res.items] == ["restored", "restored", "failed"]
-    assert journal_state(res) == ("rolled_back", {0: "restored", 1: "restored", 2: "failed"})
+    assert [i.state for i in res.items] == ["committed", "committed", "failed"]
+    assert [i.restore_state for i in res.items] == ["restored", "restored", None]
+    assert journal_state(res) == ("rolled_back", {0: "committed", 1: "committed", 2: "failed"})
     assert originals_back(corpus, items)
 
 

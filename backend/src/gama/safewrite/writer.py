@@ -78,6 +78,7 @@ class ItemResult:
     verification: dict | None = None
     attr_notes: list[str] = field(default_factory=list)
     restore: dict | None = None
+    restore_state: str | None = None  # outcome of the rollback; ``state`` stays the apply outcome
 
 
 @dataclass
@@ -112,6 +113,7 @@ class _ItemFailed(Exception):
         super().__init__(error)
         self.state, self.stage, self.error = state, stage, error
         self.leaked: str | None = None
+        self.sha_found: str | None = None
 
 
 def _phase_b_one(item: WriteItem, res: ItemResult, env: WriteEnv, j: Journal, job_id: str) -> None:
@@ -123,8 +125,13 @@ def _phase_b_one(item: WriteItem, res: ItemResult, env: WriteEnv, j: Journal, jo
     except _ItemFailed as e:
         failure = e
     except Exception as e:  # noqa: BLE001 - OSError from hashing/stat, journal write errors, ...
-        stage = "after-rename" if state["renamed"] else "unexpected"
-        failure = _ItemFailed("failed", stage, f"{type(e).__name__}: {e}")
+        if state["renamed"] and res.state != "committed":
+            # Never report "failed" for a file that holds the edit: decide by hash.
+            _commit_by_hash(item, res, j, f"{type(e).__name__}: {e}")
+            return
+        if state["renamed"]:
+            raise  # committed, but the journal or a later step failed: run_apply aborts and resolves by hash
+        failure = _ItemFailed("failed", "unexpected", f"{type(e).__name__}: {e}")
     else:
         return
     if state["temp"] and not state["renamed"]:
@@ -148,16 +155,18 @@ def _phase_b_steps(item: WriteItem, res: ItemResult, env: WriteEnv, j: Journal, 
         raise _ItemFailed("failed", "preflight", f"{type(e).__name__}: {e}") from None
 
     temp = _temp_path(item, job_id)
-    j.item(item.n, "temp_created", temp=temp)  # journaled before it exists
-    state["temp"] = temp
     try:
         fd = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        try:
-            got = fsutil.copy_stream(backup, fd)  # S7: from the verified backup, not the live file
-        finally:
-            os.close(fd)
-    except OSError as e:
+    except OSError as e:  # incl. FileExistsError: that file is not ours and is never touched
         raise _ItemFailed("failed", "temp", f"{type(e).__name__}: {e}") from None
+    # Ours from here on: only now is it recorded (in the journal too), so cleanup and
+    # recovery only ever delete files the engine created itself.
+    state["temp"] = temp
+    try:
+        j.item(item.n, "temp_created", temp=temp)
+        got = fsutil.copy_stream(backup, fd)  # S7: from the verified backup, not the live file
+    finally:
+        os.close(fd)
     if got != item.sha_before or fsutil.sha256_file(temp) != item.sha_before:
         raise _ItemFailed("failed", "temp", "temp copy does not match the backup")
     j.item(item.n, "temp_written", temp=temp)
@@ -192,13 +201,30 @@ def _phase_b_steps(item: WriteItem, res: ItemResult, env: WriteEnv, j: Journal, 
     except OSError as e:
         raise _ItemFailed("failed", "rename", f"{type(e).__name__}: {e}") from None
     state["renamed"] = True
-    fsutil.fsync_dir(os.path.dirname(item.path))
-    fsutil.failpoint("after_rename", n=item.n, path=item.path)
-    if fsutil.sha256_file(item.path) != sha_after:
-        raise _ItemFailed("failed", "post-rename", "file does not match the verified temp after the rename")
-    j.item(item.n, "committed", sha_after=sha_after)
-    res.state = "committed"
+    note = None
+    try:
+        fsutil.fsync_dir(os.path.dirname(item.path))
+        fsutil.failpoint("after_rename", n=item.n, path=item.path)
+    except Exception as e:  # noqa: BLE001 - the hash decides below
+        note = f"after the rename: {type(e).__name__}: {e} (the edit may not be durable yet)"
+    _commit_by_hash(item, res, j, note)
     fsutil.failpoint("after_commit", n=item.n, path=item.path)
+
+
+def _commit_by_hash(item: WriteItem, res: ItemResult, j: Journal, note: str | None) -> None:
+    """After the rename: the file's hash decides. == sha_after -> committed (any error is
+    only a note), else failed with the hash found."""
+    try:
+        cur = fsutil.sha256_file(item.path)
+    except OSError as e:
+        cur, note = None, f"{note + '; ' if note else ''}cannot re-read after the rename: {e}"
+    if cur != res.sha_after:
+        f = _ItemFailed("failed", "post-rename", f"file does not match the verified temp after the rename "
+                                                 f"(found {cur}){'; ' + note if note else ''}")
+        f.sha_found = cur
+        raise f
+    res.state, res.error = "committed", note
+    j.item(item.n, "committed", sha_after=res.sha_after, error=note)
 
 
 def _preflight_all(items: list[WriteItem], env: WriteEnv) -> dict[int, tuple[str, str]]:
@@ -250,12 +276,12 @@ def _resolve_results(items: list[WriteItem], journal_path: str, results: dict[in
         except OSError as e:
             r.state, r.error = "unknown", f"cannot hash after the abort: {e}"
             continue
-        r.state, why = resolve_apply_item(merged, cur)
+        r.state, r.restore_state, why = resolve_apply_item(merged, cur)
         r.error = r.error or why
 
 
 def run_apply(items: list[WriteItem], env: WriteEnv, *, job_id: str | None = None,
-              policy: str = "stop_rollback") -> ApplyResult:
+              policy: str = "stop_rollback", observer=None) -> ApplyResult:
     """Run one apply job. Never raises for file problems."""
     if policy not in POLICIES:
         raise ValueError(f"unknown policy {policy!r}")
@@ -268,7 +294,7 @@ def run_apply(items: list[WriteItem], env: WriteEnv, *, job_id: str | None = Non
             from gama.safewrite.recovery import blocked_paths, recover_locked
             recovered = recover_locked(env)
             blocked, unknown = blocked_paths(recovered)
-            touched = [it.relpath for it in items if os.path.normpath(it.path) in blocked]
+            touched = [it.relpath for it in items if fsutil.real_target(it.root, it.relpath) in blocked]
             if unknown or touched:
                 why = ("an unreadable journal of an earlier job needs attention" if unknown else
                        f"recovery of an earlier job is pending for: {touched[:5]}")
@@ -280,6 +306,7 @@ def run_apply(items: list[WriteItem], env: WriteEnv, *, job_id: str | None = Non
                 j = Journal.create(env.journal_dir, job_id)
             except JournalError as e:  # S4: never reuse a journal
                 return ApplyResult(job_id, "failed", list(results.values()), None, str(e), recovered)
+            j.observer = observer
             try:
                 status = _run_locked(items, env, j, job_id, policy, results)
                 error = None
@@ -300,6 +327,7 @@ def run_apply(items: list[WriteItem], env: WriteEnv, *, job_id: str | None = Non
 def _run_locked(items: list[WriteItem], env: WriteEnv, j: Journal, job_id: str, policy: str,
                 results: dict[int, ItemResult]) -> str:
     j.write({"t": "header", "job": job_id, "kind": "apply", "policy": policy,
+             "roots": {r: fsutil.root_identity(r) for r in sorted({i.root for i in items})},
              "items": [{**asdict(i), "backup_sha": i.sha_before} for i in items]})
 
     # ---- job-level preflight: nothing is written if anything fails
@@ -355,6 +383,8 @@ def _run_locked(items: list[WriteItem], env: WriteEnv, j: Journal, job_id: str, 
         except _ItemFailed as e:
             r.state, r.stage, r.error = e.state, e.stage, e.error
             extra = {"temp_leaked": e.leaked} if e.leaked else {}
+            if e.sha_found:
+                extra["sha_found"] = e.sha_found
             j.item(it.n, e.state, stage=e.stage, error=e.error[:2000], sha_after=r.sha_after, **extra)
             failed = True
 
@@ -380,11 +410,11 @@ def _run_locked(items: list[WriteItem], env: WriteEnv, j: Journal, job_id: str, 
             cur = None
         if cur == it.sha_before:
             continue
-        out = restore_one(RestoreItem(it.n, it.root, it.relpath, it.sha_before, r.sha_after), env, j, job_id)
+        out = restore_one(RestoreItem(it.n, it.root, it.relpath, it.sha_before, r.sha_after), env, j, job_id,
+                          field="restore_state")
         r.restore = asdict(out)
-        if out.state == "restored":
-            r.state = "restored"
-        else:
+        r.restore_state = out.state
+        if out.state != "restored":
             all_ok = False
     status = "rolled_back" if all_ok else "failed_partial"
     j.job(status)

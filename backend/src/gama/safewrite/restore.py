@@ -55,23 +55,32 @@ def _temp_path(path: str, job_id: str, n: int, tag: str) -> str:
     return os.path.join(d, f"{fsutil.TEMP_PREFIX}{job_id}-{n}-{tag}{secrets.token_hex(4)}{ext}")
 
 
-def restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str) -> RestoreOutcome:
+def restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str, *,
+                field: str = "state") -> RestoreOutcome:
     """Restore one file. Never raises: every exception becomes ``restore_failed``,
-    and once the rename has happened the outcome is decided by hash."""
+    and once the rename has happened the outcome is decided by hash.
+
+    ``field``: the journal field for the restore states. A rollback inside an apply
+    job uses "restore_state", so the item's apply ``state`` keeps saying what the
+    edit did (committed, failed, ...) and the rollback outcome sits next to it.
+    """
     out = RestoreOutcome(it.n, it.relpath, "restore_failed")
     try:
-        return _restore_one(it, env, journal, job_id, out)
+        return _restore_one(it, env, journal, job_id, out, field)
     except Exception as e:  # noqa: BLE001 - e.g. a journal write error; the file state is decided later by hash
         out.state, out.error = "restore_failed", f"{type(e).__name__}: {e}"
         return out
 
 
-def _restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str, out: RestoreOutcome
-                 ) -> RestoreOutcome:
+def _restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str, out: RestoreOutcome,
+                 field: str) -> RestoreOutcome:
+    def record(state: str, **fields) -> None:
+        journal.write({"t": "item", "n": it.n, field: state, **fields})
+
     def done(state: str, error: str | None = None, **extra) -> RestoreOutcome:
         out.state, out.error = state, error
-        journal.item(it.n, state, error=error, sha_found=out.sha_found, forced_backup=out.forced_backup_sha,
-                     sha_before=it.sha_before, sha_after=it.sha_after, **extra)
+        record(state, error=error, sha_found=out.sha_found, forced_backup=out.forced_backup_sha,
+               sha_before=it.sha_before, sha_after=it.sha_after, **extra)
         return out
 
     store = env.store
@@ -104,11 +113,20 @@ def _restore_one(it: RestoreItem, env: WriteEnv, journal: Journal, job_id: str, 
         return done("restore_failed", f"{type(e).__name__}: {e}")
 
     temp = _temp_path(it.path, job_id, it.n, "r")
-    # Journaled before the temp exists. If this write fails, nothing is touched.
-    journal.item(it.n, "restoring", temp=temp, sha_expected_current=cur, sha_before=it.sha_before,
-                 sha_after=it.sha_after)
     try:
         fd = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except OSError as e:  # incl. FileExistsError: not ours, never touched
+        return done("restore_failed", f"cannot create a temp file: {type(e).__name__}: {e}")
+    try:
+        # Recorded once it is ours, and before the rename. If this write fails, the temp
+        # (ours) is removed and the file is never touched.
+        try:
+            record("restoring", temp=temp, sha_expected_current=cur, sha_before=it.sha_before,
+                   sha_after=it.sha_after)
+        except Exception:
+            os.close(fd)
+            fsutil.remove_temp(temp)
+            raise
         try:
             got = fsutil.copy_stream(store.path_for(it.sha_before), fd)
         finally:
@@ -156,7 +174,8 @@ class RestoreResult:
     error: str | None = None
 
 
-def run_restore(items: list[RestoreItem], env: WriteEnv, *, job_id: str | None = None) -> RestoreResult:
+def run_restore(items: list[RestoreItem], env: WriteEnv, *, job_id: str | None = None,
+                observer=None) -> RestoreResult:
     """A restore job: locked, recovered, journaled like an apply."""
     from gama.safewrite.recovery import blocked_paths, recover_locked
 
@@ -171,12 +190,14 @@ def run_restore(items: list[RestoreItem], env: WriteEnv, *, job_id: str | None =
                 j = Journal.create(env.journal_dir, job_id)
             except JournalError as e:
                 return RestoreResult(job_id, "failed", [], None, str(e))
+            j.observer = observer
             outs: list[RestoreOutcome] = []
             try:
                 j.write({"t": "header", "job": job_id, "kind": "restore",
+                         "roots": {r: fsutil.root_identity(r) for r in sorted({i.root for i in items})},
                          "items": [asdict(i) for i in items]})
                 for i in items:
-                    if os.path.normpath(i.path) in blocked:
+                    if fsutil.real_target(i.root, i.relpath) in blocked:
                         outs.append(RestoreOutcome(i.n, i.relpath, "restore_failed",
                                                    "recovery of an earlier job is pending for this file"))
                         j.item(i.n, "restore_failed", error=outs[-1].error)

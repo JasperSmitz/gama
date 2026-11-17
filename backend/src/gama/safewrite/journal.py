@@ -19,11 +19,11 @@ import time
 
 from gama.safewrite import fsutil
 
-APPLY_STATES = ("planned", "backed_up", "temp_created", "temp_written", "verified", "renaming", "committed",
+APPLY_STATES = ("planned", "backed_up", "temp_created", "temp_written", "verified", "renaming", "committed", "missing",
                 "failed", "conflict", "skipped")
 RESTORE_STATES = ("restoring", "restored", "restore_conflict", "restore_failed", "nothing_to_do")
-TERMINAL_ITEM = {"committed", "failed", "conflict", "skipped", "restored", "restore_conflict", "restore_failed",
-                 "nothing_to_do"}
+TERMINAL_ITEM = {"committed", "failed", "conflict", "skipped", "missing", "restored", "restore_conflict",
+                 "restore_failed", "nothing_to_do"}
 TERMINAL_JOB = {"succeeded", "completed_with_errors", "rolled_back", "failed_partial", "conflict", "failed",
                 "interrupted"}
 _JOB_RE = re.compile(r"[A-Za-z0-9_-]{1,64}")
@@ -43,6 +43,9 @@ class Journal:
         self.path = path
         self._fd = fd
         self.poisoned: str | None = None
+        # Called with each record after it is durable (e.g. to mirror progress into the
+        # DB). Its errors are ignored: the observer can never affect the write engine.
+        self.observer = None
 
     @classmethod
     def create(cls, journal_dir: str, job_id: str) -> Journal:
@@ -95,6 +98,11 @@ class Journal:
             except OSError:
                 pass
             raise JournalWriteError(f"cannot write journal {self.path}: {self.poisoned}") from e
+        if self.observer is not None:
+            try:
+                self.observer(record)
+            except Exception:  # noqa: BLE001
+                pass
 
     def item(self, n: int, state: str, **fields) -> None:
         self.write({"t": "item", "n": n, "state": state, **fields})
@@ -141,9 +149,11 @@ def summarize(records: list[dict]) -> dict:
         if r.get("t") == "item":
             cur = items.setdefault(r["n"], {})
             cur.update({k: v for k, v in r.items() if k not in ("t", "ts")})
-            if r.get("temp"):
+            # "temp" is only journaled once the engine has created the file itself (O_EXCL),
+            # so recovery never deletes a file it did not create.
+            if r.get("temp") and r["temp"] not in temps.get(r["n"], []):
                 temps.setdefault(r["n"], []).append(r["temp"])
-            if r.get("temp_leaked"):
+            if r.get("temp_leaked") and r["temp_leaked"] not in leaked:
                 leaked.append(r["temp_leaked"])
         elif r.get("t") == "job":
             status = r["status"]
