@@ -1,0 +1,16 @@
+ok   changed   actually_flac.mp3
+ok   changed   flac_two_pictures_no_padding.flac
+ok   changed   flac_with_id3v2_prefix.flac
+ok   unchanged garbage.flac
+ok   changed   m4a_alac.m4a
+ok   changed   m4a_faststart.m4a
+ok   unchanged m4a_header_only.m4a
+ok   changed   mp3_id3v1_only.mp3
+ok   changed   mp3_id3v23.mp3
+ok   changed   mp3_id3v24_apev2_id3v1.mp3
+ok   changed   truncated.flac
+ok   unchanged truncated.m4a
+ok   changed   truncated.mp3
+ok   unchanged zero_bytes.mp3
+
+14 files, 10 changed, 0 with problems

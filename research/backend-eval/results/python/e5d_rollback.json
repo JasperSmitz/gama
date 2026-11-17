@@ -1,0 +1,24 @@
+{
+  "command": "rollback",
+  "ok": true,
+  "results": [
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e5d/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "ok": true,
+      "action": "restored",
+      "sha256_after_restore": "afd5166efdef7bfa836ba113215066115c6c7d0a284a06bfccd0c59c079f7952"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e5d/albums/real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+      "ok": true,
+      "action": "restored",
+      "sha256_after_restore": "33a3cf27fe552439cb1bb5ea68226efbf631f0243dd7b6775986ff54937baac6"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e5d/albums/real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+      "ok": true,
+      "action": "restored",
+      "sha256_after_restore": "8ce8a1987fbd33fdab86807409d137c3b22d01fdac9ca6d33df84efa4df704ac"
+    }
+  ]
+}

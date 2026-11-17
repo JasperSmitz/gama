@@ -1,0 +1,65 @@
+{
+  "backup_dir": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5c.bk",
+  "committed": 2,
+  "failed": 0,
+  "fatal": "simulated failure after 2 commit(s)",
+  "journal": "/storage/development/gama/research/backend-eval/results/rust/e5/c_journal.json",
+  "ok": false,
+  "op": "set-genres",
+  "preflight": [
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5c/albums/real_flac/01. C418 - Key.flac"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5c/albums/real_flac/02. C418 - Door.flac"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5c/albums/real_flac/03. C418 - Subwoofer Lullaby.flac"
+    }
+  ],
+  "preflight_skipped": 0,
+  "results": [
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5c/albums/real_flac/01. C418 - Key.flac",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5c/albums/real_flac/02. C418 - Door.flac",
+      "status": "committed"
+    }
+  ],
+  "rolled_back": [
+    {
+      "error": null,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5c/albums/real_flac/02. C418 - Door.flac",
+      "result": "restored",
+      "sha256_verified": true
+    },
+    {
+      "error": null,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5c/albums/real_flac/01. C418 - Key.flac",
+      "result": "restored",
+      "sha256_verified": true
+    }
+  ]
+}

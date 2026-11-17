@@ -1,0 +1,15 @@
+{
+  "op": "set-genres Genres([\"Ambient\", \"Electronic\", \"Soundtrack\"])",
+  "created_unix": 1794929389,
+  "entries": [
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/flac_with_id3v2_prefix.flac",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4.bk/flac_with_id3v2_prefix.flac/0000-flac_with_id3v2_prefix.flac",
+      "sha256_before": "b0b53905977139c8fb4d974095411ebe4dc3d0a76af1eb2cd66f37351c11a1ff",
+      "sha256_after": "7693b9698da9f312c824b73a9c029bd3540912ff747c17d9b8f1b26cf0d0cd20",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    }
+  ]
+}

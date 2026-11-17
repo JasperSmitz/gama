@@ -1,0 +1,11 @@
+## (g) verify-step failure injected on file 2 of albums/real_flac (PROTO_FAULT_VERIFY), no --continue-on-error
+$ PROTO_FAULT_VERIFY="02. C418 - Door.flac" proto set-genres --genres "Ambient;Electronic;Soundtrack" --backup-dir B --journal J $P/*
+{'ok': False, 'aborted': '/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/fault/real_flac/02. C418 - Door.flac: verify: INJECTED_FAULT: want [] got ["x"]; rolling back batch', 'committed': 0, 'failed': 1, 'rolled_back': 1, 'leftover_temp_files': []}
+    rolled_back 01. C418 - Key.flac 
+    failed 02. C418 - Door.flac verify: INJECTED_FAULT: want [] got ["x"]
+    pending 03. C418 - Subwoofer Lullaby.flac 
+dir:
+01. C418 - Key.flac
+02. C418 - Door.flac
+03. C418 - Subwoofer Lullaby.flac
+sha256: all files identical to pre-batch

@@ -1,0 +1,235 @@
+{
+  "results": [
+    {
+      "file": "albums/partial_failure/01 ok.flac",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/partial_failure/02 ok.mp3",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/partial_failure/03 truncated.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/partial_failure/04 ok.opus",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/partial_failure/05 readonly.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/real_flac/01. C418 - Key.flac",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 3160
+    },
+    {
+      "file": "albums/real_flac/02. C418 - Door.flac",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/real_flac/03. C418 - Subwoofer Lullaby.flac",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "albums/real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/real_mp3/01. Joy Division - Disorder.mp3",
+      "problems": [],
+      "notes": [
+        "existing ID3v1 tag re-synced from new values"
+      ],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "albums/real_mp3/02. Joy Division - Day Of The Lords.mp3",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/real_mp3/03. Joy Division - Candidate.mp3",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/synth_opus/01 - Synthetic opus.opus",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "albums/synth_opus/02 - Synthetic opus.opus",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/synth_opus/03 - Synthetic opus.opus",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "albums/synth_vorbis/02 - Synthetic vorbis.ogg",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "albums/synth_vorbis/03 - Synthetic vorbis.ogg",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "edge/actually_flac.mp3",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 3160
+    },
+    {
+      "file": "edge/flac_two_pictures_no_padding.flac",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 3160
+    },
+    {
+      "file": "edge/flac_with_id3v2_prefix.flac",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 3160
+    },
+    {
+      "file": "edge/garbage.flac",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "edge/m4a_alac.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 1068
+    },
+    {
+      "file": "edge/m4a_faststart.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "edge/m4a_header_only.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "edge/mp3_id3v1_only.mp3",
+      "problems": [
+        "ID3v2 frame TCON changed: None -> [('text', ('Rock',))]",
+        "genre changed during field write: None -> 'Rock'"
+      ],
+      "notes": [
+        "existing ID3v1 tag re-synced from new values"
+      ],
+      "status": "changed",
+      "size_delta": 9683
+    },
+    {
+      "file": "edge/mp3_id3v23.mp3",
+      "problems": [],
+      "notes": [
+        "ID3v2 version 2.3 -> 2.4"
+      ],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "edge/mp3_id3v24_apev2_id3v1.mp3",
+      "problems": [],
+      "notes": [
+        "existing ID3v1 tag re-synced from new values"
+      ],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "edge/truncated.flac",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 2255
+    },
+    {
+      "file": "edge/truncated.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "edge/truncated.mp3",
+      "problems": [],
+      "notes": [],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "edge/zero_bytes.mp3",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    }
+  ],
+  "leftover": []
+}

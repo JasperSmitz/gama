@@ -1,0 +1,9 @@
+Host: 16 cores (nproc=16), Rust 1.99.1 (Arch), lofty 0.25.5. Registry already downloaded.
+Times are cargo's own "Finished ... in" lines (bc missing, so the wall clock wrapper failed).
+clean release build (all 38 crates from scratch, separate CARGO_TARGET_DIR): 6.85 s
+clean debug build (same target dir, deps rebuilt for dev profile):           4.81 s
+incremental release rebuild after touching src/main.rs:                       1.63 s
+release binary: 2,735,792 bytes unstripped; 2,083,248 bytes stripped
+runtime deps (ldd): linux-vdso, libgcc_s.so.1, libc.so.6, ld-linux (no other shared libs)
+crates in normal dep tree: 38 (lofty, lofty_attr, byteorder, flate2+miniz_oxide, data-encoding,
+  ogg_pager, paste, log, serde/serde_json, sha2, hex, ...)

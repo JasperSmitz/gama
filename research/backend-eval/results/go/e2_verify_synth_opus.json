@@ -1,0 +1,38 @@
+{
+  "results": [
+    {
+      "file": "01 - Synthetic opus.opus",
+      "problems": [
+        "Ogg non-genre comments differ: -['encoder=Lavc63.1.102 libopus'] +['ENCODER=Lavc63.1.102 libopus']"
+      ],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 766
+    },
+    {
+      "file": "02 - Synthetic opus.opus",
+      "problems": [
+        "Ogg non-genre comments differ: -['encoder=Lavc63.1.102 libopus'] +['ENCODER=Lavc63.1.102 libopus']"
+      ],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 766
+    },
+    {
+      "file": "03 - Synthetic opus.opus",
+      "problems": [
+        "Ogg non-genre comments differ: -['encoder=Lavc63.1.102 libopus'] +['ENCODER=Lavc63.1.102 libopus']"
+      ],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 766
+    }
+  ],
+  "leftover": []
+}

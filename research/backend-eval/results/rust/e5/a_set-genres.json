@@ -1,0 +1,51 @@
+{
+  "error": "preflight failed for 2 file(s); batch aborted, nothing modified",
+  "ok": false,
+  "op": "set-genres",
+  "preflight": [
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5a/albums/partial_failure/01 ok.flac"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5a/albums/partial_failure/02 ok.mp3"
+    },
+    {
+      "dir_writable_rename_possible": true,
+      "error": "lofty parse: failed to parse Mp4 file",
+      "mode": "644",
+      "ok": false,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5a/albums/partial_failure/03 truncated.m4a"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Opus",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5a/albums/partial_failure/04 ok.opus"
+    },
+    {
+      "dir_writable_rename_possible": true,
+      "error": "file not writable (Permission denied (os error 13)); refusing even though rename-over would have succeeded",
+      "mode": "444",
+      "ok": false,
+      "os_open_for_write": false,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5a/albums/partial_failure/05 readonly.m4a"
+    }
+  ],
+  "results": []
+}

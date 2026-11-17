@@ -1,0 +1,52 @@
+$ verify.py genres $EVAL/master/albums/real_flac $W/albums/real_flac --genres 'Ambient;Electronic;Soundtrack' --require-changed
+FAIL changed   01. C418 - Key.flac
+       - metaflac: non-genre comments differ (order or content)
+FAIL changed   02. C418 - Door.flac
+       - metaflac: non-genre comments differ (order or content)
+FAIL changed   03. C418 - Subwoofer Lullaby.flac
+       - metaflac: non-genre comments differ (order or content)
+
+3 files, 3 changed, 3 with problems
+exit 1
+
+$ verify.py genres $EVAL/master/albums/real_mp3 $W/albums/real_mp3 --genres 'Ambient;Electronic;Soundtrack' --require-changed
+ok   changed   01. Joy Division - Disorder.mp3
+       . note: existing ID3v1 tag re-synced from new values
+ok   changed   02. Joy Division - Day Of The Lords.mp3
+       . note: existing ID3v1 tag re-synced from new values
+ok   changed   03. Joy Division - Candidate.mp3
+       . note: existing ID3v1 tag re-synced from new values
+
+3 files, 3 changed, 0 with problems
+exit 0
+
+$ verify.py genres $EVAL/master/albums/real_m4a $W/albums/real_m4a --genres 'Ambient;Electronic;Soundtrack' --require-changed
+ok   changed   05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a
+ok   changed   07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a
+ok   changed   08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a
+
+3 files, 3 changed, 0 with problems
+exit 0
+
+$ verify.py genres $EVAL/master/albums/synth_vorbis $W/albums/synth_vorbis --genres 'Ambient;Electronic;Soundtrack' --require-changed
+FAIL changed   01 - Synthetic vorbis.ogg
+       - Ogg non-genre comments differ: -['encoder=Lavc63.1.102 libvorbis'] +['ENCODER=Lavc63.1.102 libvorbis']
+FAIL changed   02 - Synthetic vorbis.ogg
+       - Ogg non-genre comments differ: -['encoder=Lavc63.1.102 libvorbis'] +['ENCODER=Lavc63.1.102 libvorbis']
+FAIL changed   03 - Synthetic vorbis.ogg
+       - Ogg non-genre comments differ: -['encoder=Lavc63.1.102 libvorbis'] +['ENCODER=Lavc63.1.102 libvorbis']
+
+3 files, 3 changed, 3 with problems
+exit 1
+
+$ verify.py genres $EVAL/master/albums/synth_opus $W/albums/synth_opus --genres 'Ambient;Electronic;Soundtrack' --require-changed
+FAIL changed   01 - Synthetic opus.opus
+       - Ogg non-genre comments differ: -['encoder=Lavc63.1.102 libopus'] +['ENCODER=Lavc63.1.102 libopus']
+FAIL changed   02 - Synthetic opus.opus
+       - Ogg non-genre comments differ: -['encoder=Lavc63.1.102 libopus'] +['ENCODER=Lavc63.1.102 libopus']
+FAIL changed   03 - Synthetic opus.opus
+       - Ogg non-genre comments differ: -['encoder=Lavc63.1.102 libopus'] +['ENCODER=Lavc63.1.102 libopus']
+
+3 files, 3 changed, 3 with problems
+exit 1
+

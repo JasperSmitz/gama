@@ -1,0 +1,7 @@
+ok   changed   01 ok.flac
+ok   changed   02 ok.mp3
+ok   unchanged 03 truncated.m4a
+ok   changed   04 ok.opus
+ok   unchanged 05 readonly.m4a
+
+5 files, 3 changed, 0 with problems

@@ -1,0 +1,14 @@
+actually_flac.mp3 exit=0
+flac_two_pictures_no_padding.flac exit=0
+flac_with_id3v2_prefix.flac exit=0
+garbage.flac exit=1
+m4a_alac.m4a exit=0
+m4a_faststart.m4a exit=0
+m4a_header_only.m4a exit=1
+mp3_id3v1_only.mp3 exit=0
+mp3_id3v23.mp3 exit=0
+mp3_id3v24_apev2_id3v1.mp3 exit=0
+truncated.flac exit=0
+truncated.m4a exit=1
+truncated.mp3 exit=0
+zero_bytes.mp3 exit=1

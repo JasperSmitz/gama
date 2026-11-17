@@ -1,0 +1,141 @@
+{
+  "op": "set-fields Fields",
+  "created_unix": 1794929382,
+  "entries": [
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/real_flac/01. C418 - Key.flac",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0000-01. C418 - Key.flac",
+      "sha256_before": "a8a3919a2b464fe2dfcf0f3c9195fcebc55a8073ce3aeafe71453e479f640f7e",
+      "sha256_after": "1cc89562d03290a53c1a2d851ed0bdf827e6075092ab72f4f1823b465e5f69cf",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/real_mp3/01. Joy Division - Disorder.mp3",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0001-01. Joy Division - Disorder.mp3",
+      "sha256_before": "2168a12cb59a80b2d47b14c116d6a83c62f0fa5f496ca03ad8962a7e46b147c5",
+      "sha256_after": "ff7a96498deed07a74e6357b61b510e3fc0f4f329fe867ff6216143187eb2f80",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0002-05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "afd5166efdef7bfa836ba113215066115c6c7d0a284a06bfccd0c59c079f7952",
+      "sha256_after": "4701b019b5970360505d61cb3901a089a0e496ee56f7d0b3ae46f406314facc3",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0003-01 - Synthetic vorbis.ogg",
+      "sha256_before": "9b9d20744b2e0c26a22f2bbc42ddb3bb988cb9baeade17ebb53df95b66314f24",
+      "sha256_after": "f5b5b4f0a0ced285fdbd6bc22d40c272d760287c20f215dbd2f97947db8ecbff",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/synth_opus/01 - Synthetic opus.opus",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0004-01 - Synthetic opus.opus",
+      "sha256_before": "bd2e99ff7c88e89124f261e79db79c8e8d807c0a1a78fdd0d20a84870c8ce9d9",
+      "sha256_after": "42fcc6d61fadd664472000f68275d18a34db5f5eec6f2bbde045eecb5945528e",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/actually_flac.mp3",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0005-actually_flac.mp3",
+      "sha256_before": "a8a3919a2b464fe2dfcf0f3c9195fcebc55a8073ce3aeafe71453e479f640f7e",
+      "sha256_after": "1cc89562d03290a53c1a2d851ed0bdf827e6075092ab72f4f1823b465e5f69cf",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/flac_two_pictures_no_padding.flac",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0006-flac_two_pictures_no_padding.flac",
+      "sha256_before": "d7125329af7534581b9f163fb6dd086d51c930312fdb9292453603b8b8c6de2a",
+      "sha256_after": "a91ea33549bcf21b7b4f66dacd5b13a92281f56a0266382cf67eb89923adc752",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/flac_with_id3v2_prefix.flac",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0007-flac_with_id3v2_prefix.flac",
+      "sha256_before": "b0b53905977139c8fb4d974095411ebe4dc3d0a76af1eb2cd66f37351c11a1ff",
+      "sha256_after": "40b9acf1a3819490623729f43734af3b4c0b2eac0cd4ed8039b664a164c05e68",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/m4a_alac.m4a",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0008-m4a_alac.m4a",
+      "sha256_before": "648e8de9619a782c48c62297777e25a84747c03c7f99098eb8b1e0289e217c5b",
+      "sha256_after": "e25c4fa481bd2d508d69160ded49ec3b2dc67cf2b4195b41f7d9db176d590161",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/m4a_faststart.m4a",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0009-m4a_faststart.m4a",
+      "sha256_before": "25644904fba282ea9066c79b728f258e496e7b4bd9152b968766e6002f3e1cb4",
+      "sha256_after": "64a628cee61fcd781666fdb45ee759d45d80fa31b1d4f07ad208b03306ba212b",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/mp3_id3v1_only.mp3",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0010-mp3_id3v1_only.mp3",
+      "sha256_before": "5a4cc17eaefe2f0dd40a1e49e2a9ad4e7ff283229457f1e295ed8f9d0cab24e1",
+      "sha256_after": "941b4dc12f170420c79014049197a2604e678108bf44b6739ef770003f3d153c",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/mp3_id3v23.mp3",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0011-mp3_id3v23.mp3",
+      "sha256_before": "fbaca3e55c8625daee6686e2abb845e09d4091a6a18b122d26150c1038a5f979",
+      "sha256_after": "db194373764992b7af42be5a5cc285cc0f7a7646416404260ccca89202d70e49",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/mp3_id3v24_apev2_id3v1.mp3",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0012-mp3_id3v24_apev2_id3v1.mp3",
+      "sha256_before": "62f6f4d4726a897194f8691b91ab248ae34844fe93b4545c37d41812d9fe2942",
+      "sha256_after": "baf24920cb17247b02a2befdd8470c82557ad730560c844b19feda421723b34b",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/truncated.flac",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0013-truncated.flac",
+      "sha256_before": "3675141375be7aa5b62c5e9455dac85497edfc0bb60262c13e0c5de6a4646e43",
+      "sha256_after": "4753666088c5bd2dcfc136d83879fdc1f8cede44a802ea8fccce9c786b7a0d9d",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/truncated.mp3",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk/0014-truncated.mp3",
+      "sha256_before": "afe27672372b834565505a7cc15050590bf835a9179e1cf1c5245c77d43ba905",
+      "sha256_after": "4324ef97584d9780c8980f3747cdf9ce18d658b70d7c9fa7360efa77bcbbe462",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    }
+  ]
+}

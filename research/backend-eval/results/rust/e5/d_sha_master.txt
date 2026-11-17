@@ -1,0 +1,20 @@
+a8a3919a2b464fe2dfcf0f3c9195fcebc55a8073ce3aeafe71453e479f640f7e  ./partial_failure/01 ok.flac
+2168a12cb59a80b2d47b14c116d6a83c62f0fa5f496ca03ad8962a7e46b147c5  ./partial_failure/02 ok.mp3
+fc63a16d1ed1367fe301b87aba2b5778fcda3755a7f72434ca7341f1a699946c  ./partial_failure/03 truncated.m4a
+bd2e99ff7c88e89124f261e79db79c8e8d807c0a1a78fdd0d20a84870c8ce9d9  ./partial_failure/04 ok.opus
+afd5166efdef7bfa836ba113215066115c6c7d0a284a06bfccd0c59c079f7952  ./partial_failure/05 readonly.m4a
+a8a3919a2b464fe2dfcf0f3c9195fcebc55a8073ce3aeafe71453e479f640f7e  ./real_flac/01. C418 - Key.flac
+62f0737dd970433550a5a130807cd4f7c95f7fcdcd769d20d9d3285602c4eda3  ./real_flac/02. C418 - Door.flac
+fd7be9614208a1930158222de636ef0bacb0e7af6e4cf0dc9da5299a15fb885a  ./real_flac/03. C418 - Subwoofer Lullaby.flac
+afd5166efdef7bfa836ba113215066115c6c7d0a284a06bfccd0c59c079f7952  ./real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a
+33a3cf27fe552439cb1bb5ea68226efbf631f0243dd7b6775986ff54937baac6  ./real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a
+8ce8a1987fbd33fdab86807409d137c3b22d01fdac9ca6d33df84efa4df704ac  ./real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a
+2168a12cb59a80b2d47b14c116d6a83c62f0fa5f496ca03ad8962a7e46b147c5  ./real_mp3/01. Joy Division - Disorder.mp3
+bf5ddf9e98903989272d0ab4e86657f7f12613361ef0d80ec05b7ce08b226130  ./real_mp3/02. Joy Division - Day Of The Lords.mp3
+657962dfd1dfb0b8829b5081d71c2d483bd0a29aea661c826eb91d5c0fd34a47  ./real_mp3/03. Joy Division - Candidate.mp3
+bd2e99ff7c88e89124f261e79db79c8e8d807c0a1a78fdd0d20a84870c8ce9d9  ./synth_opus/01 - Synthetic opus.opus
+607c9aa287fef624e39fe64190419a2e0ff4327ceab724989bbe23770d0bb5dd  ./synth_opus/02 - Synthetic opus.opus
+a202a0950e959a9223354f3cbf98c54d0f8fe89523016c614907ab08d4225df2  ./synth_opus/03 - Synthetic opus.opus
+9b9d20744b2e0c26a22f2bbc42ddb3bb988cb9baeade17ebb53df95b66314f24  ./synth_vorbis/01 - Synthetic vorbis.ogg
+14b07187e36aa668c512470cda148395f5f39243d6d02c836ae3a2ce3612aa89  ./synth_vorbis/02 - Synthetic vorbis.ogg
+2e996a1d91f638996c7808c4c66b62cd1333b71a905ffe71c6ecb65fe9848ab2  ./synth_vorbis/03 - Synthetic vorbis.ogg

@@ -1,0 +1,119 @@
+{
+  "results": [
+    {
+      "file": "actually_flac.mp3",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 1048
+    },
+    {
+      "file": "flac_two_pictures_no_padding.flac",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 1048
+    },
+    {
+      "file": "flac_with_id3v2_prefix.flac",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 1048
+    },
+    {
+      "file": "garbage.flac",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "m4a_alac.m4a",
+      "problems": [],
+      "notes": [
+        "genres checked via raw MP4 ilst"
+      ],
+      "status": "changed",
+      "size_delta": 52
+    },
+    {
+      "file": "m4a_faststart.m4a",
+      "problems": [],
+      "notes": [
+        "genres checked via raw MP4 ilst"
+      ],
+      "status": "changed",
+      "size_delta": 38
+    },
+    {
+      "file": "m4a_header_only.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "mp3_id3v1_only.mp3",
+      "problems": [],
+      "notes": [
+        "genres checked via raw ID3v2 TCON"
+      ],
+      "status": "changed",
+      "size_delta": 1053
+    },
+    {
+      "file": "mp3_id3v23.mp3",
+      "problems": [],
+      "notes": [
+        "genres checked via raw ID3v2 TCON"
+      ],
+      "status": "changed",
+      "size_delta": 1007
+    },
+    {
+      "file": "mp3_id3v24_apev2_id3v1.mp3",
+      "problems": [],
+      "notes": [
+        "genres checked via raw ID3v2 TCON"
+      ],
+      "status": "changed",
+      "size_delta": -7635
+    },
+    {
+      "file": "truncated.flac",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 1048
+    },
+    {
+      "file": "truncated.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "truncated.mp3",
+      "problems": [],
+      "notes": [
+        "genres checked via raw ID3v2 TCON"
+      ],
+      "status": "changed",
+      "size_delta": -7635
+    },
+    {
+      "file": "zero_bytes.mp3",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    }
+  ],
+  "leftover": []
+}

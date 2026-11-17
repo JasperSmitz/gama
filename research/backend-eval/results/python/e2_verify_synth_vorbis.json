@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "file": "01 - Synthetic vorbis.ogg",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 2677
+    },
+    {
+      "file": "02 - Synthetic vorbis.ogg",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 2679
+    },
+    {
+      "file": "03 - Synthetic vorbis.ogg",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 2678
+    }
+  ],
+  "leftover": []
+}

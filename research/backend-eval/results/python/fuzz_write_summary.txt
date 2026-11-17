@@ -1,0 +1,16 @@
+288 fuzzed files <400KB; summary {'files': 288, 'preflight_failed': 164, 'committed': 111, 'failed': 13, 'rolled_back_ok': 0}
+write-stage failures by type Counter({'mutagen.oggvorbis.OggVorbisHeaderError': 7, 'mutagen.oggopus.OggOpusHeaderError': 6})
+   01 - Synthet_06.ogg mutagen.oggvorbis.OggVorbisHeaderError: read b'z\x991i', expected b'OggS', at 0x46582
+   01 - Synthet_07.ogg mutagen.oggvorbis.OggVorbisHeaderError: unable to read full data
+   01 - Synthet_12.opus mutagen.oggopus.OggOpusHeaderError: read b'LKXH', expected b'OggS', at 0x20601
+   01 - Synthet_21.ogg mutagen.oggvorbis.OggVorbisHeaderError: unable to read full data
+   01 - Synthet_28.ogg mutagen.oggvorbis.OggVorbisHeaderError: unable to read full data
+   01 - Synthet_32.ogg mutagen.oggvorbis.OggVorbisHeaderError: unable to read full data
+   01 - Synthet_37.opus mutagen.oggopus.OggOpusHeaderError: unable to read full data
+   01 - Synthet_40.opus mutagen.oggopus.OggOpusHeaderError: unable to read full data
+   01 - Synthet_41.opus mutagen.oggopus.OggOpusHeaderError: read b'1iFp', expected b'OggS', at 0x104ff
+   01 - Synthet_44.ogg mutagen.oggvorbis.OggVorbisHeaderError: unable to read full data
+   01 - Synthet_51.ogg mutagen.oggvorbis.OggVorbisHeaderError: read b'1iJ`', expected b'OggS', at 0x46588
+   01 - Synthet_55.opus mutagen.oggopus.OggOpusHeaderError: read b'9vof', expected b'OggS', at 0x305ed
+   01 - Synthet_57.opus mutagen.oggopus.OggOpusHeaderError: unable to read full data
+leftover temp files: 0

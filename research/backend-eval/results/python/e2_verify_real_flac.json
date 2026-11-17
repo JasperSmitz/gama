@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "file": "01. C418 - Key.flac",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 3124
+    },
+    {
+      "file": "02. C418 - Door.flac",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 8435
+    },
+    {
+      "file": "03. C418 - Subwoofer Lullaby.flac",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 10610
+    }
+  ],
+  "leftover": []
+}

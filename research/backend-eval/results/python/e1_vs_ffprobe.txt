@@ -1,0 +1,38 @@
+python/e1/albums/partial_failure/01 ok.flac: match
+python/e1/albums/partial_failure/02 ok.mp3: genres: proto=['Rock', 'Post-Punk'] ffprobe='Rock'
+python/e1/albums/partial_failure/03 truncated.m4a: ffprobe error: [mov,mp4,m4a,3gp,3g2,mj2 @ 0x55b436a31c00] moov atom not found
+/tmp/claude-1000/-storage-development-gama/88084e20-e91b- | proto ok=False
+python/e1/albums/partial_failure/04 ok.opus: match
+python/e1/albums/partial_failure/05 readonly.m4a: genres: proto=['Rock;Progressive Rock'] ffprobe='Rock;Progressive Rock'
+python/e1/albums/real_flac/01. C418 - Key.flac: match
+python/e1/albums/real_flac/02. C418 - Door.flac: match
+python/e1/albums/real_flac/03. C418 - Subwoofer Lullaby.flac: match
+python/e1/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a: genres: proto=['Rock;Progressive Rock'] ffprobe='Rock;Progressive Rock'
+python/e1/albums/real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a: genres: proto=['Rock;Progressive Rock'] ffprobe='Rock;Progressive Rock'
+python/e1/albums/real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a: genres: proto=['Rock;Progressive Rock'] ffprobe='Rock;Progressive Rock'
+python/e1/albums/real_mp3/01. Joy Division - Disorder.mp3: genres: proto=['Rock', 'Post-Punk'] ffprobe='Rock'
+python/e1/albums/real_mp3/02. Joy Division - Day Of The Lords.mp3: genres: proto=['Rock', 'Post-Punk'] ffprobe='Rock'
+python/e1/albums/real_mp3/03. Joy Division - Candidate.mp3: genres: proto=['Rock', 'Post-Punk'] ffprobe='Rock'
+python/e1/albums/synth_opus/01 - Synthetic opus.opus: match
+python/e1/albums/synth_opus/02 - Synthetic opus.opus: match
+python/e1/albums/synth_opus/03 - Synthetic opus.opus: match
+python/e1/albums/synth_vorbis/01 - Synthetic vorbis.ogg: match
+python/e1/albums/synth_vorbis/02 - Synthetic vorbis.ogg: match
+python/e1/albums/synth_vorbis/03 - Synthetic vorbis.ogg: match
+python/e1/edge/actually_flac.mp3: match
+python/e1/edge/flac_two_pictures_no_padding.flac: match
+python/e1/edge/flac_with_id3v2_prefix.flac: match
+python/e1/edge/garbage.flac: proto FAILED (mutagen.flac.FLACNoHeaderError: '/tmp/claude-1000/-storage-development-gama/8808) but ffprobe reads format=flac title=None
+python/e1/edge/m4a_alac.m4a: match
+python/e1/edge/m4a_faststart.m4a: genres: proto=['Rock;Progressive Rock'] ffprobe='Rock;Progressive Rock'
+python/e1/edge/m4a_header_only.m4a: ffprobe error: [mov,mp4,m4a,3gp,3g2,mj2 @ 0x564a33ddfbc0] moov atom not found
+/tmp/claude-1000/-storage-development-gama/88084e20-e91b- | proto ok=False
+python/e1/edge/mp3_id3v1_only.mp3: title: proto='V1 Title' ffprobe=None; artist: proto='V1 Artist' ffprobe=None; album: proto='V1 Album' ffprobe=None; year: proto='1999' ffprobe=None; track: proto=7 ffprobe=None; genres: proto=['Rock'] ffprobe=None
+python/e1/edge/mp3_id3v23.mp3: match
+python/e1/edge/mp3_id3v24_apev2_id3v1.mp3: genres: proto=['Rock', 'Post-Punk'] ffprobe='Rock'
+python/e1/edge/truncated.flac: match
+python/e1/edge/truncated.m4a: ffprobe error: [mov,mp4,m4a,3gp,3g2,mj2 @ 0x5563896a5bc0] moov atom not found
+/tmp/claude-1000/-storage-development-gama/88084e20-e91b- | proto ok=False
+python/e1/edge/truncated.mp3: genres: proto=['Rock', 'Post-Punk'] ffprobe='Rock'
+python/e1/edge/zero_bytes.mp3: ffprobe error: [mp3 @ 0x55d2e38d7bc0] Failed to find two consecutive MPEG audio frames.
+/tmp/claude-1000/-storage-development-gama/8808 | proto ok=False

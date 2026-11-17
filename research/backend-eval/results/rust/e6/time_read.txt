@@ -1,0 +1,4 @@
+/usr/bin/time not installed; using rust/scripts/measure.py (getrusage)
+exit=0 wall_s=0.011 user_s=0.005 sys_s=0.006 max_rss_kb=13872
+exit=0 wall_s=0.010 user_s=0.007 sys_s=0.004 max_rss_kb=14056
+exit=0 wall_s=0.010 user_s=0.041 sys_s=0.021 max_rss_kb=14092

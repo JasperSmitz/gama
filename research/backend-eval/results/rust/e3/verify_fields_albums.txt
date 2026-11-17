@@ -1,0 +1,22 @@
+ok   unchanged partial_failure/01 ok.flac
+ok   unchanged partial_failure/02 ok.mp3
+ok   unchanged partial_failure/03 truncated.m4a
+ok   unchanged partial_failure/04 ok.opus
+ok   unchanged partial_failure/05 readonly.m4a
+ok   changed   real_flac/01. C418 - Key.flac
+ok   unchanged real_flac/02. C418 - Door.flac
+ok   unchanged real_flac/03. C418 - Subwoofer Lullaby.flac
+ok   changed   real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a
+ok   unchanged real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a
+ok   unchanged real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a
+ok   changed   real_mp3/01. Joy Division - Disorder.mp3
+ok   unchanged real_mp3/02. Joy Division - Day Of The Lords.mp3
+ok   unchanged real_mp3/03. Joy Division - Candidate.mp3
+ok   changed   synth_opus/01 - Synthetic opus.opus
+ok   unchanged synth_opus/02 - Synthetic opus.opus
+ok   unchanged synth_opus/03 - Synthetic opus.opus
+ok   changed   synth_vorbis/01 - Synthetic vorbis.ogg
+ok   unchanged synth_vorbis/02 - Synthetic vorbis.ogg
+ok   unchanged synth_vorbis/03 - Synthetic vorbis.ogg
+
+20 files, 5 changed, 0 with problems

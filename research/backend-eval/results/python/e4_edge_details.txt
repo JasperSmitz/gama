@@ -1,0 +1,42 @@
+== mp3_id3v23.mp3
+  master: v2.3 frames=['APIC:Cover', 'TALB', 'TCON', 'TDAT', 'TENC', 'TIT2', 'TPE1', 'TPE2', 'TPOS', 'TRCK', 'TSSE', 'TXXX:CUSTOM_UNRELATED', 'TXXX:lyrics-eng', 'TYER']
+     tail={'size': 8714612, 'starts': '49443303', 'id3v1': None, 'apev2_present': False}
+     APEv2: APENoHeaderError
+  work: v2.4 frames=['APIC:Cover', 'TALB', 'TCON', 'TDRC', 'TENC', 'TIT2', 'TPE1', 'TPE2', 'TPOS', 'TRCK', 'TSSE', 'TXXX:CUSTOM_UNRELATED', 'TXXX:lyrics-eng']
+     tail={'size': 8714612, 'starts': '49443304', 'id3v1': None, 'apev2_present': False}
+     APEv2: APENoHeaderError
+  master date frames: {'TYER': '1979', 'TDAT': '1506', 'TCON': 'Rock/Post-Punk'}
+  work date frames: {'TDRC': '1979-06-15', 'TCON': 'Ambient\x00Electronic\x00Soundtrack'}
+== mp3_id3v1_only.mp3
+  master: v2.4 frames=['TSSE']
+     tail={'size': 8506685, 'starts': '49443304', 'id3v1': {'title': 'V1 Title', 'genre_byte': 17}, 'apev2_present': False}
+     APEv2: APENoHeaderError
+  work: v2.4 frames=['TALB', 'TCON', 'TDRC', 'TIT2', 'TPE1', 'TRCK', 'TSSE']
+     tail={'size': 8516336, 'starts': '49443304', 'id3v1': {'title': 'V1 Title', 'genre_byte': 26}, 'apev2_present': False}
+     APEv2: APENoHeaderError
+== mp3_id3v24_apev2_id3v1.mp3
+  master: v2.4 frames=['APIC:Cover', 'TALB', 'TCON', 'TDRC', 'TENC', 'TIT2', 'TPE1', 'TPE2', 'TPOS', 'TRCK', 'USLT::eng']
+     tail={'size': 8723583, 'starts': '49443304', 'id3v1': {'title': 'Disorder', 'genre_byte': 17}, 'apev2_present': True}
+     APEv2={'MP3GAIN_MINMAX': '120,210', 'REPLAYGAIN_TRACK_GAIN': '-3.2 dB'}
+  work: v2.4 frames=['APIC:Cover', 'TALB', 'TCON', 'TDRC', 'TENC', 'TIT2', 'TPE1', 'TPE2', 'TPOS', 'TRCK', 'USLT::eng']
+     tail={'size': 8723583, 'starts': '49443304', 'id3v1': {'title': 'Disorder', 'genre_byte': 26}, 'apev2_present': True}
+     APEv2={'MP3GAIN_MINMAX': '120,210', 'REPLAYGAIN_TRACK_GAIN': '-3.2 dB'}
+== truncated.mp3
+  master: v2.4 frames=['APIC:Cover', 'TALB', 'TCON', 'TDRC', 'TENC', 'TIT2', 'TPE1', 'TPE2', 'TPOS', 'TRCK', 'USLT::eng']
+     tail={'size': 5233994, 'starts': '49443304', 'id3v1': None, 'apev2_present': False}
+     APEv2: APENoHeaderError
+  work: v2.4 frames=['APIC:Cover', 'TALB', 'TCON', 'TDRC', 'TENC', 'TIT2', 'TPE1', 'TPE2', 'TPOS', 'TRCK', 'USLT::eng']
+     tail={'size': 5233994, 'starts': '49443304', 'id3v1': None, 'apev2_present': False}
+     APEv2: APENoHeaderError
+== flac_with_id3v2_prefix.flac
+  master: starts=b'ID3\x03' blocks=['StreamInfo:65.0', 'VCFLACDict:', 'Picture:'] pics=[(3, 'image/jpeg', 184682)]
+  work: starts=b'ID3\x03' blocks=['StreamInfo:65.0', 'VCFLACDict:', 'Picture:', 'Padding:3100'] pics=[(3, 'image/jpeg', 184682)]
+== flac_two_pictures_no_padding.flac
+  master: starts=b'fLaC' blocks=['StreamInfo:65.0', 'VCFLACDict:', 'Picture:', 'Picture:'] pics=[(3, 'image/jpeg', 184682), (4, 'image/jpeg', 184682)]
+  work: starts=b'fLaC' blocks=['StreamInfo:65.0', 'VCFLACDict:', 'Picture:', 'Picture:', 'Padding:3100'] pics=[(3, 'image/jpeg', 184682), (4, 'image/jpeg', 184682)]
+== actually_flac.mp3
+  master: starts=b'fLaC' blocks=['StreamInfo:65.0', 'VCFLACDict:', 'Picture:'] pics=[(3, 'image/jpeg', 184682)]
+  work: starts=b'fLaC' blocks=['StreamInfo:65.0', 'VCFLACDict:', 'Picture:', 'Padding:3100'] pics=[(3, 'image/jpeg', 184682)]
+== truncated.flac
+  master: starts=b'fLaC' blocks=['StreamInfo:65.0', 'VCFLACDict:', 'Picture:'] pics=[(3, 'image/jpeg', 184682)]
+  work: starts=b'fLaC' blocks=['StreamInfo:65.0', 'VCFLACDict:', 'Picture:', 'Padding:2195'] pics=[(3, 'image/jpeg', 184682)]

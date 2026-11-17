@@ -1,0 +1,42 @@
+{
+  "journal_error": null,
+  "ok": true,
+  "restored": [
+    {
+      "error": null,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5d/albums/real_mp3/03. Joy Division - Candidate.mp3",
+      "result": "restored",
+      "sha256_verified": true
+    },
+    {
+      "error": null,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5d/albums/real_mp3/02. Joy Division - Day Of The Lords.mp3",
+      "result": "restored",
+      "sha256_verified": true
+    },
+    {
+      "error": null,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5d/albums/real_mp3/01. Joy Division - Disorder.mp3",
+      "result": "restored",
+      "sha256_verified": true
+    },
+    {
+      "error": null,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5d/albums/synth_vorbis/03 - Synthetic vorbis.ogg",
+      "result": "restored",
+      "sha256_verified": true
+    },
+    {
+      "error": null,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5d/albums/synth_vorbis/02 - Synthetic vorbis.ogg",
+      "result": "restored",
+      "sha256_verified": true
+    },
+    {
+      "error": null,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e5d/albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+      "result": "restored",
+      "sha256_verified": true
+    }
+  ]
+}

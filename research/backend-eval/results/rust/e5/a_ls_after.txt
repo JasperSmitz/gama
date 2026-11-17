@@ -1,0 +1,8 @@
+total 32120
+drwxr-xr-x 2 jasper jasper      140 Nov 17 16:29 .
+drwxr-xr-x 8 jasper jasper      160 Nov 17 16:14 ..
+-rw-r--r-- 1 jasper jasper  2261631 Nov 15 22:53 01 ok.flac
+-rw-r--r-- 1 jasper jasper  8723324 Nov 16 11:46 02 ok.mp3
+-rw-r--r-- 1 jasper jasper  8085243 Nov 17 16:14 03 truncated.m4a
+-rw-r--r-- 1 jasper jasper   337544 Nov 17 16:14 04 ok.opus
+-r--r--r-- 1 jasper jasper 13475405 Nov 16 11:46 05 readonly.m4a

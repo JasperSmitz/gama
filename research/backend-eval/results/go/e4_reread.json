@@ -1,0 +1,580 @@
+[
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/actually_flac.mp3",
+    "ok": false,
+    "error": "library accepted file as \"mpeg\" but found no audio stream (sample_rate=0)",
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "flac",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "",
+    "artist": "",
+    "album": "",
+    "album_artist": "",
+    "year": null,
+    "track": null,
+    "track_total": null,
+    "disc": null,
+    "disc_total": null,
+    "genres": [],
+    "pictures": [],
+    "other_tags": {},
+    "length_ms": 0,
+    "sample_rate": 0,
+    "channels": 0,
+    "elapsed_ms": 164.793
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/flac_two_pictures_no_padding.flac",
+    "ok": true,
+    "format": "flac",
+    "detection": {
+      "by_extension": "flac",
+      "by_content": "flac",
+      "library": "flac",
+      "method": "extension"
+    },
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": 2011,
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      },
+      {
+        "type": "Back Cover",
+        "description": "back cover",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "ENCODER": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "length_ms": 65000,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 2.731
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/flac_with_id3v2_prefix.flac",
+    "ok": true,
+    "format": "flac",
+    "detection": {
+      "by_extension": "flac",
+      "by_content": "flac (behind ID3v2)",
+      "library": "flac",
+      "method": "extension"
+    },
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": 2011,
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "ENCODER": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "length_ms": 65000,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.098
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/garbage.flac",
+    "ok": false,
+    "error": "library could not open file (ReadProperties returned empty Properties, no error)",
+    "format": "",
+    "detection": {
+      "by_extension": "flac",
+      "by_content": "unknown",
+      "library": "",
+      "method": ""
+    },
+    "title": "",
+    "artist": "",
+    "album": "",
+    "album_artist": "",
+    "year": null,
+    "track": null,
+    "track_total": null,
+    "disc": null,
+    "disc_total": null,
+    "genres": [],
+    "pictures": [],
+    "other_tags": {},
+    "length_ms": 0,
+    "sample_rate": 0,
+    "channels": 0,
+    "elapsed_ms": 0.862
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/m4a_alac.m4a",
+    "ok": true,
+    "format": "mp4/alac",
+    "detection": {
+      "by_extension": "mp4",
+      "by_content": "mp4",
+      "library": "mp4/alac",
+      "method": "extension"
+    },
+    "title": "ALAC Track",
+    "artist": "Gama Test Artist",
+    "album": "ALAC Album",
+    "album_artist": "C418",
+    "year": 2011,
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "ENCODING": [
+        "Lavf63.1.102"
+      ]
+    },
+    "length_ms": 65000,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 0.937
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/m4a_faststart.m4a",
+    "ok": true,
+    "format": "mp4/aac",
+    "detection": {
+      "by_extension": "mp4",
+      "by_content": "mp4",
+      "library": "mp4/aac",
+      "method": "extension"
+    },
+    "title": "Even Less - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": "",
+    "year": 2023,
+    "track": 5,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "other_tags": {
+      "ENCODING": [
+        "Lavf63.1.102"
+      ],
+      "LYRICS": [
+        "A body is washed up on a Norfolk beach\nHe was a brim that I could not reach\nHe thought I was cold, but I understand\nBut for the grace of God goes another man\n\nAnd I may just waste away from doing nothing\nBut I'm a martyr to even less, to even less, to even less\n\nA choirboy is buried on the moors\nWhere we used to go dreaming when we were born\nSome kids are best left to fend themselves\nAnd others were born to stack shelves\n\nAnd I may just waste away from doing nothing\nBut I'm a martyr to even less, to even less, to even less\n\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5"
+      ]
+    },
+    "length_ms": 415916,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.516
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/m4a_header_only.m4a",
+    "ok": false,
+    "error": "library could not open file (ReadProperties returned empty Properties, no error)",
+    "format": "",
+    "detection": {
+      "by_extension": "mp4",
+      "by_content": "mp4",
+      "library": "",
+      "method": ""
+    },
+    "title": "",
+    "artist": "",
+    "album": "",
+    "album_artist": "",
+    "year": null,
+    "track": null,
+    "track_total": null,
+    "disc": null,
+    "disc_total": null,
+    "genres": [],
+    "pictures": [],
+    "other_tags": {},
+    "length_ms": 0,
+    "sample_rate": 0,
+    "channels": 0,
+    "elapsed_ms": 0.276
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/mp3_id3v1_only.mp3",
+    "ok": true,
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "mpeg",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "",
+    "artist": "",
+    "album": "",
+    "album_artist": "",
+    "year": null,
+    "track": null,
+    "track_total": null,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [],
+    "other_tags": {
+      "ENCODING": [
+        "Lavf63.1.102"
+      ]
+    },
+    "length_ms": 212637,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 0.415
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/mp3_id3v23.mp3",
+    "ok": true,
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "mpeg",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": 1979,
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "Cover",
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "other_tags": {
+      "CUSTOM_UNRELATED": [
+        "keep me"
+      ],
+      "ENCODEDBY": [
+        "sherb"
+      ],
+      "ENCODING": [
+        "Lavf63.1.102"
+      ],
+      "LYRICS-ENG": [
+        "[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the insults leave them for another day\n[00:46.65] I've got the spirit, lose the feeling, take the shock away\n[01:26.06] It's getting faster, moving faster now, it's getting out of hand\n[01:31.76] On the tenth floor, down the backstairs into no man's land\n[01:37.35] Lights are flashing, cars are crashing, getting frequent now\n[01:42.86] I've got the spirit, lose the feeling, let it out somehow\n[01:47.90] \n[02:21.93] What means to you, what means to me and we will meet again\n[02:27.70] I'm watching you, I watch it all, I take no pity from your friends\n[02:33.33] Who is right, who can tell and who gives a damn right now?\n[02:39.15] Until the spirit, new sensation takes hold, then you know\n[02:44.94] 'Til the spirit, new sensation takes hold, then you know\n[02:50.28] 'Til the spirit, new sensation takes hold, then you know\n[02:54.83] \n[02:57.93] I've got the spirit, but lose the feeling\n[03:03.62] I've got the spirit, but lose the feeling\n[03:09.84] Feeling, feeling\n[03:11.20] Feeling, feeling\n[03:12.78] Feeling, feeling\n[03:14.27] Feeling\n[03:17.52]"
+      ]
+    },
+    "length_ms": 212637,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.584
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/mp3_id3v24_apev2_id3v1.mp3",
+    "ok": true,
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "mpeg",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": 1979,
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "Cover",
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "other_tags": {
+      "ENCODEDBY": [
+        "sherb"
+      ],
+      "LYRICS": [
+        "[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the insults leave them for another day\n[00:46.65] I've got the spirit, lose the feeling, take the shock away\n[01:26.06] It's getting faster, moving faster now, it's getting out of hand\n[01:31.76] On the tenth floor, down the backstairs into no man's land\n[01:37.35] Lights are flashing, cars are crashing, getting frequent now\n[01:42.86] I've got the spirit, lose the feeling, let it out somehow\n[01:47.90] \n[02:21.93] What means to you, what means to me and we will meet again\n[02:27.70] I'm watching you, I watch it all, I take no pity from your friends\n[02:33.33] Who is right, who can tell and who gives a damn right now?\n[02:39.15] Until the spirit, new sensation takes hold, then you know\n[02:44.94] 'Til the spirit, new sensation takes hold, then you know\n[02:50.28] 'Til the spirit, new sensation takes hold, then you know\n[02:54.83] \n[02:57.93] I've got the spirit, but lose the feeling\n[03:03.62] I've got the spirit, but lose the feeling\n[03:09.84] Feeling, feeling\n[03:11.20] Feeling, feeling\n[03:12.78] Feeling, feeling\n[03:14.27] Feeling\n[03:17.52]"
+      ]
+    },
+    "length_ms": 212637,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.488
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/truncated.flac",
+    "ok": true,
+    "format": "flac",
+    "detection": {
+      "by_extension": "flac",
+      "by_content": "flac",
+      "library": "flac",
+      "method": "extension"
+    },
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": 2011,
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "ENCODER": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "length_ms": 65000,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.099
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/truncated.m4a",
+    "ok": false,
+    "error": "library could not open file (ReadProperties returned empty Properties, no error)",
+    "format": "",
+    "detection": {
+      "by_extension": "mp4",
+      "by_content": "mp4",
+      "library": "",
+      "method": ""
+    },
+    "title": "",
+    "artist": "",
+    "album": "",
+    "album_artist": "",
+    "year": null,
+    "track": null,
+    "track_total": null,
+    "disc": null,
+    "disc_total": null,
+    "genres": [],
+    "pictures": [],
+    "other_tags": {},
+    "length_ms": 0,
+    "sample_rate": 0,
+    "channels": 0,
+    "elapsed_ms": 0.397
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/truncated.mp3",
+    "ok": true,
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "mpeg",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": 1979,
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "Cover",
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "other_tags": {
+      "ENCODEDBY": [
+        "sherb"
+      ],
+      "LYRICS": [
+        "[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the insults leave them for another day\n[00:46.65] I've got the spirit, lose the feeling, take the shock away\n[01:26.06] It's getting faster, moving faster now, it's getting out of hand\n[01:31.76] On the tenth floor, down the backstairs into no man's land\n[01:37.35] Lights are flashing, cars are crashing, getting frequent now\n[01:42.86] I've got the spirit, lose the feeling, let it out somehow\n[01:47.90] \n[02:21.93] What means to you, what means to me and we will meet again\n[02:27.70] I'm watching you, I watch it all, I take no pity from your friends\n[02:33.33] Who is right, who can tell and who gives a damn right now?\n[02:39.15] Until the spirit, new sensation takes hold, then you know\n[02:44.94] 'Til the spirit, new sensation takes hold, then you know\n[02:50.28] 'Til the spirit, new sensation takes hold, then you know\n[02:54.83] \n[02:57.93] I've got the spirit, but lose the feeling\n[03:03.62] I've got the spirit, but lose the feeling\n[03:09.84] Feeling, feeling\n[03:11.20] Feeling, feeling\n[03:12.78] Feeling, feeling\n[03:14.27] Feeling\n[03:17.52]"
+      ]
+    },
+    "length_ms": 212637,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.492
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e4/edge/zero_bytes.mp3",
+    "ok": false,
+    "error": "library accepted file as \"mpeg\" but found no audio stream (sample_rate=0)",
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "empty",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "",
+    "artist": "",
+    "album": "",
+    "album_artist": "",
+    "year": null,
+    "track": null,
+    "track_total": null,
+    "disc": null,
+    "disc_total": null,
+    "genres": [],
+    "pictures": [],
+    "other_tags": {},
+    "length_ms": 0,
+    "sample_rate": 0,
+    "channels": 0,
+    "elapsed_ms": 0.361
+  }
+]

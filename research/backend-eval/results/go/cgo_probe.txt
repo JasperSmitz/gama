@@ -1,0 +1,30 @@
+## cgo + system TagLib 2.3.2 via tag_c (go/cgoprobe)
+# FLAC genres write:
+save: true
+7c7,10
+< encoder=Lavf58.76.100
+---
+> ENCODER=Lavf58.76.100
+> GENRE=Ambient
+> GENRE=Electronic
+> GENRE=Soundtrack
+12,13d14
+< GENRE=Electronic
+< GENRE=Ambient
+# truncated.mp3 genres write: size 5233994 ->
+save: true
+5234122
+ID3v1 appended: True
+# id3v23 genres write:
+TagLib: ID3v2.4 no longer supports the frame type TDAT.  It will be discarded from the tag.
+save: true
+ID3 version now 2.4
+# actually_flac.mp3 via taglib_file_new (by extension):
+TagLib: MPEG::Header::parse() -- MPEG header did not match MPEG synch.
+TagLib: TagLib::ID3v2::Header::parse() - One of the size bytes in the ID3v2 header was greater than the allowed 128.
+TagLib: MPEG::Properties::read() -- Could not find an MPEG frame in the stream.
+samplerate 0
+# actually_flac.mp3 via taglib_file_new_type(FLAC):
+GENRE=["Electronic" "Ambient"]
+TITLE=["Key"]
+samplerate 44100

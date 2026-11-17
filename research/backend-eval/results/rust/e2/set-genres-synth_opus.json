@@ -1,0 +1,57 @@
+{
+  "backup_dir": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2.bk/synth_opus",
+  "committed": 3,
+  "failed": 0,
+  "fatal": null,
+  "journal": "/storage/development/gama/research/backend-eval/results/rust/e2/journal-synth_opus.json",
+  "ok": true,
+  "op": "set-genres",
+  "preflight": [
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Opus",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/synth_opus/01 - Synthetic opus.opus"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Opus",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/synth_opus/02 - Synthetic opus.opus"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Opus",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/synth_opus/03 - Synthetic opus.opus"
+    }
+  ],
+  "preflight_skipped": 0,
+  "results": [
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/synth_opus/01 - Synthetic opus.opus",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/synth_opus/02 - Synthetic opus.opus",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/synth_opus/03 - Synthetic opus.opus",
+      "status": "committed"
+    }
+  ],
+  "rolled_back": []
+}

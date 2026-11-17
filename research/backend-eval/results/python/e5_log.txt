@@ -1,0 +1,60 @@
+### (a) partial_failure without --continue-on-error
+rc=1
+summary None aborted True error preflight failed for 2 file(s); nothing modified
+  preflight FAIL 03 truncated.m4a mutagen.mp4.MP4StreamInfoError: not a MP4 file
+  preflight FAIL 05 readonly.m4a builtins.PermissionError: file is not writable (os.access W_OK false)
+sha256: all 5 files unchanged
+0
+-r--r--r-- 1 jasper jasper 13475405 Nov 16 11:46 05 readonly.m4a
+### (b) partial_failure with --continue-on-error
+rc=1
+summary {'files': 5, 'preflight_failed': 2, 'committed': 3, 'failed': 0, 'rolled_back_ok': 0} aborted False error None
+  preflight FAIL 03 truncated.m4a mutagen.mp4.MP4StreamInfoError: not a MP4 file
+  preflight FAIL 05 readonly.m4a builtins.PermissionError: file is not writable (os.access W_OK false)
+   ok  01 ok.flac 
+   ok  02 ok.mp3 
+   ok  04 ok.opus 
+1,2c1,2
+< a8a3919a2b464fe2dfcf0f3c9195fcebc55a8073ce3aeafe71453e479f640f7e  01 ok.flac
+< 2168a12cb59a80b2d47b14c116d6a83c62f0fa5f496ca03ad8962a7e46b147c5  02 ok.mp3
+---
+> 85914928523ccb1eda3879edf61341965071ca9a71a72e1cad413d8047901729  01 ok.flac
+> 367ab989ade81480b5e47836c3220c50706962ced5a9c7d95169e1c79412822d  02 ok.mp3
+4c4
+< bd2e99ff7c88e89124f261e79db79c8e8d807c0a1a78fdd0d20a84870c8ce9d9  04 ok.opus
+---
+> 35f49249e942c291673107d5b22314230106c494361862acd417b30d7132c96a  04 ok.opus
+-r--r--r-- 1 jasper jasper 13475405 Nov 16 11:46 05 readonly.m4a
+no temp files
+ok   changed   01 ok.flac
+FAIL changed   02 ok.mp3
+       - genres ['Ambient'] != expected ['Ambient', 'Electronic', 'Soundtrack']
+ok   unchanged 03 truncated.m4a
+ok   changed   04 ok.opus
+ok   unchanged 05 readonly.m4a
+
+5 files, 3 changed, 1 with problems
+### (c) --fail-after 2 on real_flac + real_mp3 (healthy, 6 files)
+rc=1
+summary {'files': 6, 'preflight_failed': 0, 'committed': 0, 'failed': 1, 'rolled_back_ok': 2} aborted True error None
+   ok  01. C418 - Key.flac 
+   ok  02. C418 - Door.flac 
+   ERR 03. C418 - Subwoofer Lullaby.flac __main__.SimulatedCrash: --fail-after 2: simulated failure after 2 commits
+   rollback 01. C418 - Key.flac {'path': '/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e5c/albums/real_flac/01. C418 - Key.flac', 'ok': True, 'action': 'restored', 'sha256_after_restore': 'a8a3919a2b464fe2dfcf0f3c9195fcebc55a8073ce3aeafe71453e479f640f7e'}
+   rollback 02. C418 - Door.flac {'path': '/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e5c/albums/real_flac/02. C418 - Door.flac', 'ok': True, 'action': 'restored', 'sha256_after_restore': '62f0737dd970433550a5a130807cd4f7c95f7fcdcd769d20d9d3285602c4eda3'}
+sha256: all 6 files identical to before
+journal states ['rolled_back', 'rolled_back']
+no temp files
+### (d) successful batch then rollback --journal
+write rc=0
+summary {'files': 3, 'preflight_failed': 0, 'committed': 3, 'failed': 0, 'rolled_back_ok': 0} aborted False error None
+   ok  05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a 
+   ok  07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a 
+   ok  08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a 
+files changed by batch (expected)
+rollback rc=0
+True [('restored', True), ('restored', True), ('restored', True)]
+sha256: all 3 restored to original
+644 /tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e5d/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a
+644 /tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e5d/albums/real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a
+644 /tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e5d/albums/real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a

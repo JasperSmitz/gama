@@ -1,0 +1,34 @@
+partial_failure/01 ok.flac: match
+partial_failure/02 ok.mp3: genres: proto=['Post-Punk', 'Rock'] ffprobe=['Rock']
+partial_failure/03 truncated.m4a: ffprobe cannot open; proto ok=False
+partial_failure/04 ok.opus: match
+partial_failure/05 readonly.m4a: match
+real_flac/01. C418 - Key.flac: match
+real_flac/02. C418 - Door.flac: match
+real_flac/03. C418 - Subwoofer Lullaby.flac: match
+real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a: match
+real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a: match
+real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a: match
+real_mp3/01. Joy Division - Disorder.mp3: genres: proto=['Post-Punk', 'Rock'] ffprobe=['Rock']
+real_mp3/02. Joy Division - Day Of The Lords.mp3: genres: proto=['Post-Punk', 'Rock'] ffprobe=['Rock']
+real_mp3/03. Joy Division - Candidate.mp3: genres: proto=['Post-Punk', 'Rock'] ffprobe=['Rock']
+synth_opus/01 - Synthetic opus.opus: match
+synth_opus/02 - Synthetic opus.opus: match
+synth_opus/03 - Synthetic opus.opus: match
+synth_vorbis/01 - Synthetic vorbis.ogg: match
+synth_vorbis/02 - Synthetic vorbis.ogg: match
+synth_vorbis/03 - Synthetic vorbis.ogg: match
+edge/actually_flac.mp3: proto FAILED (library accepted file as "mpeg" but found no audio stream (sample_rate) but ffprobe reads it (title='Key')
+edge/flac_two_pictures_no_padding.flac: match
+edge/flac_with_id3v2_prefix.flac: match
+edge/garbage.flac: proto FAILED (library could not open file (ReadProperties returned empty Properties,) but ffprobe reads it (title=None)
+edge/m4a_alac.m4a: match
+edge/m4a_faststart.m4a: match
+edge/m4a_header_only.m4a: ffprobe cannot open; proto ok=False
+edge/mp3_id3v1_only.mp3: match
+edge/mp3_id3v23.mp3: match
+edge/mp3_id3v24_apev2_id3v1.mp3: genres: proto=['Post-Punk', 'Rock'] ffprobe=['Rock']
+edge/truncated.flac: match
+edge/truncated.m4a: ffprobe cannot open; proto ok=False
+edge/truncated.mp3: genres: proto=['Post-Punk', 'Rock'] ffprobe=['Rock']
+edge/zero_bytes.mp3: ffprobe cannot open; proto ok=False

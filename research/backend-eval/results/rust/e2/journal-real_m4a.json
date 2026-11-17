@@ -1,0 +1,33 @@
+{
+  "op": "set-genres Genres([\"Ambient\", \"Electronic\", \"Soundtrack\"])",
+  "created_unix": 1794929375,
+  "entries": [
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2.bk/real_m4a/0000-05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "afd5166efdef7bfa836ba113215066115c6c7d0a284a06bfccd0c59c079f7952",
+      "sha256_after": "4af3d9f08671c2db4d324ad5e52d3abf2d76558377d902fbeb1d84573b5594b3",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2.bk/real_m4a/0001-07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "33a3cf27fe552439cb1bb5ea68226efbf631f0243dd7b6775986ff54937baac6",
+      "sha256_after": "191841a9945d9f13447e00de8c264be758cd066b539ee2a4a3be8f81b93466b5",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2.bk/real_m4a/0002-08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "8ce8a1987fbd33fdab86807409d137c3b22d01fdac9ca6d33df84efa4df704ac",
+      "sha256_after": "9ccf3e702089388218aa3c0d8cbc6b3f63603b73918973ef534796b1e597b106",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    }
+  ]
+}

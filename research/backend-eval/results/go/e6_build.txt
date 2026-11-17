@@ -1,0 +1,8 @@
+cold build (empty GOCACHE, modules already downloaded): 3.04s exit=0
+cold static build CGO_ENABLED=0 -trimpath -ldflags='-s -w' (empty GOCACHE): 2.85s exit=0
+incremental build: 0.03s exit=0
+-rwxr-xr-x 1 jasper jasper 10393453 Nov 17 16:26 proto
+-rwxr-xr-x 1 jasper jasper  6848672 Nov 17 16:26 proto-static
+bin/proto-static: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=LzE0jcLLK
+	not a dynamic executable
+linux-vdso.so.1 libresolv.so.2 libc.so.6 /lib64/ld-linux-x86-64.so.2 

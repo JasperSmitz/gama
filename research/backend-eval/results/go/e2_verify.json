@@ -1,0 +1,176 @@
+{
+  "results": [
+    {
+      "file": "partial_failure/01 ok.flac",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "partial_failure/02 ok.mp3",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "partial_failure/03 truncated.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "partial_failure/04 ok.opus",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "partial_failure/05 readonly.m4a",
+      "problems": [],
+      "notes": [],
+      "status": "unchanged"
+    },
+    {
+      "file": "real_flac/01. C418 - Key.flac",
+      "problems": [
+        "metaflac: non-genre comments differ (order or content)"
+      ],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 4120
+    },
+    {
+      "file": "real_flac/02. C418 - Door.flac",
+      "problems": [
+        "metaflac: non-genre comments differ (order or content)"
+      ],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 4120
+    },
+    {
+      "file": "real_flac/03. C418 - Subwoofer Lullaby.flac",
+      "problems": [
+        "metaflac: non-genre comments differ (order or content)"
+      ],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 4120
+    },
+    {
+      "file": "real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "problems": [],
+      "notes": [
+        "genres checked via raw MP4 ilst"
+      ],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+      "problems": [],
+      "notes": [
+        "genres checked via raw MP4 ilst"
+      ],
+      "status": "changed",
+      "size_delta": 325
+    },
+    {
+      "file": "real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+      "problems": [],
+      "notes": [
+        "genres checked via raw MP4 ilst"
+      ],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "real_mp3/01. Joy Division - Disorder.mp3",
+      "problems": [],
+      "notes": [
+        "genres checked via raw ID3v2 TCON"
+      ],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "real_mp3/02. Joy Division - Day Of The Lords.mp3",
+      "problems": [],
+      "notes": [
+        "genres checked via raw ID3v2 TCON"
+      ],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "real_mp3/03. Joy Division - Candidate.mp3",
+      "problems": [],
+      "notes": [
+        "genres checked via raw ID3v2 TCON"
+      ],
+      "status": "changed",
+      "size_delta": 0
+    },
+    {
+      "file": "synth_opus/01 - Synthetic opus.opus",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 766
+    },
+    {
+      "file": "synth_opus/02 - Synthetic opus.opus",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 766
+    },
+    {
+      "file": "synth_opus/03 - Synthetic opus.opus",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 766
+    },
+    {
+      "file": "synth_vorbis/01 - Synthetic vorbis.ogg",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 793
+    },
+    {
+      "file": "synth_vorbis/02 - Synthetic vorbis.ogg",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 793
+    },
+    {
+      "file": "synth_vorbis/03 - Synthetic vorbis.ogg",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 793
+    }
+  ],
+  "leftover": []
+}

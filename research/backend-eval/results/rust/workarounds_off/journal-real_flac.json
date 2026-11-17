@@ -1,0 +1,33 @@
+{
+  "op": "set-genres Genres([\"Ambient\", \"Electronic\", \"Soundtrack\"])",
+  "created_unix": 1794929396,
+  "entries": [
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff/albums/real_flac/01. C418 - Key.flac",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff.bk/real_flac/0000-01. C418 - Key.flac",
+      "sha256_before": "a8a3919a2b464fe2dfcf0f3c9195fcebc55a8073ce3aeafe71453e479f640f7e",
+      "sha256_after": "caf23571d3e2367e1e6847b63397a6ea2714e194e87a6b37922ff75d326d1dcb",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff/albums/real_flac/02. C418 - Door.flac",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff.bk/real_flac/0001-02. C418 - Door.flac",
+      "sha256_before": "62f0737dd970433550a5a130807cd4f7c95f7fcdcd769d20d9d3285602c4eda3",
+      "sha256_after": "c331f5a615370ac809683c5ce43f391cdd9b6bad1aa9de563f756b6eaf6efc9e",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff/albums/real_flac/03. C418 - Subwoofer Lullaby.flac",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff.bk/real_flac/0002-03. C418 - Subwoofer Lullaby.flac",
+      "sha256_before": "fd7be9614208a1930158222de636ef0bacb0e7af6e4cf0dc9da5299a15fb885a",
+      "sha256_after": "be4e18bb3c08c9e88c5192ba9576e1b10bef420daf3add0f8f29bf7340e95a76",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    }
+  ]
+}

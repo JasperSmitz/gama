@@ -1,0 +1,698 @@
+{
+  "failed": 4,
+  "files": 14,
+  "lofty_version": "0.25.5",
+  "results": [
+    {
+      "album": "Minecraft - Volume Alpha",
+      "album_artist": "C418",
+      "artist": "C418",
+      "detection": {
+        "by_content": "Flac",
+        "by_extension": "Mpeg",
+        "method": "content",
+        "mismatch": true
+      },
+      "disc": null,
+      "disc_total": null,
+      "elapsed_ms": 0.439367,
+      "error": null,
+      "format": "Flac",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": null,
+      "ok": true,
+      "other_tags": {
+        "VC:<vendor>": [
+          "Lavf58.76.100"
+        ],
+        "VC:COMMENT": [
+          "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+        ],
+        "VC:COPYRIGHT": [
+          "℗© 2011 C418"
+        ],
+        "VC:ENCODER": [
+          "Lavf58.76.100"
+        ],
+        "VC:ISRC": [
+          "TCAAW1157068"
+        ],
+        "VC:LABEL": [
+          "C418"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/actually_flac.mp3",
+      "pictures": [
+        {
+          "bytes": 184682,
+          "description": "",
+          "mime": "image/jpeg",
+          "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3",
+          "source": "FLAC-PICTURE",
+          "type": "CoverFront"
+        }
+      ],
+      "properties": {
+        "audio_bitrate": 255,
+        "channels": 2,
+        "duration_ms": 65000,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "VorbisComments"
+      ],
+      "title": "Key",
+      "track": 1,
+      "track_total": 24,
+      "year": 2011
+    },
+    {
+      "album": "Minecraft - Volume Alpha",
+      "album_artist": "C418",
+      "artist": "C418",
+      "detection": {
+        "by_content": "Flac",
+        "by_extension": "Flac",
+        "method": "content",
+        "mismatch": false
+      },
+      "disc": null,
+      "disc_total": null,
+      "elapsed_ms": 0.5182570000000001,
+      "error": null,
+      "format": "Flac",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": null,
+      "ok": true,
+      "other_tags": {
+        "VC:<vendor>": [
+          "Lavf58.76.100"
+        ],
+        "VC:COMMENT": [
+          "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+        ],
+        "VC:COPYRIGHT": [
+          "℗© 2011 C418"
+        ],
+        "VC:ENCODER": [
+          "Lavf58.76.100"
+        ],
+        "VC:ISRC": [
+          "TCAAW1157068"
+        ],
+        "VC:LABEL": [
+          "C418"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/flac_two_pictures_no_padding.flac",
+      "pictures": [
+        {
+          "bytes": 184682,
+          "description": "",
+          "mime": "image/jpeg",
+          "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3",
+          "source": "FLAC-PICTURE",
+          "type": "CoverFront"
+        },
+        {
+          "bytes": 184682,
+          "description": "back cover",
+          "mime": "image/jpeg",
+          "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3",
+          "source": "FLAC-PICTURE",
+          "type": "CoverBack"
+        }
+      ],
+      "properties": {
+        "audio_bitrate": 255,
+        "channels": 2,
+        "duration_ms": 65000,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "VorbisComments"
+      ],
+      "title": "Key",
+      "track": 1,
+      "track_total": 24,
+      "year": 2011
+    },
+    {
+      "album": "Minecraft - Volume Alpha",
+      "album_artist": "C418",
+      "artist": "C418",
+      "detection": {
+        "by_content": "Flac",
+        "by_extension": "Flac",
+        "method": "content",
+        "mismatch": false
+      },
+      "disc": null,
+      "disc_total": null,
+      "elapsed_ms": 0.25530600000000003,
+      "error": null,
+      "format": "Flac",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": "2.3.0",
+      "ok": true,
+      "other_tags": {
+        "VC:<vendor>": [
+          "Lavf58.76.100"
+        ],
+        "VC:COMMENT": [
+          "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+        ],
+        "VC:COPYRIGHT": [
+          "℗© 2011 C418"
+        ],
+        "VC:ENCODER": [
+          "Lavf58.76.100"
+        ],
+        "VC:ISRC": [
+          "TCAAW1157068"
+        ],
+        "VC:LABEL": [
+          "C418"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/flac_with_id3v2_prefix.flac",
+      "pictures": [
+        {
+          "bytes": 184682,
+          "description": "",
+          "mime": "image/jpeg",
+          "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3",
+          "source": "FLAC-PICTURE",
+          "type": "CoverFront"
+        }
+      ],
+      "properties": {
+        "audio_bitrate": 255,
+        "channels": 2,
+        "duration_ms": 65000,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "ID3v2",
+        "VorbisComments"
+      ],
+      "title": "Key",
+      "track": 1,
+      "track_total": 24,
+      "year": 2011
+    },
+    {
+      "detection": {
+        "by_content": null,
+        "by_extension": "Flac",
+        "method": "extension"
+      },
+      "elapsed_ms": 0.102716,
+      "error": "lofty parse: failed to parse Flac file",
+      "format": "Flac",
+      "ok": false,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/garbage.flac"
+    },
+    {
+      "album": "ALAC Album",
+      "album_artist": "C418",
+      "artist": "Gama Test Artist",
+      "detection": {
+        "by_content": "Mp4",
+        "by_extension": "Mp4",
+        "method": "content",
+        "mismatch": false
+      },
+      "disc": null,
+      "disc_total": null,
+      "elapsed_ms": 0.10782599999999999,
+      "error": null,
+      "format": "Mp4",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": null,
+      "ok": true,
+      "other_tags": {
+        "MP4:cprt": [
+          "℗© 2011 C418"
+        ],
+        "MP4:�ART": [
+          "Gama Test Artist"
+        ],
+        "MP4:�alb": [
+          "ALAC Album"
+        ],
+        "MP4:�cmt": [
+          "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+        ],
+        "MP4:�day": [
+          "2011-03-04"
+        ],
+        "MP4:�gen": [
+          "Ambient \\0 Electronic \\0 Soundtrack"
+        ],
+        "MP4:�nam": [
+          "ALAC Track"
+        ],
+        "MP4:�too": [
+          "Lavf63.1.102"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/m4a_alac.m4a",
+      "pictures": [],
+      "properties": {
+        "audio_bitrate": 289,
+        "channels": 2,
+        "duration_ms": 65000,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "Mp4Ilst"
+      ],
+      "title": "ALAC Track",
+      "track": 1,
+      "track_total": 24,
+      "year": 2011
+    },
+    {
+      "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+      "album_artist": null,
+      "artist": "Porcupine Tree",
+      "detection": {
+        "by_content": "Mp4",
+        "by_extension": "Mp4",
+        "method": "content",
+        "mismatch": false
+      },
+      "disc": 1,
+      "disc_total": 1,
+      "elapsed_ms": 0.20493,
+      "error": null,
+      "format": "Mp4",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": null,
+      "ok": true,
+      "other_tags": {
+        "MP4:stik": [
+          "SignedInteger(1)"
+        ],
+        "MP4:�ART": [
+          "Porcupine Tree"
+        ],
+        "MP4:�alb": [
+          "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22"
+        ],
+        "MP4:�day": [
+          "2023"
+        ],
+        "MP4:�gen": [
+          "Ambient \\0 Electronic \\0 Soundtrack"
+        ],
+        "MP4:�lyr": [
+          "A body is washed up on a Norfolk beach\nHe was a brim that I could not reach\nHe thought I was cold, but I understand\nBut for the grace of God goes another man\n\nAnd I may just waste away from doing nothing\nBut I'm a martyr to even less, to even less, to even less\n\nA choirboy is buried on the moors\nWhere we used to go dreaming when we were born\nSome kids are best left to fend themselves\nAnd others were born to stack shelves\n\nAnd I may just waste away from doing nothing\nBut I'm a martyr to even less, to even less, to even less\n\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5"
+        ],
+        "MP4:�nam": [
+          "Even Less - CLOSURE/CONTINUATION.LIVE"
+        ],
+        "MP4:�too": [
+          "Lavf63.1.102"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/m4a_faststart.m4a",
+      "pictures": [
+        {
+          "bytes": 91444,
+          "description": "",
+          "mime": "image/jpeg",
+          "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f",
+          "source": "MP4:covr",
+          "type": "Other"
+        }
+      ],
+      "properties": {
+        "audio_bitrate": 256,
+        "channels": 2,
+        "duration_ms": 415916,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "Mp4Ilst"
+      ],
+      "title": "Even Less - CLOSURE/CONTINUATION.LIVE",
+      "track": 5,
+      "track_total": 21,
+      "year": 2023
+    },
+    {
+      "detection": {
+        "by_content": "Mp4",
+        "by_extension": "Mp4",
+        "method": "content"
+      },
+      "elapsed_ms": 0.089561,
+      "error": "lofty parse: failed to parse Mp4 file",
+      "format": "Mp4",
+      "ok": false,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/m4a_header_only.m4a"
+    },
+    {
+      "album": "V1 Album",
+      "album_artist": null,
+      "artist": "V1 Artist",
+      "detection": {
+        "by_content": "Mpeg",
+        "by_extension": "Mpeg",
+        "method": "content",
+        "mismatch": false
+      },
+      "disc": null,
+      "disc_total": null,
+      "elapsed_ms": 0.07891100000000001,
+      "error": null,
+      "format": "Mpeg",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": "2.4.0",
+      "ok": true,
+      "other_tags": {
+        "ID3v1": [
+          "Id3v1Tag { title: Some(\"V1 Title\"), artist: Some(\"V1 Artist\"), album: Some(\"V1 Album\"), year: Some(1999), comment: None, track_number: Some(7), genre: Some(26) }"
+        ],
+        "ID3v2:TSSE": [
+          "Lavf63.1.102"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/mp3_id3v1_only.mp3",
+      "pictures": [],
+      "properties": {
+        "audio_bitrate": 320,
+        "channels": 2,
+        "duration_ms": 212637,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "ID3v2",
+        "ID3v1"
+      ],
+      "title": "V1 Title",
+      "track": 7,
+      "track_total": null,
+      "year": 1999
+    },
+    {
+      "album": "Unknown Pleasures (Collector's Edition)",
+      "album_artist": "Joy Division",
+      "artist": "Joy Division",
+      "detection": {
+        "by_content": "Mpeg",
+        "by_extension": "Mpeg",
+        "method": "content",
+        "mismatch": false
+      },
+      "disc": 1,
+      "disc_total": 2,
+      "elapsed_ms": 0.197075,
+      "error": null,
+      "format": "Mpeg",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": "2.4.0",
+      "ok": true,
+      "other_tags": {
+        "ID3v2:TENC": [
+          "sherb"
+        ],
+        "ID3v2:TSSE": [
+          "Lavf63.1.102"
+        ],
+        "ID3v2:TXXX:CUSTOM_UNRELATED": [
+          "keep me"
+        ],
+        "ID3v2:TXXX:lyrics-eng": [
+          "[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the insults leave them for another day\n[00:46.65] I've got the spirit, lose the feeling, take the shock away\n[01:26.06] It's getting faster, moving faster now, it's getting out of hand\n[01:31.76] On the tenth floor, down the backstairs into no man's land\n[01:37.35] Lights are flashing, cars are crashing, getting frequent now\n[01:42.86] I've got the spirit, lose the feeling, let it out somehow\n[01:47.90] \n[02:21.93] What means to you, what means to me and we will meet again\n[02:27.70] I'm watching you, I watch it all, I take no pity from your friends\n[02:33.33] Who is right, who can tell and who gives a damn right now?\n[02:39.15] Until the spirit, new sensation takes hold, then you know\n[02:44.94] 'Til the spirit, new sensation takes hold, then you know\n[02:50.28] 'Til the spirit, new sensation takes hold, then you know\n[02:54.83] \n[02:57.93] I've got the spirit, but lose the feeling\n[03:03.62] I've got the spirit, but lose the feeling\n[03:09.84] Feeling, feeling\n[03:11.20] Feeling, feeling\n[03:12.78] Feeling, feeling\n[03:14.27] Feeling\n[03:17.52]"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/mp3_id3v23.mp3",
+      "pictures": [
+        {
+          "bytes": 206495,
+          "description": "Cover",
+          "mime": "image/jpeg",
+          "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73",
+          "source": "ID3v2:APIC",
+          "type": "CoverFront"
+        }
+      ],
+      "properties": {
+        "audio_bitrate": 320,
+        "channels": 2,
+        "duration_ms": 212637,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "ID3v2"
+      ],
+      "title": "Disorder",
+      "track": 1,
+      "track_total": 10,
+      "year": 1979
+    },
+    {
+      "album": "Unknown Pleasures (Collector's Edition)",
+      "album_artist": "Joy Division",
+      "artist": "Joy Division",
+      "detection": {
+        "by_content": "Mpeg",
+        "by_extension": "Mpeg",
+        "method": "content",
+        "mismatch": false
+      },
+      "disc": 1,
+      "disc_total": 2,
+      "elapsed_ms": 0.20473,
+      "error": null,
+      "format": "Mpeg",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": "2.4.0",
+      "ok": true,
+      "other_tags": {
+        "APE:MP3GAIN_MINMAX": [
+          "Text(\"120,210\")"
+        ],
+        "APE:REPLAYGAIN_TRACK_GAIN": [
+          "Text(\"-3.2 dB\")"
+        ],
+        "ID3v1": [
+          "Id3v1Tag { title: Some(\"Disorder\"), artist: Some(\"Joy Division\"), album: Some(\"Unknown Pleasures\"), year: Some(1979), comment: None, track_number: Some(7), genre: Some(26) }"
+        ],
+        "ID3v2:TENC": [
+          "sherb"
+        ],
+        "ID3v2:USLT": [
+          "<1652 chars, sha256 01c00b0da7111e18>"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/mp3_id3v24_apev2_id3v1.mp3",
+      "pictures": [
+        {
+          "bytes": 206495,
+          "description": "Cover",
+          "mime": "image/jpeg",
+          "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73",
+          "source": "ID3v2:APIC",
+          "type": "CoverFront"
+        }
+      ],
+      "properties": {
+        "audio_bitrate": 320,
+        "channels": 2,
+        "duration_ms": 212637,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "ID3v2",
+        "APE",
+        "ID3v1"
+      ],
+      "title": "Disorder",
+      "track": 1,
+      "track_total": 10,
+      "year": 1979
+    },
+    {
+      "album": "Minecraft - Volume Alpha",
+      "album_artist": "C418",
+      "artist": "C418",
+      "detection": {
+        "by_content": "Flac",
+        "by_extension": "Flac",
+        "method": "content",
+        "mismatch": false
+      },
+      "disc": null,
+      "disc_total": null,
+      "elapsed_ms": 0.177919,
+      "error": null,
+      "format": "Flac",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": null,
+      "ok": true,
+      "other_tags": {
+        "VC:<vendor>": [
+          "Lavf58.76.100"
+        ],
+        "VC:COMMENT": [
+          "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+        ],
+        "VC:COPYRIGHT": [
+          "℗© 2011 C418"
+        ],
+        "VC:ENCODER": [
+          "Lavf58.76.100"
+        ],
+        "VC:ISRC": [
+          "TCAAW1157068"
+        ],
+        "VC:LABEL": [
+          "C418"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/truncated.flac",
+      "pictures": [
+        {
+          "bytes": 184682,
+          "description": "",
+          "mime": "image/jpeg",
+          "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3",
+          "source": "FLAC-PICTURE",
+          "type": "CoverFront"
+        }
+      ],
+      "properties": {
+        "audio_bitrate": 144,
+        "channels": 2,
+        "duration_ms": 65000,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "VorbisComments"
+      ],
+      "title": "Key",
+      "track": 1,
+      "track_total": 24,
+      "year": 2011
+    },
+    {
+      "detection": {
+        "by_content": "Mp4",
+        "by_extension": "Mp4",
+        "method": "content"
+      },
+      "elapsed_ms": 0.06821999999999999,
+      "error": "lofty parse: failed to parse Mp4 file",
+      "format": "Mp4",
+      "ok": false,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/truncated.m4a"
+    },
+    {
+      "album": "Unknown Pleasures (Collector's Edition)",
+      "album_artist": "Joy Division",
+      "artist": "Joy Division",
+      "detection": {
+        "by_content": "Mpeg",
+        "by_extension": "Mpeg",
+        "method": "content",
+        "mismatch": false
+      },
+      "disc": 1,
+      "disc_total": 2,
+      "elapsed_ms": 0.1998,
+      "error": null,
+      "format": "Mpeg",
+      "genres": [
+        "Ambient",
+        "Electronic",
+        "Soundtrack"
+      ],
+      "id3v2_header": "2.4.0",
+      "ok": true,
+      "other_tags": {
+        "ID3v2:TENC": [
+          "sherb"
+        ],
+        "ID3v2:USLT": [
+          "<1652 chars, sha256 01c00b0da7111e18>"
+        ]
+      },
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/truncated.mp3",
+      "pictures": [
+        {
+          "bytes": 206495,
+          "description": "Cover",
+          "mime": "image/jpeg",
+          "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73",
+          "source": "ID3v2:APIC",
+          "type": "CoverFront"
+        }
+      ],
+      "properties": {
+        "audio_bitrate": 320,
+        "channels": 2,
+        "duration_ms": 212637,
+        "sample_rate": 44100
+      },
+      "tag_types": [
+        "ID3v2"
+      ],
+      "title": "Disorder",
+      "track": 1,
+      "track_total": 10,
+      "year": 1979
+    },
+    {
+      "detection": {
+        "by_content": null,
+        "by_extension": "Mpeg",
+        "method": "extension"
+      },
+      "elapsed_ms": 0.070634,
+      "error": "lofty parse: failed to parse Mpeg file",
+      "format": "Mpeg",
+      "ok": false,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/zero_bytes.mp3"
+    }
+  ]
+}

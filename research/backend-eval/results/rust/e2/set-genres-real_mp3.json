@@ -1,0 +1,63 @@
+{
+  "backup_dir": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2.bk/real_mp3",
+  "committed": 3,
+  "failed": 0,
+  "fatal": null,
+  "journal": "/storage/development/gama/research/backend-eval/results/rust/e2/journal-real_mp3.json",
+  "ok": true,
+  "op": "set-genres",
+  "preflight": [
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/real_mp3/01. Joy Division - Disorder.mp3"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/real_mp3/02. Joy Division - Day Of The Lords.mp3"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/real_mp3/03. Joy Division - Candidate.mp3"
+    }
+  ],
+  "preflight_skipped": 0,
+  "results": [
+    {
+      "notes": [
+        "also updated ID3v1 tag (single genre byte)"
+      ],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/real_mp3/01. Joy Division - Disorder.mp3",
+      "status": "committed"
+    },
+    {
+      "notes": [
+        "also updated ID3v1 tag (single genre byte)"
+      ],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/real_mp3/02. Joy Division - Day Of The Lords.mp3",
+      "status": "committed"
+    },
+    {
+      "notes": [
+        "also updated ID3v1 tag (single genre byte)"
+      ],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e2/albums/real_mp3/03. Joy Division - Candidate.mp3",
+      "status": "committed"
+    }
+  ],
+  "rolled_back": []
+}

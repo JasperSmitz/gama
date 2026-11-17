@@ -1,0 +1,973 @@
+[
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/partial_failure/01 ok.flac",
+    "ok": true,
+    "format": "flac",
+    "detection": {
+      "by_extension": "flac",
+      "by_content": "flac",
+      "library": "flac",
+      "method": "extension"
+    },
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": 2011,
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Electronic",
+      "Ambient"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "ENCODER": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "length_ms": 65000,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 6.365
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/partial_failure/02 ok.mp3",
+    "ok": true,
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "mpeg",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": 1979,
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "Cover",
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "other_tags": {
+      "ENCODEDBY": [
+        "sherb"
+      ],
+      "LYRICS": [
+        "[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the insults leave them for another day\n[00:46.65] I've got the spirit, lose the feeling, take the shock away\n[01:26.06] It's getting faster, moving faster now, it's getting out of hand\n[01:31.76] On the tenth floor, down the backstairs into no man's land\n[01:37.35] Lights are flashing, cars are crashing, getting frequent now\n[01:42.86] I've got the spirit, lose the feeling, let it out somehow\n[01:47.90] \n[02:21.93] What means to you, what means to me and we will meet again\n[02:27.70] I'm watching you, I watch it all, I take no pity from your friends\n[02:33.33] Who is right, who can tell and who gives a damn right now?\n[02:39.15] Until the spirit, new sensation takes hold, then you know\n[02:44.94] 'Til the spirit, new sensation takes hold, then you know\n[02:50.28] 'Til the spirit, new sensation takes hold, then you know\n[02:54.83] \n[02:57.93] I've got the spirit, but lose the feeling\n[03:03.62] I've got the spirit, but lose the feeling\n[03:09.84] Feeling, feeling\n[03:11.20] Feeling, feeling\n[03:12.78] Feeling, feeling\n[03:14.27] Feeling\n[03:17.52]"
+      ]
+    },
+    "length_ms": 212637,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.482
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/partial_failure/03 truncated.m4a",
+    "ok": false,
+    "error": "library could not open file (ReadProperties returned empty Properties, no error)",
+    "format": "",
+    "detection": {
+      "by_extension": "mp4",
+      "by_content": "mp4",
+      "library": "",
+      "method": ""
+    },
+    "title": "",
+    "artist": "",
+    "album": "",
+    "album_artist": "",
+    "year": null,
+    "track": null,
+    "track_total": null,
+    "disc": null,
+    "disc_total": null,
+    "genres": [],
+    "pictures": [],
+    "other_tags": {},
+    "length_ms": 0,
+    "sample_rate": 0,
+    "channels": 0,
+    "elapsed_ms": 0.297
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/partial_failure/04 ok.opus",
+    "ok": true,
+    "format": "ogg/opus",
+    "detection": {
+      "by_extension": "ogg",
+      "by_content": "ogg/opus",
+      "library": "ogg/opus",
+      "method": "extension"
+    },
+    "title": "Synthetic opus 1",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Opus Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": 2021,
+    "track": 1,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Electronic"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ],
+      "ENCODER": [
+        "Lavc63.1.102 libopus"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000001"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ]
+    },
+    "length_ms": 8000,
+    "sample_rate": 48000,
+    "channels": 1,
+    "elapsed_ms": 4.079
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/partial_failure/05 readonly.m4a",
+    "ok": true,
+    "format": "mp4/aac",
+    "detection": {
+      "by_extension": "mp4",
+      "by_content": "mp4",
+      "library": "mp4/aac",
+      "method": "extension"
+    },
+    "title": "Even Less - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": "",
+    "year": 2023,
+    "track": 5,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Rock;Progressive Rock"
+    ],
+    "pictures": [
+      {
+        "type": "",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "other_tags": {
+      "ENCODING": [
+        "Lavf63.1.102"
+      ],
+      "LYRICS": [
+        "A body is washed up on a Norfolk beach\nHe was a brim that I could not reach\nHe thought I was cold, but I understand\nBut for the grace of God goes another man\n\nAnd I may just waste away from doing nothing\nBut I'm a martyr to even less, to even less, to even less\n\nA choirboy is buried on the moors\nWhere we used to go dreaming when we were born\nSome kids are best left to fend themselves\nAnd others were born to stack shelves\n\nAnd I may just waste away from doing nothing\nBut I'm a martyr to even less, to even less, to even less\n\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5"
+      ]
+    },
+    "length_ms": 415916,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.725
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/real_flac/01. C418 - Key.flac",
+    "ok": true,
+    "format": "flac",
+    "detection": {
+      "by_extension": "flac",
+      "by_content": "flac",
+      "library": "flac",
+      "method": "extension"
+    },
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": 2011,
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "ENCODER": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "length_ms": 65000,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.287
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/real_flac/02. C418 - Door.flac",
+    "ok": true,
+    "format": "flac",
+    "detection": {
+      "by_extension": "flac",
+      "by_content": "flac",
+      "library": "flac",
+      "method": "extension"
+    },
+    "title": "Door",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": 2011,
+    "track": 2,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFY25PB3?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "ENCODER": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157069"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "length_ms": 111438,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.274
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/real_flac/03. C418 - Subwoofer Lullaby.flac",
+    "ok": true,
+    "format": "flac",
+    "detection": {
+      "by_extension": "flac",
+      "by_content": "flac",
+      "library": "flac",
+      "method": "extension"
+    },
+    "title": "Subwoofer Lullaby",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": 2011,
+    "track": 3,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFXSJ5T9?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "ENCODER": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157071"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "length_ms": 208563,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.124
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+    "ok": true,
+    "format": "mp4/aac",
+    "detection": {
+      "by_extension": "mp4",
+      "by_content": "mp4",
+      "library": "mp4/aac",
+      "method": "extension"
+    },
+    "title": "Even Less - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": "",
+    "year": 2023,
+    "track": 5,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "other_tags": {
+      "ENCODING": [
+        "Lavf63.1.102"
+      ],
+      "LYRICS": [
+        "A body is washed up on a Norfolk beach\nHe was a brim that I could not reach\nHe thought I was cold, but I understand\nBut for the grace of God goes another man\n\nAnd I may just waste away from doing nothing\nBut I'm a martyr to even less, to even less, to even less\n\nA choirboy is buried on the moors\nWhere we used to go dreaming when we were born\nSome kids are best left to fend themselves\nAnd others were born to stack shelves\n\nAnd I may just waste away from doing nothing\nBut I'm a martyr to even less, to even less, to even less\n\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5\n0-0-9-6\n2-2-5-1\n2-1-1-0\n8-1-0-5"
+      ]
+    },
+    "length_ms": 415916,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.647
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+    "ok": true,
+    "format": "mp4/aac",
+    "detection": {
+      "by_extension": "mp4",
+      "by_content": "mp4",
+      "library": "mp4/aac",
+      "method": "extension"
+    },
+    "title": "Dignity - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": "",
+    "year": 2023,
+    "track": 7,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "other_tags": {
+      "ENCODING": [
+        "Lavf63.1.102"
+      ]
+    },
+    "length_ms": 515344,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.496
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+    "ok": true,
+    "format": "mp4/aac",
+    "detection": {
+      "by_extension": "mp4",
+      "by_content": "mp4",
+      "library": "mp4/aac",
+      "method": "extension"
+    },
+    "title": "The Sound of Muzak - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": "",
+    "year": 2023,
+    "track": 8,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "other_tags": {
+      "ENCODING": [
+        "Lavf63.1.102"
+      ],
+      "LYRICS": [
+        "[00:11.02] Hear the sound of music drifting in the aisles\n[00:15.43] Elevator Prozac stretching on for miles\n[00:19.85] The music of the future will not entertain\n[00:24.23] It's only meant to repress and neutralize your brain\n[00:28.99] Soul gets squeezed out\n[00:33.59] Edges get blunt\n[00:36.79] Demographic\n[00:38.82] \n[00:42.36] Gives what you want\n[00:48.06] One of the wonders of the world is going down\n[00:52.93] It's going down, I know\n[00:58.04] It's one of the blunders of the world that no one cares\n[01:03.24] No one cares enough\n[01:08.39] \n[01:15.42] Now the sound of music comes in silver pills\n[01:19.87] Engineered to suit you, building cheaper thrills\n[01:24.28] The music of rebellion makes you want to rage\n[01:28.70] But it's made by millionaires who are nearly twice your age\n[01:34.45] \n[01:38.84] Soul gets squeezed out\n[01:42.60] Edges get blunt\n[01:46.57] Demographic\n[01:46.86] Gives what you want\n[01:52.47] One of the wonders of the world is going down\n[01:57.37] It's going down, I know\n[02:02.43] It's one of the blunders of the world that no one cares\n[02:07.60] No one cares enough\n[02:12.63] One of the wonders of the world is going down\n[02:17.60] It's going down, I know\n[02:22.62] It's one of the blunders of the world that no one cares\n[02:27.83] No one cares enough\n[02:31.34] One of the wonders of the world\n[03:48.46] \n[03:54.94] One of the wonders of the world\n[03:57.21] One of the wonders of the world\n[04:00.56] One of the wonders of the world\n[04:05.48] One of the wonders of the world\n[04:07.26] One of the wonders of the world\n[04:09.09] One of the wonders of the world\n[04:12.68] \n[04:16.58] One of the wonders of the world\n[04:24.25] One of the wonders of the world\n[04:27.09] One of the wonders of the world\n[04:40.84] One of the wonders of the world\n[04:49.53] One of the wonders of the world\n[05:04.20]"
+      ]
+    },
+    "length_ms": 304321,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.875
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/real_mp3/01. Joy Division - Disorder.mp3",
+    "ok": true,
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "mpeg",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": 1979,
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "Cover",
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "other_tags": {
+      "ENCODEDBY": [
+        "sherb"
+      ],
+      "LYRICS": [
+        "[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the insults leave them for another day\n[00:46.65] I've got the spirit, lose the feeling, take the shock away\n[01:26.06] It's getting faster, moving faster now, it's getting out of hand\n[01:31.76] On the tenth floor, down the backstairs into no man's land\n[01:37.35] Lights are flashing, cars are crashing, getting frequent now\n[01:42.86] I've got the spirit, lose the feeling, let it out somehow\n[01:47.90] \n[02:21.93] What means to you, what means to me and we will meet again\n[02:27.70] I'm watching you, I watch it all, I take no pity from your friends\n[02:33.33] Who is right, who can tell and who gives a damn right now?\n[02:39.15] Until the spirit, new sensation takes hold, then you know\n[02:44.94] 'Til the spirit, new sensation takes hold, then you know\n[02:50.28] 'Til the spirit, new sensation takes hold, then you know\n[02:54.83] \n[02:57.93] I've got the spirit, but lose the feeling\n[03:03.62] I've got the spirit, but lose the feeling\n[03:09.84] Feeling, feeling\n[03:11.20] Feeling, feeling\n[03:12.78] Feeling, feeling\n[03:14.27] Feeling\n[03:17.52]"
+      ]
+    },
+    "length_ms": 212637,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.418
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/real_mp3/02. Joy Division - Day Of The Lords.mp3",
+    "ok": true,
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "mpeg",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "Day Of The Lords",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": 1979,
+    "track": 2,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "Cover",
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "other_tags": {
+      "ENCODEDBY": [
+        "sherb"
+      ],
+      "LYRICS": [
+        "[00:34.38] This is the room, the start of it all\n[00:38.10] No portrait so fine, only sheets on the wall\n[00:41.73] I've seen the nights, filled with bloodsport and pain\n[00:45.97] And the bodies obtained, the bodies obtained\n[00:52.26] Where will it end? Where will it end?\n[00:57.76] Where will it end? Where will it end?\n[01:22.11] These are your friends from childhood, through youth\n[01:25.34] Who goaded you on, demanded more proof\n[01:29.12] Withdrawal pain is hard, it can do you right in\n[01:32.77] So distorted and thin, distorted and thin\n[01:40.11] Where will it end? Where will it end?\n[01:47.55] Where will it end? Where will it end?\n[02:43.48] This is the car at the edge of the road\n[02:46.53] There's nothing disturbed, all the windows are closed\n[02:50.09] I guess you were right, when we talked in the heat\n[02:53.65] There's no room for the weak, no room for the weak\n[03:01.46] Where will it end? Where will it end?\n[03:08.61] Where will it end? Where will it end?\n[03:32.68] This is the room, the start of it all\n[03:35.77] Through childhood, through youth, I remember it all\n[03:39.49] Oh, I've seen the nights filled with bloodsport and pain\n[03:43.01] And the bodies obtained, the bodies obtained, the bodies obtained\n[03:53.80] Where will it end? Where will it end?\n[04:01.32] Where will it end? Where will it end?\n[04:09.39]"
+      ]
+    },
+    "length_ms": 289620,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.512
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/real_mp3/03. Joy Division - Candidate.mp3",
+    "ok": true,
+    "format": "mpeg",
+    "detection": {
+      "by_extension": "mpeg",
+      "by_content": "mpeg",
+      "library": "mpeg",
+      "method": "extension"
+    },
+    "title": "Candidate",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": 1979,
+    "track": 3,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "Cover",
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "other_tags": {
+      "ENCODEDBY": [
+        "sherb"
+      ],
+      "LYRICS": [
+        "[00:26.13]Forced by the pressure\n[00:28.58]The territories marked\n[00:32.71]No longer the pleasure\n[00:36.84]Oh, I've since lost the heart\n[00:47.62]Corrupted from memory\n[00:50.71]No longer the power\n[00:54.46]It's creeping up slowly\n[00:57.86]That last fatal hour\n[01:01.45]I don't know what made me\n[01:05.01]Or what gave me the right\n[01:08.87]To mess with your values\n[01:12.52]And change wrong to right\n[01:30.29]Please keep your distance\n[01:33.33]The trail leads to here\n[01:37.02]There's blood on your fingers\n[01:40.67]Brought on by fear\n[01:44.19]I campaigned for nothing\n[01:47.50]I worked hard for this\n[01:51.21]I tried to get to you\n[01:54.72]You treat me like this\n[01:58.52]It's just second nature\n[02:02.00]It's what we've been shown\n[02:05.59]We're living by your rules\n[02:08.36]That's all that we know\n[02:30.76]I tried to get to you\n[02:36.04]I tried to get to you\n[02:42.71]I tried to get to you\n[02:49.87]I tried to get to you\n[02:55.01]"
+      ]
+    },
+    "length_ms": 185156,
+    "sample_rate": 44100,
+    "channels": 2,
+    "elapsed_ms": 1.533
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/synth_opus/01 - Synthetic opus.opus",
+    "ok": true,
+    "format": "ogg/opus",
+    "detection": {
+      "by_extension": "ogg",
+      "by_content": "ogg/opus",
+      "library": "ogg/opus",
+      "method": "extension"
+    },
+    "title": "Synthetic opus 1",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Opus Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": 2021,
+    "track": 1,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ],
+      "ENCODER": [
+        "Lavc63.1.102 libopus"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000001"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ]
+    },
+    "length_ms": 8000,
+    "sample_rate": 48000,
+    "channels": 1,
+    "elapsed_ms": 5.747
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/synth_opus/02 - Synthetic opus.opus",
+    "ok": true,
+    "format": "ogg/opus",
+    "detection": {
+      "by_extension": "ogg",
+      "by_content": "ogg/opus",
+      "library": "ogg/opus",
+      "method": "extension"
+    },
+    "title": "Synthetic opus 2",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Opus Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": 2021,
+    "track": 2,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ],
+      "ENCODER": [
+        "Lavc63.1.102 libopus"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000002"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ]
+    },
+    "length_ms": 8000,
+    "sample_rate": 48000,
+    "channels": 1,
+    "elapsed_ms": 4.809
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/synth_opus/03 - Synthetic opus.opus",
+    "ok": true,
+    "format": "ogg/opus",
+    "detection": {
+      "by_extension": "ogg",
+      "by_content": "ogg/opus",
+      "library": "ogg/opus",
+      "method": "extension"
+    },
+    "title": "Synthetic opus 3",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Opus Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": 2021,
+    "track": 3,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ],
+      "ENCODER": [
+        "Lavc63.1.102 libopus"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000003"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ]
+    },
+    "length_ms": 8000,
+    "sample_rate": 48000,
+    "channels": 1,
+    "elapsed_ms": 5.408
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+    "ok": true,
+    "format": "ogg/vorbis",
+    "detection": {
+      "by_extension": "ogg",
+      "by_content": "ogg/vorbis",
+      "library": "ogg/vorbis",
+      "method": "extension"
+    },
+    "title": "Synthetic vorbis 1",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Vorbis Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": 2021,
+    "track": 1,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ],
+      "ENCODER": [
+        "Lavc63.1.102 libvorbis"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000001"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ]
+    },
+    "length_ms": 8000,
+    "sample_rate": 48000,
+    "channels": 1,
+    "elapsed_ms": 6.705
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/synth_vorbis/02 - Synthetic vorbis.ogg",
+    "ok": true,
+    "format": "ogg/vorbis",
+    "detection": {
+      "by_extension": "ogg",
+      "by_content": "ogg/vorbis",
+      "library": "ogg/vorbis",
+      "method": "extension"
+    },
+    "title": "Synthetic vorbis 2",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Vorbis Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": 2021,
+    "track": 2,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ],
+      "ENCODER": [
+        "Lavc63.1.102 libvorbis"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000002"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ]
+    },
+    "length_ms": 8000,
+    "sample_rate": 48000,
+    "channels": 1,
+    "elapsed_ms": 6.403
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/go/e2/albums/synth_vorbis/03 - Synthetic vorbis.ogg",
+    "ok": true,
+    "format": "ogg/vorbis",
+    "detection": {
+      "by_extension": "ogg",
+      "by_content": "ogg/vorbis",
+      "library": "ogg/vorbis",
+      "method": "extension"
+    },
+    "title": "Synthetic vorbis 3",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Vorbis Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": 2021,
+    "track": 3,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Ambient",
+      "Electronic",
+      "Soundtrack"
+    ],
+    "pictures": [
+      {
+        "type": "Front Cover",
+        "description": "",
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "other_tags": {
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ],
+      "ENCODER": [
+        "Lavc63.1.102 libvorbis"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000003"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ]
+    },
+    "length_ms": 8000,
+    "sample_rate": 48000,
+    "channels": 1,
+    "elapsed_ms": 5.529
+  }
+]

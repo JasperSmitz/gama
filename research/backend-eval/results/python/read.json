@@ -1,0 +1,1526 @@
+[
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/partial_failure/01 ok.flac",
+    "ok": true,
+    "error": null,
+    "format": "FLAC",
+    "magic": "664c6143",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "FLAC",
+      "agrees_with_extension": true
+    },
+    "codec": "StreamInfo",
+    "length_s": 65.0,
+    "sample_rate": 44100,
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": "2011-03-04",
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Electronic",
+      "Ambient"
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "encoder": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "vendor": "Lavf58.76.100",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 3.92
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/partial_failure/02 ok.mp3",
+    "ok": true,
+    "error": null,
+    "format": "MP3",
+    "magic": "49443304",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP3",
+      "agrees_with_extension": true
+    },
+    "codec": "MPEGInfo",
+    "length_s": 212.587,
+    "sample_rate": 44100,
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": "1979-06-15",
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "other_tags": {
+      "TENC": [
+        "sherb"
+      ],
+      "USLT::eng": [
+        "USLT==eng=[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the i…(+1057 chars)"
+      ]
+    },
+    "genres_raw": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "id3_version": "2.4.0",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "elapsed_ms": 1.37
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/partial_failure/03 truncated.m4a",
+    "ok": false,
+    "error": "mutagen.mp4.MP4StreamInfoError: not a MP4 file",
+    "format": null,
+    "magic": "0000001c",
+    "detection": {},
+    "error_is_mutagen_error": true,
+    "elapsed_ms": 0.17
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/partial_failure/04 ok.opus",
+    "ok": true,
+    "error": null,
+    "format": "OggOpus",
+    "magic": "4f676753",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "OggOpus",
+      "agrees_with_extension": true
+    },
+    "codec": "OggOpusInfo",
+    "length_s": 8.0,
+    "sample_rate": null,
+    "title": "Synthetic opus 1",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Opus Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": "2021",
+    "track": 1,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Electronic"
+    ],
+    "other_tags": {
+      "encoder": [
+        "Lavc63.1.102 libopus"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000001"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ],
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ]
+    },
+    "vendor": "Lavf63.1.102",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.88
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/partial_failure/05 readonly.m4a",
+    "ok": true,
+    "error": null,
+    "format": "MP4",
+    "magic": "0000001c",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP4",
+      "agrees_with_extension": true
+    },
+    "codec": "mp4a.40.2",
+    "length_s": 415.916,
+    "sample_rate": 44100,
+    "title": "Even Less - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": null,
+    "year": "2023",
+    "track": 5,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Rock;Progressive Rock"
+    ],
+    "other_tags": {
+      "©too": [
+        "Lavf63.1.102"
+      ],
+      "©lyr": [
+        "A body is washed up on a Norfolk beach\nHe was a brim that I could not reach\nHe thought I was cold, but I understand\nBut for the grace of God goes another man\n\nAnd I may just waste away from doing noth…(+425 chars)"
+      ],
+      "stik": [
+        "1"
+      ]
+    },
+    "pictures": [
+      {
+        "type": null,
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "elapsed_ms": 0.47
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/real_flac/01. C418 - Key.flac",
+    "ok": true,
+    "error": null,
+    "format": "FLAC",
+    "magic": "664c6143",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "FLAC",
+      "agrees_with_extension": true
+    },
+    "codec": "StreamInfo",
+    "length_s": 65.0,
+    "sample_rate": 44100,
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": "2011-03-04",
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Electronic",
+      "Ambient"
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "encoder": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "vendor": "Lavf58.76.100",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.28
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/real_flac/02. C418 - Door.flac",
+    "ok": true,
+    "error": null,
+    "format": "FLAC",
+    "magic": "664c6143",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "FLAC",
+      "agrees_with_extension": true
+    },
+    "codec": "StreamInfo",
+    "length_s": 111.438,
+    "sample_rate": 44100,
+    "title": "Door",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": "2011-03-04",
+    "track": 2,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Electronic",
+      "Ambient"
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFY25PB3?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "encoder": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157069"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "vendor": "Lavf58.76.100",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.26
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/real_flac/03. C418 - Subwoofer Lullaby.flac",
+    "ok": true,
+    "error": null,
+    "format": "FLAC",
+    "magic": "664c6143",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "FLAC",
+      "agrees_with_extension": true
+    },
+    "codec": "StreamInfo",
+    "length_s": 208.563,
+    "sample_rate": 44100,
+    "title": "Subwoofer Lullaby",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": "2011-03-04",
+    "track": 3,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Electronic",
+      "Ambient"
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFXSJ5T9?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "encoder": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157071"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "vendor": "Lavf58.76.100",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.29
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+    "ok": true,
+    "error": null,
+    "format": "MP4",
+    "magic": "0000001c",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP4",
+      "agrees_with_extension": true
+    },
+    "codec": "mp4a.40.2",
+    "length_s": 415.916,
+    "sample_rate": 44100,
+    "title": "Even Less - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": null,
+    "year": "2023",
+    "track": 5,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Rock;Progressive Rock"
+    ],
+    "other_tags": {
+      "©too": [
+        "Lavf63.1.102"
+      ],
+      "©lyr": [
+        "A body is washed up on a Norfolk beach\nHe was a brim that I could not reach\nHe thought I was cold, but I understand\nBut for the grace of God goes another man\n\nAnd I may just waste away from doing noth…(+425 chars)"
+      ],
+      "stik": [
+        "1"
+      ]
+    },
+    "pictures": [
+      {
+        "type": null,
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "elapsed_ms": 0.38
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+    "ok": true,
+    "error": null,
+    "format": "MP4",
+    "magic": "0000001c",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP4",
+      "agrees_with_extension": true
+    },
+    "codec": "mp4a.40.2",
+    "length_s": 515.344,
+    "sample_rate": 44100,
+    "title": "Dignity - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": null,
+    "year": "2023",
+    "track": 7,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Rock;Progressive Rock"
+    ],
+    "other_tags": {
+      "©too": [
+        "Lavf63.1.102"
+      ],
+      "stik": [
+        "1"
+      ]
+    },
+    "pictures": [
+      {
+        "type": null,
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "elapsed_ms": 0.33
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+    "ok": true,
+    "error": null,
+    "format": "MP4",
+    "magic": "0000001c",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP4",
+      "agrees_with_extension": true
+    },
+    "codec": "mp4a.40.2",
+    "length_s": 304.321,
+    "sample_rate": 44100,
+    "title": "The Sound of Muzak - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": null,
+    "year": "2023",
+    "track": 8,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Rock;Progressive Rock"
+    ],
+    "other_tags": {
+      "©too": [
+        "Lavf63.1.102"
+      ],
+      "©lyr": [
+        "[00:11.02] Hear the sound of music drifting in the aisles\n[00:15.43] Elevator Prozac stretching on for miles\n[00:19.85] The music of the future will not entertain\n[00:24.23] It's only meant to repress…(+1657 chars)"
+      ],
+      "stik": [
+        "1"
+      ]
+    },
+    "pictures": [
+      {
+        "type": null,
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "elapsed_ms": 0.34
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/real_mp3/01. Joy Division - Disorder.mp3",
+    "ok": true,
+    "error": null,
+    "format": "MP3",
+    "magic": "49443304",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP3",
+      "agrees_with_extension": true
+    },
+    "codec": "MPEGInfo",
+    "length_s": 212.587,
+    "sample_rate": 44100,
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": "1979-06-15",
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "other_tags": {
+      "TENC": [
+        "sherb"
+      ],
+      "USLT::eng": [
+        "USLT==eng=[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the i…(+1057 chars)"
+      ]
+    },
+    "genres_raw": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "id3_version": "2.4.0",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "elapsed_ms": 0.83
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/real_mp3/02. Joy Division - Day Of The Lords.mp3",
+    "ok": true,
+    "error": null,
+    "format": "MP3",
+    "magic": "49443304",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP3",
+      "agrees_with_extension": true
+    },
+    "codec": "MPEGInfo",
+    "length_s": 289.573,
+    "sample_rate": 44100,
+    "title": "Day Of The Lords",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": "1979-06-15",
+    "track": 2,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "other_tags": {
+      "TENC": [
+        "sherb"
+      ],
+      "USLT::eng": [
+        "USLT==eng=[00:34.38] This is the room, the start of it all\n[00:38.10] No portrait so fine, only sheets on the wall\n[00:41.73] I've seen the nights, filled with bloodsport and pain\n[00:45.97] And the b…(+1161 chars)"
+      ]
+    },
+    "genres_raw": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "id3_version": "2.4.0",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "elapsed_ms": 0.79
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/real_mp3/03. Joy Division - Candidate.mp3",
+    "ok": true,
+    "error": null,
+    "format": "MP3",
+    "magic": "49443304",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP3",
+      "agrees_with_extension": true
+    },
+    "codec": "MPEGInfo",
+    "length_s": 185.12,
+    "sample_rate": 44100,
+    "title": "Candidate",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": "1979-06-15",
+    "track": 3,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "other_tags": {
+      "TENC": [
+        "sherb"
+      ],
+      "USLT::eng": [
+        "USLT==eng=[00:26.13]Forced by the pressure\n[00:28.58]The territories marked\n[00:32.71]No longer the pleasure\n[00:36.84]Oh, I've since lost the heart\n[00:47.62]Corrupted from memory\n[00:50.71]No longer…(+771 chars)"
+      ]
+    },
+    "genres_raw": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "id3_version": "2.4.0",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "elapsed_ms": 0.75
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/synth_opus/01 - Synthetic opus.opus",
+    "ok": true,
+    "error": null,
+    "format": "OggOpus",
+    "magic": "4f676753",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "OggOpus",
+      "agrees_with_extension": true
+    },
+    "codec": "OggOpusInfo",
+    "length_s": 8.0,
+    "sample_rate": null,
+    "title": "Synthetic opus 1",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Opus Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": "2021",
+    "track": 1,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Electronic"
+    ],
+    "other_tags": {
+      "encoder": [
+        "Lavc63.1.102 libopus"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000001"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ],
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ]
+    },
+    "vendor": "Lavf63.1.102",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.86
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/synth_opus/02 - Synthetic opus.opus",
+    "ok": true,
+    "error": null,
+    "format": "OggOpus",
+    "magic": "4f676753",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "OggOpus",
+      "agrees_with_extension": true
+    },
+    "codec": "OggOpusInfo",
+    "length_s": 8.0,
+    "sample_rate": null,
+    "title": "Synthetic opus 2",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Opus Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": "2021",
+    "track": 2,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Electronic"
+    ],
+    "other_tags": {
+      "encoder": [
+        "Lavc63.1.102 libopus"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000002"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ],
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ]
+    },
+    "vendor": "Lavf63.1.102",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.84
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/synth_opus/03 - Synthetic opus.opus",
+    "ok": true,
+    "error": null,
+    "format": "OggOpus",
+    "magic": "4f676753",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "OggOpus",
+      "agrees_with_extension": true
+    },
+    "codec": "OggOpusInfo",
+    "length_s": 8.0,
+    "sample_rate": null,
+    "title": "Synthetic opus 3",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Opus Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": "2021",
+    "track": 3,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Electronic"
+    ],
+    "other_tags": {
+      "encoder": [
+        "Lavc63.1.102 libopus"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000003"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ],
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ]
+    },
+    "vendor": "Lavf63.1.102",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.84
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+    "ok": true,
+    "error": null,
+    "format": "OggVorbis",
+    "magic": "4f676753",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "OggVorbis",
+      "agrees_with_extension": true
+    },
+    "codec": "OggVorbisInfo",
+    "length_s": 8.0,
+    "sample_rate": 48000,
+    "title": "Synthetic vorbis 1",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Vorbis Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": "2021",
+    "track": 1,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Electronic"
+    ],
+    "other_tags": {
+      "encoder": [
+        "Lavc63.1.102 libvorbis"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000001"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ],
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ]
+    },
+    "vendor": "Lavf63.1.102",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.85
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/synth_vorbis/02 - Synthetic vorbis.ogg",
+    "ok": true,
+    "error": null,
+    "format": "OggVorbis",
+    "magic": "4f676753",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "OggVorbis",
+      "agrees_with_extension": true
+    },
+    "codec": "OggVorbisInfo",
+    "length_s": 8.0,
+    "sample_rate": 48000,
+    "title": "Synthetic vorbis 2",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Vorbis Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": "2021",
+    "track": 2,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Electronic"
+    ],
+    "other_tags": {
+      "encoder": [
+        "Lavc63.1.102 libvorbis"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000002"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ],
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ]
+    },
+    "vendor": "Lavf63.1.102",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.85
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/albums/synth_vorbis/03 - Synthetic vorbis.ogg",
+    "ok": true,
+    "error": null,
+    "format": "OggVorbis",
+    "magic": "4f676753",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "OggVorbis",
+      "agrees_with_extension": true
+    },
+    "codec": "OggVorbisInfo",
+    "length_s": 8.0,
+    "sample_rate": 48000,
+    "title": "Synthetic vorbis 3",
+    "artist": "Gama Test Artist",
+    "album": "Synthetic Vorbis Album",
+    "album_artist": "Gama Test Album Artist",
+    "year": "2021",
+    "track": 3,
+    "track_total": 3,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Electronic"
+    ],
+    "other_tags": {
+      "encoder": [
+        "Lavc63.1.102 libvorbis"
+      ],
+      "MUSICBRAINZ_TRACKID": [
+        "8f0e2c6e-0000-4000-8000-000000000003"
+      ],
+      "REPLAYGAIN_TRACK_GAIN": [
+        "-6.50 dB"
+      ],
+      "CUSTOM_UNRELATED": [
+        "keep me ✓ ünïcødé"
+      ]
+    },
+    "vendor": "Lavf63.1.102",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.84
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/actually_flac.mp3",
+    "ok": true,
+    "error": null,
+    "format": "FLAC",
+    "magic": "664c6143",
+    "detection": {
+      "method": "content sniff fallback (mutagen.File pick failed)",
+      "mutagen_default_error": "mutagen.mp3.HeaderNotFoundError: can't sync to MPEG frame",
+      "extension_implies": "MP3",
+      "agrees_with_extension": false
+    },
+    "codec": "StreamInfo",
+    "length_s": 65.0,
+    "sample_rate": 44100,
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": "2011-03-04",
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Electronic",
+      "Ambient"
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "encoder": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "vendor": "Lavf58.76.100",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 3.26
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/flac_two_pictures_no_padding.flac",
+    "ok": true,
+    "error": null,
+    "format": "FLAC",
+    "magic": "664c6143",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "FLAC",
+      "agrees_with_extension": true
+    },
+    "codec": "StreamInfo",
+    "length_s": 65.0,
+    "sample_rate": 44100,
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": "2011-03-04",
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Electronic",
+      "Ambient"
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "encoder": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "vendor": "Lavf58.76.100",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      },
+      {
+        "type": 4,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.4
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/flac_with_id3v2_prefix.flac",
+    "ok": true,
+    "error": null,
+    "format": "FLAC",
+    "magic": "49443303",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "FLAC",
+      "agrees_with_extension": true
+    },
+    "codec": "StreamInfo",
+    "length_s": 65.0,
+    "sample_rate": 44100,
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": "2011-03-04",
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Electronic",
+      "Ambient"
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "encoder": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "vendor": "Lavf58.76.100",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.25
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/garbage.flac",
+    "ok": false,
+    "error": "mutagen.flac.FLACNoHeaderError: '/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/garbage.flac' is not a valid FLAC file",
+    "format": null,
+    "magic": "0eb983e8",
+    "detection": {},
+    "error_is_mutagen_error": true,
+    "elapsed_ms": 0.11
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/m4a_alac.m4a",
+    "ok": true,
+    "error": null,
+    "format": "MP4",
+    "magic": "0000001c",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP4",
+      "agrees_with_extension": true
+    },
+    "codec": "alac",
+    "length_s": 65.0,
+    "sample_rate": 44100,
+    "title": "ALAC Track",
+    "artist": "Gama Test Artist",
+    "album": "ALAC Album",
+    "album_artist": "C418",
+    "year": "2011-03-04",
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Ambient"
+    ],
+    "other_tags": {
+      "©too": [
+        "Lavf63.1.102"
+      ],
+      "©cmt": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "cprt": [
+        "℗© 2011 C418"
+      ]
+    },
+    "pictures": [],
+    "elapsed_ms": 0.24
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/m4a_faststart.m4a",
+    "ok": true,
+    "error": null,
+    "format": "MP4",
+    "magic": "0000001c",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP4",
+      "agrees_with_extension": true
+    },
+    "codec": "mp4a.40.2",
+    "length_s": 415.916,
+    "sample_rate": 44100,
+    "title": "Even Less - CLOSURE/CONTINUATION.LIVE",
+    "artist": "Porcupine Tree",
+    "album": "CLOSURE / CONTINUATION. LIVE. AMSTERDAM 07/11/22",
+    "album_artist": null,
+    "year": "2023",
+    "track": 5,
+    "track_total": 21,
+    "disc": 1,
+    "disc_total": 1,
+    "genres": [
+      "Rock;Progressive Rock"
+    ],
+    "other_tags": {
+      "©too": [
+        "Lavf63.1.102"
+      ],
+      "©lyr": [
+        "A body is washed up on a Norfolk beach\nHe was a brim that I could not reach\nHe thought I was cold, but I understand\nBut for the grace of God goes another man\n\nAnd I may just waste away from doing noth…(+425 chars)"
+      ],
+      "stik": [
+        "1"
+      ]
+    },
+    "pictures": [
+      {
+        "type": null,
+        "mime": "image/jpeg",
+        "bytes": 91444,
+        "sha256": "4eaa1a1f4facbbe47521cfa1bb8563332ae0487f2be0dfc048a4e67bb8c4145f"
+      }
+    ],
+    "elapsed_ms": 0.33
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/m4a_header_only.m4a",
+    "ok": false,
+    "error": "mutagen.mp4.MP4StreamInfoError: not a MP4 file",
+    "format": null,
+    "magic": "0000001c",
+    "detection": {},
+    "error_is_mutagen_error": true,
+    "elapsed_ms": 0.12
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/mp3_id3v1_only.mp3",
+    "ok": true,
+    "error": null,
+    "format": "MP3",
+    "magic": "49443304",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP3",
+      "agrees_with_extension": true
+    },
+    "codec": "MPEGInfo",
+    "length_s": 212.637,
+    "sample_rate": 44100,
+    "title": "V1 Title",
+    "artist": "V1 Artist",
+    "album": "V1 Album",
+    "album_artist": null,
+    "year": "1999",
+    "track": 7,
+    "track_total": null,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Rock"
+    ],
+    "other_tags": {
+      "TSSE": [
+        "Lavf63.1.102"
+      ]
+    },
+    "genres_raw": [
+      "Rock"
+    ],
+    "id3_version": "2.4.0",
+    "pictures": [],
+    "elapsed_ms": 0.29
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/mp3_id3v23.mp3",
+    "ok": true,
+    "error": null,
+    "format": "MP3",
+    "magic": "49443303",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP3",
+      "agrees_with_extension": true
+    },
+    "codec": "MPEGInfo",
+    "length_s": 212.587,
+    "sample_rate": 44100,
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": "1979-06-15",
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Rock/Post-Punk"
+    ],
+    "other_tags": {
+      "TXXX:lyrics-eng": [
+        "TXXX=lyrics-eng=[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare…(+1063 chars)"
+      ],
+      "TENC": [
+        "sherb"
+      ],
+      "TXXX:CUSTOM_UNRELATED": [
+        "TXXX=CUSTOM_UNRELATED=keep me"
+      ],
+      "TSSE": [
+        "Lavf63.1.102"
+      ]
+    },
+    "genres_raw": [
+      "Rock/Post-Punk"
+    ],
+    "id3_version": "2.3.0",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "elapsed_ms": 0.9
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/mp3_id3v24_apev2_id3v1.mp3",
+    "ok": true,
+    "error": null,
+    "format": "MP3",
+    "magic": "49443304",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP3",
+      "agrees_with_extension": true
+    },
+    "codec": "MPEGInfo",
+    "length_s": 212.587,
+    "sample_rate": 44100,
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": "1979-06-15",
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "other_tags": {
+      "TENC": [
+        "sherb"
+      ],
+      "USLT::eng": [
+        "USLT==eng=[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the i…(+1057 chars)"
+      ],
+      "APEv2:MP3GAIN_MINMAX": [
+        "120,210"
+      ],
+      "APEv2:REPLAYGAIN_TRACK_GAIN": [
+        "-3.2 dB"
+      ]
+    },
+    "genres_raw": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "id3_version": "2.4.0",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "elapsed_ms": 0.6
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/truncated.flac",
+    "ok": true,
+    "error": null,
+    "format": "FLAC",
+    "magic": "664c6143",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "FLAC",
+      "agrees_with_extension": true
+    },
+    "codec": "StreamInfo",
+    "length_s": 65.0,
+    "sample_rate": 44100,
+    "title": "Key",
+    "artist": "C418",
+    "album": "Minecraft - Volume Alpha",
+    "album_artist": "C418",
+    "year": "2011-03-04",
+    "track": 1,
+    "track_total": 24,
+    "disc": null,
+    "disc_total": null,
+    "genres": [
+      "Electronic",
+      "Ambient"
+    ],
+    "other_tags": {
+      "COMMENT": [
+        "downloaded from lucida.to: https://music.amazon.com/tracks/B0GFYCY6KJ?musicTerritory=US"
+      ],
+      "COPYRIGHT": [
+        "℗© 2011 C418"
+      ],
+      "encoder": [
+        "Lavf58.76.100"
+      ],
+      "ISRC": [
+        "TCAAW1157068"
+      ],
+      "LABEL": [
+        "C418"
+      ]
+    },
+    "vendor": "Lavf58.76.100",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 184682,
+        "sha256": "77ef7f63113ea6b2e95b1cae1e9da2fb76fbbde17d60d704e651e36e510835c3"
+      }
+    ],
+    "elapsed_ms": 0.26
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/truncated.m4a",
+    "ok": false,
+    "error": "mutagen.mp4.MP4StreamInfoError: not a MP4 file",
+    "format": null,
+    "magic": "0000001c",
+    "detection": {},
+    "error_is_mutagen_error": true,
+    "elapsed_ms": 0.14
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/truncated.mp3",
+    "ok": true,
+    "error": null,
+    "format": "MP3",
+    "magic": "49443304",
+    "detection": {
+      "method": "mutagen.File score (extension + header bytes)",
+      "extension_implies": "MP3",
+      "agrees_with_extension": true
+    },
+    "codec": "MPEGInfo",
+    "length_s": 212.587,
+    "sample_rate": 44100,
+    "title": "Disorder",
+    "artist": "Joy Division",
+    "album": "Unknown Pleasures (Collector's Edition)",
+    "album_artist": "Joy Division",
+    "year": "1979-06-15",
+    "track": 1,
+    "track_total": 10,
+    "disc": 1,
+    "disc_total": 2,
+    "genres": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "other_tags": {
+      "TENC": [
+        "sherb"
+      ],
+      "USLT::eng": [
+        "USLT==eng=[00:29.73] I've been waiting for a guide to come and take me by the hand\n[00:35.37] Could these sensations make me feel the pleasures of a normal man?\n[00:41.27] Lose sensations, spare the i…(+1057 chars)"
+      ]
+    },
+    "genres_raw": [
+      "Rock",
+      "Post-Punk"
+    ],
+    "id3_version": "2.4.0",
+    "pictures": [
+      {
+        "type": 3,
+        "mime": "image/jpeg",
+        "bytes": 206495,
+        "sha256": "b392b283eb6a3eb291080ea637786705fd64cef7f251fb6405375b9a41f0cf73"
+      }
+    ],
+    "elapsed_ms": 0.51
+  },
+  {
+    "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e1/edge/zero_bytes.mp3",
+    "ok": false,
+    "error": "mutagen.mp3.HeaderNotFoundError: can't sync to MPEG frame",
+    "format": null,
+    "magic": "",
+    "detection": {},
+    "error_is_mutagen_error": true,
+    "elapsed_ms": 0.1
+  }
+]

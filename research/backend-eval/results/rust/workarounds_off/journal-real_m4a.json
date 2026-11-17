@@ -1,0 +1,33 @@
+{
+  "op": "set-genres Genres([\"Ambient\", \"Electronic\", \"Soundtrack\"])",
+  "created_unix": 1794929396,
+  "entries": [
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff.bk/real_m4a/0000-05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "afd5166efdef7bfa836ba113215066115c6c7d0a284a06bfccd0c59c079f7952",
+      "sha256_after": "12ec4f939f626f5905333c2c09311d852ce92939247d81b5147c77d4d14ae1db",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff/albums/real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff.bk/real_m4a/0001-07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "33a3cf27fe552439cb1bb5ea68226efbf631f0243dd7b6775986ff54937baac6",
+      "sha256_after": "eae580317c85767304e918402ed4c87ba10245c972c2e79346f69b852d8ce6b1",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff/albums/real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff.bk/real_m4a/0002-08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "8ce8a1987fbd33fdab86807409d137c3b22d01fdac9ca6d33df84efa4df704ac",
+      "sha256_after": "0e10ae291b931b9107fc6e0d9e7e3c8b0f80b0ecb9b664ad6753f2eeb690a2f2",
+      "mode": 420,
+      "state": "committed",
+      "error": null
+    }
+  ]
+}

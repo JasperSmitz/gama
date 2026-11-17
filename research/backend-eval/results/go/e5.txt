@@ -1,0 +1,96 @@
+## (a) partial_failure without --continue-on-error
+$ proto set-genres --genres Ambient;Electronic;Soundtrack --backup-dir $EVAL/side/go-e5/a.bak --journal $EVAL/side/go-e5/a.json $EVAL/work/go/e5a/albums/partial_failure/01 ok.flac $EVAL/work/go/e5a/albums/partial_failure/02 ok.mp3 $EVAL/work/go/e5a/albums/partial_failure/03 truncated.m4a $EVAL/work/go/e5a/albums/partial_failure/04 ok.opus $EVAL/work/go/e5a/albums/partial_failure/05 readonly.m4a
+    exit 1
+{"ok": false, "aborted": "preflight failed for 2 file(s); nothing modified", "committed": 0, "failed": 0, "skipped": 2, "rolled_back": 0, "leftover_temp_files": []}
+    pending 01 ok.flac 
+    pending 02 ok.mp3 
+    preflight_failed 03 truncated.m4a library read failed: library could not open file (ReadProperties returned empty Properties, no error)
+    pending 04 ok.opus 
+    preflight_failed 05 readonly.m4a no write permission on file: permission denied
+sha256: all 5 files identical before/after (zero modified)
+
+## (b) partial_failure with --continue-on-error
+$ proto set-genres --genres Ambient;Electronic;Soundtrack --continue-on-error --backup-dir $EVAL/side/go-e5/b.bak --journal $EVAL/side/go-e5/b.json $EVAL/work/go/e5b/albums/partial_failure/01 ok.flac $EVAL/work/go/e5b/albums/partial_failure/02 ok.mp3 $EVAL/work/go/e5b/albums/partial_failure/03 truncated.m4a $EVAL/work/go/e5b/albums/partial_failure/04 ok.opus $EVAL/work/go/e5b/albums/partial_failure/05 readonly.m4a
+    exit 1
+{"ok": false, "committed": 3, "failed": 0, "skipped": 2, "rolled_back": 0, "leftover_temp_files": []}
+    committed 01 ok.flac 
+    committed 02 ok.mp3 
+    preflight_failed 03 truncated.m4a library read failed: library could not open file (ReadProperties returned empty Properties, no error)
+    committed 04 ok.opus 
+    preflight_failed 05 readonly.m4a no write permission on file: permission denied
+files whose sha256 changed:
+> 62d7948fbe5d0df554f3e4ee0627802e44869cb520c62c8e3361840a8897e18e  01 ok.flac
+> a89d9b7caae932a4be4c33d95182dcb471c7a7b5450b2c72a33f3c542c4d322c  02 ok.mp3
+> 92243e5216107dbbbef2b019dbb8706c101b361a67db738cafba050effd5446f  04 ok.opus
+total 32124
+-rw-r--r-- 1 jasper jasper  2265751 Nov 17 16:23 01 ok.flac
+-rw-r--r-- 1 jasper jasper  8723324 Nov 17 16:23 02 ok.mp3
+-rw-r--r-- 1 jasper jasper  8085243 Nov 17 16:14 03 truncated.m4a
+-rw-r--r-- 1 jasper jasper   338310 Nov 17 16:23 04 ok.opus
+-r--r--r-- 1 jasper jasper 13475405 Nov 16 11:46 05 readonly.m4a
+FAIL changed   01 ok.flac
+       - metaflac: non-genre comments differ (order or content)
+FAIL changed   02 ok.mp3
+       - genres ['Ambient'] != expected ['Ambient', 'Electronic', 'Soundtrack']
+ok   unchanged 03 truncated.m4a
+ok   changed   04 ok.opus
+ok   unchanged 05 readonly.m4a
+
+5 files, 3 changed, 2 with problems
+
+## (c) --fail-after 2 on albums/real_flac
+$ proto set-genres --genres Ambient;Electronic;Soundtrack --fail-after 2 --backup-dir $EVAL/side/go-e5/c.bak --journal $EVAL/side/go-e5/c.json $EVAL/work/go/e5c/albums/real_flac/01. C418 - Key.flac $EVAL/work/go/e5c/albums/real_flac/02. C418 - Door.flac $EVAL/work/go/e5c/albums/real_flac/03. C418 - Subwoofer Lullaby.flac
+    exit 1
+{"ok": false, "aborted": "simulated failure after 2 commit(s) (--fail-after)", "committed": 0, "failed": 0, "skipped": 0, "rolled_back": 2, "leftover_temp_files": []}
+    rolled_back 01. C418 - Key.flac 
+    rolled_back 02. C418 - Door.flac 
+    pending 03. C418 - Subwoofer Lullaby.flac 
+sha256: all 3 files identical to pre-batch (full rollback)
+dir listing:
+01. C418 - Key.flac
+02. C418 - Door.flac
+03. C418 - Subwoofer Lullaby.flac
+
+## (d) successful batch on albums/synth_vorbis, then rollback --journal
+$ proto set-genres --genres Ambient;Electronic;Soundtrack --backup-dir $EVAL/side/go-e5/d.bak --journal $EVAL/side/go-e5/d.json $EVAL/work/go/e5d/albums/synth_vorbis/01 - Synthetic vorbis.ogg $EVAL/work/go/e5d/albums/synth_vorbis/02 - Synthetic vorbis.ogg $EVAL/work/go/e5d/albums/synth_vorbis/03 - Synthetic vorbis.ogg
+    exit 0
+{"ok": true, "committed": 3, "failed": 0, "skipped": 0, "rolled_back": 0, "leftover_temp_files": []}
+    committed 01 - Synthetic vorbis.ogg 
+    committed 02 - Synthetic vorbis.ogg 
+    committed 03 - Synthetic vorbis.ogg 
+files changed by batch: 3
+$ proto rollback --journal $EVAL/side/go-e5/d.json
+    exit 0
+{"ok": true, "leftover_temp_files": []}
+    restored 01 - Synthetic vorbis.ogg 
+    restored 02 - Synthetic vorbis.ogg 
+    restored 03 - Synthetic vorbis.ogg 
+sha256: all 3 files identical to pre-batch after rollback
+01 - Synthetic vorbis.ogg
+02 - Synthetic vorbis.ogg
+03 - Synthetic vorbis.ogg
+
+## (e) read-only file: what would the library / OS allow?
+direct in-place taglib.WriteTags on 0444 file:
+{  "error": "can't save file",  "ok": false,  "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/side/go-e5/ro.m4a"}
+-> file unchanged: TagLib opens read-only and save() fails (ErrSavingFile, no detail)
+-> but rename(2) over the 0444 file succeeds (needs only dir write perm): without the preflight W_OK check, the temp+rename protocol WOULD modify it
+
+## (f) SIGKILL mid-batch (copy of albums/real_m4a), then rollback --journal
+killed after 0.03s; journal states: writing pending pending
+dir after kill:
+.05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.gamatmp-1566869901.m4a
+05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a
+07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a
+08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a
+$ proto rollback --journal $EVAL/side/go-e5/k.json
+    exit 0
+{"ok": true, "leftover_temp_files": []}
+    already original 05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a 
+    skipped (no backup: pending) 07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a 
+    skipped (no backup: pending) 08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a 
+dir after rollback:
+05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a
+07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a
+08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a
+sha256 identical to pre-batch after rollback

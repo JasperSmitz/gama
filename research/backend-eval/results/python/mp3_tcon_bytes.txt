@@ -1,0 +1,17 @@
+# master
+01. Joy Division - Disorder.mp3: ID3v2.4 TCON payload b'\x03Rock\x00Post-Punk\x00'
+02. Joy Division - Day Of The Lords.mp3: ID3v2.4 TCON payload b'\x03Rock\x00Post-Punk\x00'
+03. Joy Division - Candidate.mp3: ID3v2.4 TCON payload b'\x03Rock\x00Post-Punk\x00'
+mp3_id3v23.mp3: ID3v2.3 TCON payload b'\x00Rock/Post-Punk\x00'
+mp3_id3v24_apev2_id3v1.mp3: ID3v2.4 TCON payload b'\x03Rock\x00Post-Punk\x00'
+# after E2
+01. Joy Division - Disorder.mp3: ID3v2.4 TCON payload b'\x03Ambient\x00Electronic\x00Soundtrack\x00'
+02. Joy Division - Day Of The Lords.mp3: ID3v2.4 TCON payload b'\x03Ambient\x00Electronic\x00Soundtrack\x00'
+03. Joy Division - Candidate.mp3: ID3v2.4 TCON payload b'\x03Ambient\x00Electronic\x00Soundtrack\x00'
+# after E4
+/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e4/edge/actually_flac.mp3: no ID3v2 header
+mp3_id3v1_only.mp3: ID3v2.4 TCON payload b'\x03Ambient\x00Electronic\x00Soundtrack\x00'
+mp3_id3v23.mp3: ID3v2.4 TCON payload b'\x03Ambient\x00Electronic\x00Soundtrack\x00'
+mp3_id3v24_apev2_id3v1.mp3: ID3v2.4 TCON payload b'\x03Ambient\x00Electronic\x00Soundtrack\x00'
+truncated.mp3: ID3v2.4 TCON payload b'\x03Ambient\x00Electronic\x00Soundtrack\x00'
+/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e4/edge/zero_bytes.mp3: no ID3v2 header

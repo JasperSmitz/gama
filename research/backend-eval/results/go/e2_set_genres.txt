@@ -1,0 +1,135 @@
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --backup-dir $S/e2.bak --journal $S/e2.json $W/albums/{real_flac,real_mp3,real_m4a,synth_vorbis,synth_opus}/*
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e2.json",
+  "committed": 15,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e2/albums/real_flac/01. C418 - Key.flac",
+      "backup": "$EVAL/side/go-e234/e2.bak/0000-01. C418 - Key.flac",
+      "sha256_before": "a8a3919a2b464fe2dfcf0f3c9195fcebc55a8073ce3aeafe71453e479f640f7e",
+      "sha256_after": "62d7948fbe5d0df554f3e4ee0627802e44869cb520c62c8e3361840a8897e18e",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/real_flac/02. C418 - Door.flac",
+      "backup": "$EVAL/side/go-e234/e2.bak/0001-02. C418 - Door.flac",
+      "sha256_before": "62f0737dd970433550a5a130807cd4f7c95f7fcdcd769d20d9d3285602c4eda3",
+      "sha256_after": "a1fcc3ceaeb084163eb48f370219ef1a102bbb56143ab263351f57082524843c",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/real_flac/03. C418 - Subwoofer Lullaby.flac",
+      "backup": "$EVAL/side/go-e234/e2.bak/0002-03. C418 - Subwoofer Lullaby.flac",
+      "sha256_before": "fd7be9614208a1930158222de636ef0bacb0e7af6e4cf0dc9da5299a15fb885a",
+      "sha256_after": "384cd49ad5204b1358b118411d1f0779c87fcf74771db41820f80d58ea05bc69",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/real_mp3/01. Joy Division - Disorder.mp3",
+      "backup": "$EVAL/side/go-e234/e2.bak/0003-01. Joy Division - Disorder.mp3",
+      "sha256_before": "2168a12cb59a80b2d47b14c116d6a83c62f0fa5f496ca03ad8962a7e46b147c5",
+      "sha256_after": "a89d9b7caae932a4be4c33d95182dcb471c7a7b5450b2c72a33f3c542c4d322c",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/real_mp3/02. Joy Division - Day Of The Lords.mp3",
+      "backup": "$EVAL/side/go-e234/e2.bak/0004-02. Joy Division - Day Of The Lords.mp3",
+      "sha256_before": "bf5ddf9e98903989272d0ab4e86657f7f12613361ef0d80ec05b7ce08b226130",
+      "sha256_after": "1d978f0773b2ee588669f935698e45126a2299637050357c16ebde6521603471",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/real_mp3/03. Joy Division - Candidate.mp3",
+      "backup": "$EVAL/side/go-e234/e2.bak/0005-03. Joy Division - Candidate.mp3",
+      "sha256_before": "657962dfd1dfb0b8829b5081d71c2d483bd0a29aea661c826eb91d5c0fd34a47",
+      "sha256_after": "1e244b25882d659f5f04ed5ff50939329615032138c368376222f8d4a23d7f2d",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "$EVAL/side/go-e234/e2.bak/0006-05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "afd5166efdef7bfa836ba113215066115c6c7d0a284a06bfccd0c59c079f7952",
+      "sha256_after": "b076eddb0532af6134e19b371f7e5811ceaa17fc965bee7c13cbfe8c89991728",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/real_m4a/07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "$EVAL/side/go-e234/e2.bak/0007-07 - Porcupine Tree - Dignity - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "33a3cf27fe552439cb1bb5ea68226efbf631f0243dd7b6775986ff54937baac6",
+      "sha256_after": "56a363d62b1b719e5c315670aa390fb1fe9e38e8bb6deb46d13059c8620063e7",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/real_m4a/08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "$EVAL/side/go-e234/e2.bak/0008-08 - Porcupine Tree - The Sound of Muzak - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "8ce8a1987fbd33fdab86807409d137c3b22d01fdac9ca6d33df84efa4df704ac",
+      "sha256_after": "e87b15df2f721ccbfd81eb0b7d68ca3dcbdaded6e5a0e4dc99599ee0c60d9ec0",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+      "backup": "$EVAL/side/go-e234/e2.bak/0009-01 - Synthetic vorbis.ogg",
+      "sha256_before": "9b9d20744b2e0c26a22f2bbc42ddb3bb988cb9baeade17ebb53df95b66314f24",
+      "sha256_after": "a26858584124dc8f60df5b9309546120f9a92e63ca71e2a6c7a1b5720ab66f8c",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/synth_vorbis/02 - Synthetic vorbis.ogg",
+      "backup": "$EVAL/side/go-e234/e2.bak/0010-02 - Synthetic vorbis.ogg",
+      "sha256_before": "14b07187e36aa668c512470cda148395f5f39243d6d02c836ae3a2ce3612aa89",
+      "sha256_after": "23481f793fac70c1a4125caa753cc83980954d4a0f5adcc4562019db3543cd71",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/synth_vorbis/03 - Synthetic vorbis.ogg",
+      "backup": "$EVAL/side/go-e234/e2.bak/0011-03 - Synthetic vorbis.ogg",
+      "sha256_before": "2e996a1d91f638996c7808c4c66b62cd1333b71a905ffe71c6ecb65fe9848ab2",
+      "sha256_after": "b20beeaf406a6481e7fd5b3a426efb6794cc62dafd8cbf8f3b8ae44e790c2c4f",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/synth_opus/01 - Synthetic opus.opus",
+      "backup": "$EVAL/side/go-e234/e2.bak/0012-01 - Synthetic opus.opus",
+      "sha256_before": "bd2e99ff7c88e89124f261e79db79c8e8d807c0a1a78fdd0d20a84870c8ce9d9",
+      "sha256_after": "92243e5216107dbbbef2b019dbb8706c101b361a67db738cafba050effd5446f",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/synth_opus/02 - Synthetic opus.opus",
+      "backup": "$EVAL/side/go-e234/e2.bak/0013-02 - Synthetic opus.opus",
+      "sha256_before": "607c9aa287fef624e39fe64190419a2e0ff4327ceab724989bbe23770d0bb5dd",
+      "sha256_after": "0da78d2852828b403cb1ae48914b856026f0a7d08169bc37b661310a092fc3cb",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e2/albums/synth_opus/03 - Synthetic opus.opus",
+      "backup": "$EVAL/side/go-e234/e2.bak/0014-03 - Synthetic opus.opus",
+      "sha256_before": "a202a0950e959a9223354f3cbf98c54d0f8fe89523016c614907ab08d4225df2",
+      "sha256_after": "4bb9025416329dc36c5f3113bd9ba816a4cb19b200da685ba7556f568f6102cc",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 377
+}
+exit 0

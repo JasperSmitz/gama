@@ -1,0 +1,270 @@
+{
+  "backup_dir": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3.bk",
+  "committed": 15,
+  "failed": 0,
+  "fatal": null,
+  "journal": "/storage/development/gama/research/backend-eval/results/rust/e3/journal.json",
+  "ok": false,
+  "op": "set-fields",
+  "preflight": [
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/real_flac/01. C418 - Key.flac"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/real_mp3/01. Joy Division - Disorder.mp3"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mp4",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Vorbis",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/synth_vorbis/01 - Synthetic vorbis.ogg"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Opus",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/synth_opus/01 - Synthetic opus.opus"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/actually_flac.mp3"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/flac_two_pictures_no_padding.flac"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/flac_with_id3v2_prefix.flac"
+    },
+    {
+      "dir_writable_rename_possible": true,
+      "error": "lofty parse: failed to parse Flac file",
+      "mode": "644",
+      "ok": false,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/garbage.flac"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mp4",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/m4a_alac.m4a"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mp4",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/m4a_faststart.m4a"
+    },
+    {
+      "dir_writable_rename_possible": true,
+      "error": "lofty parse: failed to parse Mp4 file",
+      "mode": "644",
+      "ok": false,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/m4a_header_only.m4a"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/mp3_id3v1_only.mp3"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/mp3_id3v23.mp3"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/mp3_id3v24_apev2_id3v1.mp3"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/truncated.flac"
+    },
+    {
+      "dir_writable_rename_possible": true,
+      "error": "lofty parse: failed to parse Mp4 file",
+      "mode": "644",
+      "ok": false,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/truncated.m4a"
+    },
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/truncated.mp3"
+    },
+    {
+      "dir_writable_rename_possible": true,
+      "error": "lofty parse: failed to parse Mpeg file",
+      "mode": "644",
+      "ok": false,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/zero_bytes.mp3"
+    }
+  ],
+  "preflight_skipped": 4,
+  "results": [
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/real_flac/01. C418 - Key.flac",
+      "status": "committed"
+    },
+    {
+      "notes": [
+        "also updated ID3v1 tag (single genre byte)"
+      ],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/real_mp3/01. Joy Division - Disorder.mp3",
+      "status": "committed"
+    },
+    {
+      "notes": [
+        "lofty workarounds applied: [\"stik\"]"
+      ],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/albums/synth_opus/01 - Synthetic opus.opus",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/actually_flac.mp3",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/flac_two_pictures_no_padding.flac",
+      "status": "committed"
+    },
+    {
+      "notes": [
+        "lofty workarounds applied: [\"FLAC-leading-ID3v2 excluded from save\"]"
+      ],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/flac_with_id3v2_prefix.flac",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/m4a_alac.m4a",
+      "status": "committed"
+    },
+    {
+      "notes": [
+        "lofty workarounds applied: [\"stik\"]"
+      ],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/m4a_faststart.m4a",
+      "status": "committed"
+    },
+    {
+      "notes": [
+        "also updated ID3v1 tag (single genre byte)"
+      ],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/mp3_id3v1_only.mp3",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/mp3_id3v23.mp3",
+      "status": "committed"
+    },
+    {
+      "notes": [
+        "APEv2 tag present: only its existing keys updated",
+        "also updated ID3v1 tag (single genre byte)"
+      ],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/mp3_id3v24_apev2_id3v1.mp3",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/truncated.flac",
+      "status": "committed"
+    },
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/truncated.mp3",
+      "status": "committed"
+    }
+  ],
+  "rolled_back": []
+}

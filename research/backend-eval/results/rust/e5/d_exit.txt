@@ -1,0 +1,3 @@
+set-genres exit=0
+rollback exit=0
+rollback-again exit=0

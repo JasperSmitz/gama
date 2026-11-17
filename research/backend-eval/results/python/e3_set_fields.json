@@ -1,0 +1,208 @@
+{
+  "command": "set-fields",
+  "journal": "/tmp/claude-1000/-storage-development-gama-research-backend-eval/ba2e859a-246a-4817-baad-6f3dc3da4587/scratchpad/e3/j.json",
+  "backup_dir": "/tmp/claude-1000/-storage-development-gama-research-backend-eval/ba2e859a-246a-4817-baad-6f3dc3da4587/scratchpad/e3/bk",
+  "preflight": [
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/real_flac/01. C418 - Key.flac",
+      "ok": true,
+      "mode": "0o644",
+      "format": "FLAC"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/real_mp3/01. Joy Division - Disorder.mp3",
+      "ok": true,
+      "mode": "0o644",
+      "format": "MP3"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "ok": true,
+      "mode": "0o644",
+      "format": "MP4"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+      "ok": true,
+      "mode": "0o644",
+      "format": "OggVorbis"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/synth_opus/01 - Synthetic opus.opus",
+      "ok": true,
+      "mode": "0o644",
+      "format": "OggOpus"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/actually_flac.mp3",
+      "ok": true,
+      "mode": "0o644",
+      "format": "FLAC"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/flac_two_pictures_no_padding.flac",
+      "ok": true,
+      "mode": "0o644",
+      "format": "FLAC"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/flac_with_id3v2_prefix.flac",
+      "ok": true,
+      "mode": "0o644",
+      "format": "FLAC"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/garbage.flac",
+      "ok": false,
+      "mode": "0o644",
+      "error": "mutagen.flac.FLACNoHeaderError: '/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/garbage.flac' is not a valid FLAC file"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/m4a_alac.m4a",
+      "ok": true,
+      "mode": "0o644",
+      "format": "MP4"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/m4a_faststart.m4a",
+      "ok": true,
+      "mode": "0o644",
+      "format": "MP4"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/m4a_header_only.m4a",
+      "ok": false,
+      "mode": "0o644",
+      "error": "mutagen.mp4.MP4StreamInfoError: not a MP4 file"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/mp3_id3v1_only.mp3",
+      "ok": true,
+      "mode": "0o644",
+      "format": "MP3"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/mp3_id3v23.mp3",
+      "ok": true,
+      "mode": "0o644",
+      "format": "MP3"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/mp3_id3v24_apev2_id3v1.mp3",
+      "ok": true,
+      "mode": "0o644",
+      "format": "MP3"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/truncated.flac",
+      "ok": true,
+      "mode": "0o644",
+      "format": "FLAC"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/truncated.m4a",
+      "ok": false,
+      "mode": "0o644",
+      "error": "mutagen.mp4.MP4StreamInfoError: not a MP4 file"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/truncated.mp3",
+      "ok": true,
+      "mode": "0o644",
+      "format": "MP3"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/zero_bytes.mp3",
+      "ok": false,
+      "mode": "0o644",
+      "error": "mutagen.mp3.HeaderNotFoundError: can't sync to MPEG frame"
+    }
+  ],
+  "results": [
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/real_flac/01. C418 - Key.flac",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/real_mp3/01. Joy Division - Disorder.mp3",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/albums/synth_opus/01 - Synthetic opus.opus",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/actually_flac.mp3",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/flac_two_pictures_no_padding.flac",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/flac_with_id3v2_prefix.flac",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/m4a_alac.m4a",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/m4a_faststart.m4a",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/mp3_id3v1_only.mp3",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/mp3_id3v23.mp3",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/mp3_id3v24_apev2_id3v1.mp3",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/truncated.flac",
+      "ok": true,
+      "state": "committed"
+    },
+    {
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/python/e3/edge/truncated.mp3",
+      "ok": true,
+      "state": "committed"
+    }
+  ],
+  "rolled_back": [],
+  "aborted": false,
+  "ok": false,
+  "summary": {
+    "files": 19,
+    "preflight_failed": 4,
+    "committed": 15,
+    "failed": 0,
+    "rolled_back_ok": 0
+  }
+}

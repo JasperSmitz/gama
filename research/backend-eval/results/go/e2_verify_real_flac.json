@@ -1,0 +1,38 @@
+{
+  "results": [
+    {
+      "file": "01. C418 - Key.flac",
+      "problems": [
+        "metaflac: non-genre comments differ (order or content)"
+      ],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 4120
+    },
+    {
+      "file": "02. C418 - Door.flac",
+      "problems": [
+        "metaflac: non-genre comments differ (order or content)"
+      ],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 4120
+    },
+    {
+      "file": "03. C418 - Subwoofer Lullaby.flac",
+      "problems": [
+        "metaflac: non-genre comments differ (order or content)"
+      ],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 4120
+    }
+  ],
+  "leftover": []
+}

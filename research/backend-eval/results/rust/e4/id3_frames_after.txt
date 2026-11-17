@@ -1,0 +1,3 @@
+mp3_id3v1_only.mp3: ID3v2.4 tag_flags=0x00 TCON=['Ambient', 'Electronic', 'Soundtrack'] frames=['TSSE', 'TCON']
+mp3_id3v23.mp3: ID3v2.4 tag_flags=0x00 TCON=['Ambient', 'Electronic', 'Soundtrack'] frames=['TRCK', 'TALB', 'TPOS', 'TIT2', 'TPE1', 'TXXX', 'TPE2', 'TENC', 'TXXX', 'TSSE', 'APIC', 'TDRC', 'TCON']
+mp3_id3v24_apev2_id3v1.mp3: ID3v2.4 tag_flags=0x00 TCON=['Ambient', 'Electronic', 'Soundtrack'] frames=['TIT2', 'TPE1', 'TRCK', 'TALB', 'TPOS', 'TDRC', 'TPE2', 'TENC', 'USLT', 'APIC', 'TCON']

@@ -1,0 +1,3 @@
+01. Joy Division - Disorder.mp3: ID3v2.4 tag_flags=0x00 TCON=['Ambient', 'Electronic', 'Soundtrack'] frames=['TIT2', 'TPE1', 'TRCK', 'TALB', 'TPOS', 'TDRC', 'TPE2', 'TENC', 'USLT', 'APIC', 'TCON']
+02. Joy Division - Day Of The Lords.mp3: ID3v2.4 tag_flags=0x00 TCON=['Ambient', 'Electronic', 'Soundtrack'] frames=['TIT2', 'TPE1', 'TRCK', 'TALB', 'TPOS', 'TDRC', 'TPE2', 'TENC', 'USLT', 'APIC', 'TCON']
+03. Joy Division - Candidate.mp3: ID3v2.4 tag_flags=0x00 TCON=['Ambient', 'Electronic', 'Soundtrack'] frames=['TIT2', 'TPE1', 'TRCK', 'TALB', 'TPOS', 'TDRC', 'TPE2', 'TENC', 'USLT', 'APIC', 'TCON']

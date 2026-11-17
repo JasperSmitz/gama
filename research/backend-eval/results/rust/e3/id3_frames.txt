@@ -1,0 +1,7 @@
+01. Joy Division - Disorder.mp3: ID3v2.4 tag_flags=0x00 TCON=['Rock', 'Post-Punk'] frames=['TCON', 'TENC', 'USLT', 'APIC', 'TIT2', 'TPE1', 'TALB', 'TDRC', 'TRCK', 'TPOS', 'TPE2']
+/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/actually_flac.mp3: no ID3v2 header
+mp3_id3v1_only.mp3: ID3v2.4 tag_flags=0x00 TCON=None frames=['TSSE', 'TIT2', 'TPE1', 'TALB', 'TDRC', 'TRCK', 'TPOS', 'TPE2']
+mp3_id3v23.mp3: ID3v2.4 tag_flags=0x00 TCON=['Rock/Post-Punk'] frames=['TXXX', 'TENC', 'TCON', 'TXXX', 'TSSE', 'APIC', 'TIT2', 'TPE1', 'TALB', 'TDRC', 'TRCK', 'TPOS', 'TPE2']
+mp3_id3v24_apev2_id3v1.mp3: ID3v2.4 tag_flags=0x00 TCON=['Rock', 'Post-Punk'] frames=['TCON', 'TENC', 'USLT', 'APIC', 'TIT2', 'TPE1', 'TALB', 'TDRC', 'TRCK', 'TPOS', 'TPE2']
+truncated.mp3: ID3v2.4 tag_flags=0x00 TCON=['Rock', 'Post-Punk'] frames=['TCON', 'TENC', 'USLT', 'APIC', 'TIT2', 'TPE1', 'TALB', 'TDRC', 'TRCK', 'TPOS', 'TPE2']
+/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e3/edge/zero_bytes.mp3: no ID3v2 header

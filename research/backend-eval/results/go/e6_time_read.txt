@@ -1,0 +1,8 @@
+read over work copy (e3, 34 files, proto read <workdir>):
+  cold wazero cache (fresh TMPDIR) run1: exit=0 wall_s=0.345 user_s=0.337 sys_s=0.045 max_rss_kb=39764
+  cold wazero cache (fresh TMPDIR) run2: exit=0 wall_s=0.353 user_s=0.350 sys_s=0.045 max_rss_kb=39400
+  cold wazero cache (fresh TMPDIR) run3: exit=0 wall_s=0.351 user_s=0.350 sys_s=0.042 max_rss_kb=39568
+  warm cache run1: exit=0 wall_s=0.236 user_s=0.230 sys_s=0.040 max_rss_kb=24156
+  warm cache run2: exit=0 wall_s=0.233 user_s=0.230 sys_s=0.035 max_rss_kb=24120
+  warm cache run3: exit=0 wall_s=0.234 user_s=0.225 sys_s=0.041 max_rss_kb=24252
+  wazero compilation cache: 2.4M in $TMPDIR/go-taglib-wasm-<uid>

@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "file": "01 - Synthetic opus.opus",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 2695
+    },
+    {
+      "file": "02 - Synthetic opus.opus",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 2698
+    },
+    {
+      "file": "03 - Synthetic opus.opus",
+      "problems": [],
+      "notes": [
+        "genres checked via ffprobe"
+      ],
+      "status": "changed",
+      "size_delta": 2698
+    }
+  ],
+  "leftover": []
+}

@@ -1,0 +1,5 @@
+real_flac exit=0
+real_mp3 exit=0
+real_m4a exit=0
+synth_vorbis exit=0
+synth_opus exit=0

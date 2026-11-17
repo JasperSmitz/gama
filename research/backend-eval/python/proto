@@ -1,0 +1,4 @@
+#!/bin/sh
+# Entry point: runs proto.py with the venv interpreter, isolated from CWD.
+D="$(cd "$(dirname "$0")" && pwd)"
+exec "$D/.venv/bin/python" -I "$D/proto.py" "$@"

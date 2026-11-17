@@ -1,0 +1,22 @@
+{
+  "backup_dir": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4.bk/truncated.m4a",
+  "committed": 0,
+  "failed": 0,
+  "fatal": null,
+  "journal": "/storage/development/gama/research/backend-eval/results/rust/e4/journal-truncated.m4a.json",
+  "ok": false,
+  "op": "set-genres",
+  "preflight": [
+    {
+      "dir_writable_rename_possible": true,
+      "error": "lofty parse: failed to parse Mp4 file",
+      "mode": "644",
+      "ok": false,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/truncated.m4a"
+    }
+  ],
+  "preflight_skipped": 1,
+  "results": [],
+  "rolled_back": []
+}

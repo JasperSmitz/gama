@@ -1,0 +1,3 @@
+mp3_id3v1_only.mp3: ID3v2.4 tag_flags=0x00 TCON=None frames=['TSSE']
+mp3_id3v23.mp3: ID3v2.3 tag_flags=0x00 TCON=['Rock/Post-Punk'] frames=['TIT2', 'TPE1', 'TRCK', 'TALB', 'TPOS', 'TYER', 'TDAT', 'TXXX', 'TPE2', 'TENC', 'TCON', 'TXXX', 'TSSE', 'APIC']
+mp3_id3v24_apev2_id3v1.mp3: ID3v2.4 tag_flags=0x00 TCON=['Rock', 'Post-Punk'] frames=['TIT2', 'TPE1', 'TRCK', 'TALB', 'TPOS', 'TDRC', 'TCON', 'TPE2', 'TENC', 'USLT', 'APIC']

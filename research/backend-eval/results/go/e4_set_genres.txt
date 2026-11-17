@@ -1,0 +1,307 @@
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-actually_flac.mp3.bak --journal $S/e4-actually_flac.mp3.json $W/edge/actually_flac.mp3
+{
+  "ok": false,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-actually_flac.mp3.json",
+  "committed": 0,
+  "failed": 0,
+  "skipped": 1,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/actually_flac.mp3",
+      "state": "preflight_failed",
+      "error": "library read failed: library accepted file as \"mpeg\" but found no audio stream (sample_rate=0)"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 165
+}
+exit 1
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-flac_two_pictures_no_padding.flac.bak --journal $S/e4-flac_two_pictures_no_padding.flac.json $W/edge/flac_two_pictures_no_padding.flac
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-flac_two_pictures_no_padding.flac.json",
+  "committed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/flac_two_pictures_no_padding.flac",
+      "backup": "$EVAL/side/go-e234/e4-flac_two_pictures_no_padding.flac.bak/0000-flac_two_pictures_no_padding.flac",
+      "sha256_before": "d7125329af7534581b9f163fb6dd086d51c930312fdb9292453603b8b8c6de2a",
+      "sha256_after": "ef21057723094c7fff7cf848c6a6e40d627ed198eaa3d71b59a382c510e1f933",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 19
+}
+exit 0
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-flac_with_id3v2_prefix.flac.bak --journal $S/e4-flac_with_id3v2_prefix.flac.json $W/edge/flac_with_id3v2_prefix.flac
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-flac_with_id3v2_prefix.flac.json",
+  "committed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/flac_with_id3v2_prefix.flac",
+      "backup": "$EVAL/side/go-e234/e4-flac_with_id3v2_prefix.flac.bak/0000-flac_with_id3v2_prefix.flac",
+      "sha256_before": "b0b53905977139c8fb4d974095411ebe4dc3d0a76af1eb2cd66f37351c11a1ff",
+      "sha256_after": "871fba994dee0ca92baa628b2719d35a4c5e33a3f0e24791414898c60572f849",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 25
+}
+exit 0
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-garbage.flac.bak --journal $S/e4-garbage.flac.json $W/edge/garbage.flac
+{
+  "ok": false,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-garbage.flac.json",
+  "committed": 0,
+  "failed": 0,
+  "skipped": 1,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/garbage.flac",
+      "state": "preflight_failed",
+      "error": "library read failed: library could not open file (ReadProperties returned empty Properties, no error)"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 5
+}
+exit 1
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-m4a_alac.m4a.bak --journal $S/e4-m4a_alac.m4a.json $W/edge/m4a_alac.m4a
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-m4a_alac.m4a.json",
+  "committed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/m4a_alac.m4a",
+      "backup": "$EVAL/side/go-e234/e4-m4a_alac.m4a.bak/0000-m4a_alac.m4a",
+      "sha256_before": "648e8de9619a782c48c62297777e25a84747c03c7f99098eb8b1e0289e217c5b",
+      "sha256_after": "4bda9b987e692848b4da61cdf18fc37e9d3d9d48a00fd491d1a369266cd24f9e",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 14
+}
+exit 0
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-m4a_faststart.m4a.bak --journal $S/e4-m4a_faststart.m4a.json $W/edge/m4a_faststart.m4a
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-m4a_faststart.m4a.json",
+  "committed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/m4a_faststart.m4a",
+      "backup": "$EVAL/side/go-e234/e4-m4a_faststart.m4a.bak/0000-m4a_faststart.m4a",
+      "sha256_before": "25644904fba282ea9066c79b728f258e496e7b4bd9152b968766e6002f3e1cb4",
+      "sha256_after": "9f0d7eca29e8de7bc07a084045b5d06fa1d5de7c002f0364586038ae39145aa4",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 90
+}
+exit 0
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-m4a_header_only.m4a.bak --journal $S/e4-m4a_header_only.m4a.json $W/edge/m4a_header_only.m4a
+{
+  "ok": false,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-m4a_header_only.m4a.json",
+  "committed": 0,
+  "failed": 0,
+  "skipped": 1,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/m4a_header_only.m4a",
+      "state": "preflight_failed",
+      "error": "library read failed: library could not open file (ReadProperties returned empty Properties, no error)"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 5
+}
+exit 1
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-mp3_id3v1_only.mp3.bak --journal $S/e4-mp3_id3v1_only.mp3.json $W/edge/mp3_id3v1_only.mp3
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-mp3_id3v1_only.mp3.json",
+  "committed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/mp3_id3v1_only.mp3",
+      "backup": "$EVAL/side/go-e234/e4-mp3_id3v1_only.mp3.bak/0000-mp3_id3v1_only.mp3",
+      "sha256_before": "5a4cc17eaefe2f0dd40a1e49e2a9ad4e7ff283229457f1e295ed8f9d0cab24e1",
+      "sha256_after": "bea074ea67a8ef8d24db9deee34cc9e3f8e8fea1d82fb50986206e2b59a934e5",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 42
+}
+exit 0
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-mp3_id3v23.mp3.bak --journal $S/e4-mp3_id3v23.mp3.json $W/edge/mp3_id3v23.mp3
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-mp3_id3v23.mp3.json",
+  "committed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/mp3_id3v23.mp3",
+      "backup": "$EVAL/side/go-e234/e4-mp3_id3v23.mp3.bak/0000-mp3_id3v23.mp3",
+      "sha256_before": "fbaca3e55c8625daee6686e2abb845e09d4091a6a18b122d26150c1038a5f979",
+      "sha256_after": "168a1e4e40808ea3bf72f862f561545449698f1b86678298a98351915bf3d566",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 33
+}
+exit 0
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-mp3_id3v24_apev2_id3v1.mp3.bak --journal $S/e4-mp3_id3v24_apev2_id3v1.mp3.json $W/edge/mp3_id3v24_apev2_id3v1.mp3
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-mp3_id3v24_apev2_id3v1.mp3.json",
+  "committed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/mp3_id3v24_apev2_id3v1.mp3",
+      "backup": "$EVAL/side/go-e234/e4-mp3_id3v24_apev2_id3v1.mp3.bak/0000-mp3_id3v24_apev2_id3v1.mp3",
+      "sha256_before": "62f6f4d4726a897194f8691b91ab248ae34844fe93b4545c37d41812d9fe2942",
+      "sha256_after": "97fe211d4f11d8d466d4fb81ae6e4803ff0c1bf8337ea42695b8e3dac27affbe",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 32
+}
+exit 0
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-truncated.flac.bak --journal $S/e4-truncated.flac.json $W/edge/truncated.flac
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-truncated.flac.json",
+  "committed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/truncated.flac",
+      "backup": "$EVAL/side/go-e234/e4-truncated.flac.bak/0000-truncated.flac",
+      "sha256_before": "3675141375be7aa5b62c5e9455dac85497edfc0bb60262c13e0c5de6a4646e43",
+      "sha256_after": "812032ad57e791bd70feab17f3d74b0094751a1b7d7af1bf57e71c5a4123cf67",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 14
+}
+exit 0
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-truncated.m4a.bak --journal $S/e4-truncated.m4a.json $W/edge/truncated.m4a
+{
+  "ok": false,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-truncated.m4a.json",
+  "committed": 0,
+  "failed": 0,
+  "skipped": 1,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/truncated.m4a",
+      "state": "preflight_failed",
+      "error": "library read failed: library could not open file (ReadProperties returned empty Properties, no error)"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 5
+}
+exit 1
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-truncated.mp3.bak --journal $S/e4-truncated.mp3.json $W/edge/truncated.mp3
+{
+  "ok": true,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-truncated.mp3.json",
+  "committed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/truncated.mp3",
+      "backup": "$EVAL/side/go-e234/e4-truncated.mp3.bak/0000-truncated.mp3",
+      "sha256_before": "afe27672372b834565505a7cc15050590bf835a9179e1cf1c5245c77d43ba905",
+      "sha256_after": "52c29b155b5ec097d76ecb9deac1308a7db7a290f771a8243738550974dd0f84",
+      "mode": 420,
+      "state": "committed"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 23
+}
+exit 0
+$ proto set-genres --genres 'Ambient;Electronic;Soundtrack' --continue-on-error --backup-dir $S/e4-zero_bytes.mp3.bak --journal $S/e4-zero_bytes.mp3.json $W/edge/zero_bytes.mp3
+{
+  "ok": false,
+  "op": "set-genres",
+  "journal": "$EVAL/side/go-e234/e4-zero_bytes.mp3.json",
+  "committed": 0,
+  "failed": 0,
+  "skipped": 1,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e4/edge/zero_bytes.mp3",
+      "state": "preflight_failed",
+      "error": "library read failed: library accepted file as \"mpeg\" but found no audio stream (sample_rate=0)"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 5
+}
+exit 1

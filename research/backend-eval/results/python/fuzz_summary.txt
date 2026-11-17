@@ -1,0 +1,4 @@
+files 420 ok 256
+Counter({'mutagen.id3._util.error': 45, 'mutagen.mp4.MP4StreamInfoError': 35, 'mutagen.oggvorbis.OggVorbisHeaderError': 27, 'mutagen.flac.error': 22, 'mutagen.oggopus.OggOpusHeaderError': 20, 'mutagen.mp4.error': 12, 'builtins.IndexError': 2, 'builtins.ValueError': 1})
+non-MutagenError exceptions: [('01 - Synthet_35.ogg', 'builtins.IndexError: bytearray index out of range'), ('01 - Synthet_52.ogg', 'builtins.IndexError: bytearray index out of range'), ('01 - Synthet_59.opus', 'builtins.ValueError: bad sequence number in <OggPage version=0 position=0 serial=194379640 sequence=2308 offset=195968 complete=True continued=True first=False ')]
+max elapsed ms 14.98

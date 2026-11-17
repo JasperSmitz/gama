@@ -1,0 +1,29 @@
+{
+  "backup_dir": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff.bk/id3flac",
+  "committed": 0,
+  "failed": 1,
+  "fatal": null,
+  "journal": "/storage/development/gama/research/backend-eval/results/rust/workarounds_off/journal-id3flac.json",
+  "ok": false,
+  "op": "set-genres",
+  "preflight": [
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Flac",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff/edge/flac_with_id3v2_prefix.flac"
+    }
+  ],
+  "preflight_skipped": 0,
+  "results": [
+    {
+      "error": "lofty save: failed to write Flac file",
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/woff/edge/flac_with_id3v2_prefix.flac",
+      "status": "failed"
+    }
+  ],
+  "rolled_back": []
+}

@@ -1,0 +1,29 @@
+{
+  "backup_dir": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4.bk/mp3_id3v23.mp3",
+  "committed": 1,
+  "failed": 0,
+  "fatal": null,
+  "journal": "/storage/development/gama/research/backend-eval/results/rust/e4/journal-mp3_id3v23.mp3.json",
+  "ok": true,
+  "op": "set-genres",
+  "preflight": [
+    {
+      "detection": "content",
+      "dir_writable_rename_possible": true,
+      "format": "Mpeg",
+      "mode": "644",
+      "ok": true,
+      "os_open_for_write": true,
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/mp3_id3v23.mp3"
+    }
+  ],
+  "preflight_skipped": 0,
+  "results": [
+    {
+      "notes": [],
+      "path": "/tmp/claude-1000/-storage-development-gama/88084e20-e91b-48dc-a0ff-99d209baba8d/scratchpad/eval/work/rust/e4/edge/mp3_id3v23.mp3",
+      "status": "committed"
+    }
+  ],
+  "rolled_back": []
+}

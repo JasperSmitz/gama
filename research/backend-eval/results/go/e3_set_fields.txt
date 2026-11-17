@@ -1,0 +1,152 @@
+$ proto set-fields --continue-on-error --backup-dir $S/e3.bak --journal $S/e3.json <1 file per album format> $W/edge/*
+{
+  "ok": false,
+  "op": "set-fields",
+  "journal": "$EVAL/side/go-e234/e3.json",
+  "committed": 14,
+  "failed": 0,
+  "skipped": 5,
+  "rolled_back": 0,
+  "entries": [
+    {
+      "path": "$EVAL/work/go/e3/albums/real_flac/01. C418 - Key.flac",
+      "backup": "$EVAL/side/go-e234/e3.bak/0000-01. C418 - Key.flac",
+      "sha256_before": "a8a3919a2b464fe2dfcf0f3c9195fcebc55a8073ce3aeafe71453e479f640f7e",
+      "sha256_after": "7a14c3da98ea1c9525d687f610bf8c37d31d2788f7b07ba00a4dcb27164ec075",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/albums/real_mp3/01. Joy Division - Disorder.mp3",
+      "backup": "$EVAL/side/go-e234/e3.bak/0001-01. Joy Division - Disorder.mp3",
+      "sha256_before": "2168a12cb59a80b2d47b14c116d6a83c62f0fa5f496ca03ad8962a7e46b147c5",
+      "sha256_after": "8fcca2154cc8ef0f92659515b58de4ee89c268fb5749e221bd50327dcd163273",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/albums/real_m4a/05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "backup": "$EVAL/side/go-e234/e3.bak/0002-05 - Porcupine Tree - Even Less - CLOSURE_CONTINUATION.LIVE.m4a",
+      "sha256_before": "afd5166efdef7bfa836ba113215066115c6c7d0a284a06bfccd0c59c079f7952",
+      "sha256_after": "f8af0871694f17ba1f3506de6a2d49aeb4cbfeea9dbe01d1dad8575110a9bbc3",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/albums/synth_vorbis/01 - Synthetic vorbis.ogg",
+      "backup": "$EVAL/side/go-e234/e3.bak/0003-01 - Synthetic vorbis.ogg",
+      "sha256_before": "9b9d20744b2e0c26a22f2bbc42ddb3bb988cb9baeade17ebb53df95b66314f24",
+      "sha256_after": "6f171d2c689ab2aaf80fad3aa97699198f4affd6a6632c9d2d12b5d5d770142b",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/albums/synth_opus/01 - Synthetic opus.opus",
+      "backup": "$EVAL/side/go-e234/e3.bak/0004-01 - Synthetic opus.opus",
+      "sha256_before": "bd2e99ff7c88e89124f261e79db79c8e8d807c0a1a78fdd0d20a84870c8ce9d9",
+      "sha256_after": "dd8417225b4150c04abe2708e12dc4f3b6b90d6971eba48b02c643f731be4a50",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/actually_flac.mp3",
+      "state": "preflight_failed",
+      "error": "library read failed: library accepted file as \"mpeg\" but found no audio stream (sample_rate=0)"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/flac_two_pictures_no_padding.flac",
+      "backup": "$EVAL/side/go-e234/e3.bak/0005-flac_two_pictures_no_padding.flac",
+      "sha256_before": "d7125329af7534581b9f163fb6dd086d51c930312fdb9292453603b8b8c6de2a",
+      "sha256_after": "99cf42b6ad4e92524f4bea11c3a422b9e499326e68285c489aa29cdfe1c40e18",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/flac_with_id3v2_prefix.flac",
+      "backup": "$EVAL/side/go-e234/e3.bak/0006-flac_with_id3v2_prefix.flac",
+      "sha256_before": "b0b53905977139c8fb4d974095411ebe4dc3d0a76af1eb2cd66f37351c11a1ff",
+      "sha256_after": "e6810e02f26df26a1e9858386d2167903e6046e6f8a0c27bab188ec5eb71c1cc",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/garbage.flac",
+      "state": "preflight_failed",
+      "error": "library read failed: library could not open file (ReadProperties returned empty Properties, no error)"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/m4a_alac.m4a",
+      "backup": "$EVAL/side/go-e234/e3.bak/0007-m4a_alac.m4a",
+      "sha256_before": "648e8de9619a782c48c62297777e25a84747c03c7f99098eb8b1e0289e217c5b",
+      "sha256_after": "8c1743b0534a09040d67a8472aa366d7b9113f65f688780e74c5a956750a6bc3",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/m4a_faststart.m4a",
+      "backup": "$EVAL/side/go-e234/e3.bak/0008-m4a_faststart.m4a",
+      "sha256_before": "25644904fba282ea9066c79b728f258e496e7b4bd9152b968766e6002f3e1cb4",
+      "sha256_after": "73e77c6bd0791940ee6d5653b365e0195a590664b23a7caacec8df3935d44bf0",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/m4a_header_only.m4a",
+      "state": "preflight_failed",
+      "error": "library read failed: library could not open file (ReadProperties returned empty Properties, no error)"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/mp3_id3v1_only.mp3",
+      "backup": "$EVAL/side/go-e234/e3.bak/0009-mp3_id3v1_only.mp3",
+      "sha256_before": "5a4cc17eaefe2f0dd40a1e49e2a9ad4e7ff283229457f1e295ed8f9d0cab24e1",
+      "sha256_after": "03b8c5102f721cccbf8901fd8076b995877b06bd7068657472251d693bf5e20e",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/mp3_id3v23.mp3",
+      "backup": "$EVAL/side/go-e234/e3.bak/0010-mp3_id3v23.mp3",
+      "sha256_before": "fbaca3e55c8625daee6686e2abb845e09d4091a6a18b122d26150c1038a5f979",
+      "sha256_after": "7a4f147113bac2f230c60b18f9571011e092544148d6cd1c850209e1ac196d63",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/mp3_id3v24_apev2_id3v1.mp3",
+      "backup": "$EVAL/side/go-e234/e3.bak/0011-mp3_id3v24_apev2_id3v1.mp3",
+      "sha256_before": "62f6f4d4726a897194f8691b91ab248ae34844fe93b4545c37d41812d9fe2942",
+      "sha256_after": "ab8050f43e3e4f36375c6906faa417bde01d65e1b8842c0fa27f59886dee9f2e",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/truncated.flac",
+      "backup": "$EVAL/side/go-e234/e3.bak/0012-truncated.flac",
+      "sha256_before": "3675141375be7aa5b62c5e9455dac85497edfc0bb60262c13e0c5de6a4646e43",
+      "sha256_after": "4056b97c5dcb89dffccbf44e62ab4f02a378cc8d078d0f9b330ffb5ed09f64cf",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/truncated.m4a",
+      "state": "preflight_failed",
+      "error": "library read failed: library could not open file (ReadProperties returned empty Properties, no error)"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/truncated.mp3",
+      "backup": "$EVAL/side/go-e234/e3.bak/0013-truncated.mp3",
+      "sha256_before": "afe27672372b834565505a7cc15050590bf835a9179e1cf1c5245c77d43ba905",
+      "sha256_after": "29d5352b4b83ebfdf1cf14b22f7b0fb4516949b1f0b97d50d3558f811b46c806",
+      "mode": 420,
+      "state": "committed"
+    },
+    {
+      "path": "$EVAL/work/go/e3/edge/zero_bytes.mp3",
+      "state": "preflight_failed",
+      "error": "library read failed: library accepted file as \"mpeg\" but found no audio stream (sample_rate=0)"
+    }
+  ],
+  "leftover_temp_files": [],
+  "elapsed_ms": 484
+}
+exit 1
