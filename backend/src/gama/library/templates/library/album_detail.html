@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ album.album }} · Gama{% endblock %}
+{% block content %}
+<h2>{{ album.album|default:"(no album tag)" }} <span class="muted">— {{ album.albumartist|default:"(no album artist)" }}</span></h2>
+<p class="muted">Folder: {{ album.album_dir }} · {{ album.disc_count }} disc(s) · {{ album.track_count }} track(s)
+  {% if album.mb_albumid %}· MusicBrainz release {{ album.mb_albumid }}{% endif %}</p>
+{% if album.inconsistent %}<p class="warn">Tracks in this folder disagree on album, album artist or genres. Each combination is shown as a separate album.</p>{% endif %}
+{% if in_basket %}
+<form method="post" action="{% url 'library:basket_remove' %}">{% csrf_token %}
+  <input type="hidden" name="album" value="{{ album.id }}"><input type="hidden" name="next" value="{{ request.get_full_path }}">
+  <button type="submit">Remove from selection</button></form>
+{% else %}
+<form method="post" action="{% url 'library:basket_add' %}">{% csrf_token %}
+  <input type="hidden" name="album" value="{{ album.id }}"><input type="hidden" name="next" value="{{ request.get_full_path }}">
+  <button type="submit">Add to selection</button></form>
+{% endif %}
+<table>
+  <thead><tr><th>Disc</th><th>#</th><th>Title</th><th>Genres (as stored)</th><th>Format</th><th>File</th><th>Notes</th></tr></thead>
+  <tbody>
+  {% for t in tracks %}
+    <tr>
+      <td>{{ t.discnumber }}</td><td>{{ t.tracknumber }}</td><td>{{ t.title }}</td>
+      <td>{{ t.genres|join:" | " }} <span class="muted">({{ t.genre_style }})</span></td>
+      <td>{{ t.file.format }}</td>
+      <td class="muted">{{ t.file.relpath }}</td>
+      <td>{% if t.file.writable_reason %}<span class="bad">not writable: {{ t.file.writable_reason }}</span>{% endif %}
+        {% for w in t.warnings %}<span class="warn">{{ w }}</span> {% endfor %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

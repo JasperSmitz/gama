@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Selection · Gama{% endblock %}
+{% block content %}
+<h2>Selected albums</h2>
+{% if albums %}
+<form method="post" action="{% url 'library:basket_remove' %}">
+  {% csrf_token %}
+  <table>
+    <thead><tr><th></th><th>Album</th><th>Album artist</th><th>Folder</th><th>Discs</th><th>Tracks</th></tr></thead>
+    <tbody>
+    {% for a in albums %}
+      <tr><td><input type="checkbox" name="album" value="{{ a.id }}" aria-label="Remove {{ a.album }}"></td>
+        <td><a href="{% url 'library:album' a.id %}">{{ a.album|default:"(no album tag)" }}</a>
+          {% if a.inconsistent %}<span class="warn">inconsistent</span>{% endif %}</td>
+        <td>{{ a.albumartist }}</td><td class="muted">{{ a.album_dir }}</td><td>{{ a.disc_count }}</td><td>{{ a.track_count }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <button type="submit">Remove checked</button>
+</form>
+<form method="post" action="{% url 'library:basket_clear' %}">{% csrf_token %}<button type="submit">Clear selection</button></form>
+{% else %}
+<p>No albums selected. <a href="{% url 'library:albums' %}">Browse albums</a>.</p>
+{% endif %}
+{% endblock %}

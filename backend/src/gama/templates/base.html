@@ -5,20 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Gama{% endblock %}</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 60rem; margin: 1rem auto; padding: 0 1rem; }
-    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; }
+    body { font-family: system-ui, sans-serif; max-width: 72rem; margin: 1rem auto; padding: 0 1rem; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; gap: 1rem; flex-wrap: wrap; }
+    header nav a { margin-right: 1rem; }
     header form { display: inline; }
+    .layout { display: grid; grid-template-columns: 1fr 18rem; gap: 1.5rem; }
+    @media (max-width: 50rem) { .layout { grid-template-columns: 1fr; } }
+    aside.selection { border-left: 1px solid #ccc; padding-left: 1rem; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { text-align: left; padding: .25rem .5rem; border-bottom: 1px solid #eee; vertical-align: top; }
+    .muted { color: #666; font-size: .9em; }
+    .warn { color: #8a5300; }
+    .bad { color: #a00; }
+    .messages { padding: .5rem; background: #eef; }
   </style>
 </head>
 <body>
   <header>
     <h1><a href="{% url 'home' %}">Gama</a></h1>
     {% if user.is_authenticated %}
+      <nav>
+        <a href="{% url 'library:albums' %}">Albums</a>
+        <a href="{% url 'library:basket' %}">Selection ({{ basket_albums|length }})</a>
+      </nav>
       <div>{{ user.get_username }}
         <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Log out</button></form>
       </div>
     {% endif %}
   </header>
-  <main>{% block content %}{% endblock %}</main>
+  {% if messages %}<div class="messages">{% for m in messages %}<p>{{ m }}</p>{% endfor %}</div>{% endif %}
+  <div class="layout">
+    <main>{% block content %}{% endblock %}</main>
+    {% if user.is_authenticated %}
+    <aside class="selection" aria-label="Selected albums">
+      <h2>Selection</h2>
+      {% if basket_albums %}
+        <ul>
+        {% for a in basket_albums %}
+          <li><a href="{% url 'library:album' a.id %}">{{ a.album|default:"(no album tag)" }}</a>
+            <span class="muted">— {{ a.albumartist|default:"(no album artist)" }}</span></li>
+        {% endfor %}
+        </ul>
+        <p><a href="{% url 'library:basket' %}">Review selection</a></p>
+      {% else %}
+        <p class="muted">No albums selected.</p>
+      {% endif %}
+    </aside>
+    {% endif %}
+  </div>
 </body>
 </html>

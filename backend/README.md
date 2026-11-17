@@ -162,6 +162,21 @@ boxes, including edit lists).
     with `os._exit`.
   - **What is atomic:** each file is replaced atomically by rename(2). A multi-file job is not atomic; recovery and
     restore undo partial jobs. Durability depends on the filesystem honouring fsync.
+- **M6 (library index and album selection): done.**
+  - The `gama.library` app has the models (LibraryRoot, MediaFile, Album, Track) and migrations.
+  - `scanner.scan_root`:
+    - walks with scandir and does not follow directory symlinks;
+    - ignores `.gama-tmp-*`;
+    - re-reads only new or changed files (size, mtime or inode), in child processes;
+    - rebuilds albums by identity key (plan 1.2), so album ids stay stable.
+  - Commands:
+    - `manage.py gama_scan [--root PATH]` indexes the configured roots and only ever reads;
+    - `manage.py gama_demo_library DIR` builds a synthetic library for manual testing. Then run
+      `GAMA_LIBRARY_ROOTS=DIR/library manage.py gama_scan`.
+  - Pages:
+    - `/library/albums/` lists albums with search over album, album artist and folder, and checkboxes;
+    - `/library/albums/<id>/` shows the tracks, their stored genres and writability;
+    - `/library/basket/` shows the selection, which is kept in the session and shown on every page.
 
 ### Known, accepted limitations
 - **Frames hidden after ID3 padding.** An ID3v2 frame placed after zero padding is invisible to mutagen and to Gama's
