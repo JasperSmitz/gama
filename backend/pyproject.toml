@@ -8,7 +8,8 @@ requires-python = ">=3.14"
 DJANGO_SETTINGS_MODULE = "gama.settings_test"
 pythonpath = ["src", "../tools"]
 testpaths = ["tests"]
-addopts = "-ra --strict-markers"
+# --ds outranks an exported DJANGO_SETTINGS_MODULE (the ini key above does not).
+addopts = "-ra --strict-markers --ds=gama.settings_test"
 markers = [
     "slow: builds or inspects real audio files with ffmpeg",
 ]

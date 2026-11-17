@@ -1,13 +1,16 @@
 """Shared test setup.
 
-Safety: the session aborts if any configured library root or the data dir
-resolves to (or under) the production collection. Every test library is built
-synthetically under pytest's tmp dirs.
+Safety: the session aborts unless Django runs with ``gama.settings_test``
+(an exported ``DJANGO_SETTINGS_MODULE`` would otherwise win), no library root
+is configured, and the data dir is under the system temp dir; and also if any
+configured path resolves to (or under) the production collection. Every test
+library is built synthetically under pytest's tmp dirs.
 """
 from __future__ import annotations
 
 import json
 import shutil
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -29,14 +32,35 @@ def production_paths(paths) -> list[Path]:
     return bad
 
 
+TEST_SETTINGS_MODULE = "gama.settings_test"
+
+
+def unsafe_test_settings(settings) -> list[str]:
+    """Reasons the Django settings are not safe to run the test suite with (empty = safe)."""
+    reasons = []
+    module = getattr(settings, "SETTINGS_MODULE", None)
+    if module != TEST_SETTINGS_MODULE:
+        reasons.append(f"settings module is {module!r}, not {TEST_SETTINGS_MODULE!r} "
+                       "(unset DJANGO_SETTINGS_MODULE or pass --ds)")
+    cfg = settings.GAMA
+    if tuple(cfg.library_roots) != ():
+        reasons.append(f"library roots are configured: {list(cfg.library_roots)}")
+    tmp = Path(tempfile.gettempdir()).resolve()
+    data = Path(cfg.data_dir).resolve(strict=False)
+    if data == tmp or not data.is_relative_to(tmp):
+        reasons.append(f"data_dir {cfg.data_dir} is not under the temp dir {tmp}")
+    bad = production_paths([*cfg.library_roots, cfg.data_dir])
+    if bad:
+        reasons.append(f"configuration points at the production collection: {bad}")
+    return reasons
+
+
 def pytest_sessionstart(session):
     from django.conf import settings
 
-    cfg = settings.GAMA
-    bad = production_paths([*cfg.library_roots, cfg.data_dir])
-    if bad:
-        pytest.exit(f"refusing to run: test configuration points at the production collection: {bad}",
-                    returncode=3)
+    reasons = unsafe_test_settings(settings)
+    if reasons:
+        pytest.exit("refusing to run: " + "; ".join(reasons), returncode=3)
 
 
 def guard(path: Path) -> Path:

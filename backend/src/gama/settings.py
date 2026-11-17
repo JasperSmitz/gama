@@ -1,8 +1,10 @@
 """Django settings for Gama.
 
 Development: ``GAMA_DEBUG=1`` enables DEBUG and a fixed insecure secret key.
-Production (``GAMA_DEBUG`` unset): ``GAMA_SECRET_KEY`` is required; set
-``GAMA_SECURE_COOKIES=1`` when served behind TLS.
+Production (``GAMA_DEBUG`` unset): ``GAMA_SECRET_KEY`` is required (at least
+50 characters, at least 10 distinct); set ``GAMA_SECURE_COOKIES=1`` when served
+behind TLS. ``GAMA_ALLOWED_HOSTS`` is refused while DEBUG is on, so debug pages
+are only ever served on localhost.
 """
 import os
 from pathlib import Path
@@ -15,16 +17,25 @@ BASE_DIR = Path(__file__).resolve().parent
 
 GAMA = load_config()
 
+MIN_SECRET_KEY_LENGTH = 50
+MIN_SECRET_KEY_DISTINCT = 10
+
 DEBUG = os.environ.get("GAMA_DEBUG", "") == "1"
 SECRET_KEY = os.environ.get("GAMA_SECRET_KEY", "")
 if not SECRET_KEY:
     if not DEBUG:
         raise ImproperlyConfigured("GAMA_SECRET_KEY must be set when GAMA_DEBUG is not 1")
     SECRET_KEY = "django-insecure-gama-development-only"
+elif len(SECRET_KEY.strip()) < MIN_SECRET_KEY_LENGTH or len(set(SECRET_KEY)) < MIN_SECRET_KEY_DISTINCT:
+    raise ImproperlyConfigured(
+        f"GAMA_SECRET_KEY is too weak: use at least {MIN_SECRET_KEY_LENGTH} characters with at least "
+        f"{MIN_SECRET_KEY_DISTINCT} distinct ones (e.g. python -c 'import secrets; print(secrets.token_urlsafe(50))')")
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"] + [
-    h for h in os.environ.get("GAMA_ALLOWED_HOSTS", "").split(",") if h
-]
+EXTRA_HOSTS = [h.strip() for h in os.environ.get("GAMA_ALLOWED_HOSTS", "").split(",") if h.strip()]
+if DEBUG and EXTRA_HOSTS:
+    raise ImproperlyConfigured("GAMA_ALLOWED_HOSTS is refused while GAMA_DEBUG=1: "
+                               "debug pages must only be served on localhost")
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"] + EXTRA_HOSTS
 
 INSTALLED_APPS = [
     "django.contrib.admin",

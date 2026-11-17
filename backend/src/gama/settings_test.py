@@ -12,7 +12,8 @@ os.environ["GAMA_CONFIG"] = ""
 os.environ["GAMA_LIBRARY_ROOTS"] = ""
 os.environ["GAMA_DATA_DIR"] = os.path.join(tempfile.gettempdir(), f"gama-test-{os.getpid()}")
 os.environ["GAMA_DEBUG"] = "0"
-os.environ["GAMA_SECRET_KEY"] = "gama-test-only-secret"
+os.environ["GAMA_SECRET_KEY"] = "gama-test-only-secret-not-for-production-0123456789abcdef"
+os.environ["GAMA_ALLOWED_HOSTS"] = ""
 
 from gama.settings import *  # noqa: E402,F401,F403
 

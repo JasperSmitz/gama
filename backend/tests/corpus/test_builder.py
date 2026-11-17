@@ -16,7 +16,7 @@ from verify.verify import (ape_parse, detect, flac_parse, id3v1_parse, id3v2_par
 
 pytestmark = pytest.mark.slow
 
-EXPECTED_FILES = 59
+EXPECTED_FILES = 60
 
 
 def top_atoms(data: bytes) -> list[bytes]:
@@ -37,6 +37,8 @@ CHECKS = {
     "duplicate-genre": lambda d, g: len(g) != len(set(g)),
     "no-genre": lambda d, g: g == [],
     "lowercase-key": lambda d, g: any(c.startswith("genre=") for c in flac_parse(d)["comments"]),
+    # Raw bytes \xe9 survive the oracle's lossless decode as a surrogate escape.
+    "non-utf8-comment": lambda d, g: any("\udce9" in c for c in flac_parse(d)["comments"]),
     "replaygain": lambda d, g: any(c.startswith("REPLAYGAIN_") for c in flac_parse(d)["comments"]),
     "delimited-genre": lambda d, g: len(g) == 1 and ";" in g[0],
     "mixed-style": lambda d, g: len(g) > 1 and any(";" in x for x in g),
@@ -85,7 +87,7 @@ def test_file_count_and_manifest(corpus_master):
     files = sorted(str(p.relative_to(corpus_master.master)) for p in corpus_master.master.rglob("*") if p.is_file())
     assert len(files) == EXPECTED_FILES
     assert files == sorted(corpus_master.manifest)
-    assert Counter(e["group"] for e in corpus_master.manifest.values()) == {"album": 29, "format": 23, "broken": 7}
+    assert Counter(e["group"] for e in corpus_master.manifest.values()) == {"album": 29, "format": 24, "broken": 7}
 
 
 def test_build_is_fast(corpus_master):
@@ -120,8 +122,38 @@ def test_every_property_holds(corpus_master):
 
 def test_manifest_genres_match_raw(corpus_master):
     for rel, e in corpus_master.manifest.items():
+        raw = raw_genres(corpus_master.master / rel)
         if e["genres"] is not None:
-            assert raw_genres(corpus_master.master / rel) == e["genres"], rel
+            assert raw == e["genres"], rel
+        elif e["group"] != "broken":
+            # None means "no genre stored"; broken files are not asserted.
+            assert raw in ([], None), (rel, raw)
+
+
+def test_fragmented_manifest_records_its_genre(corpus_master):
+    rel = corpus_master.with_prop("fragmented")[0]
+    assert corpus_master.manifest[rel]["genres"] == ["Rock"] == raw_genres(corpus_master.master / rel)
+
+
+def test_builder_refuses_production_and_library_roots(tmp_path, monkeypatch):
+    """Finding 10: the CLI/importable builder refuses the collection and configured roots.
+
+    Uses a stand-in production root under tmp_path, so the real collection is never touched.
+    """
+    prod = tmp_path / "music"
+    monkeypatch.setattr(build_mod, "PRODUCTION_ROOTS", (prod,))
+    monkeypatch.setenv("GAMA_LIBRARY_ROOTS", str(tmp_path / "lib"))
+    for out in (prod, prod / "tmp", tmp_path / "lib" / "x"):
+        with pytest.raises(ValueError, match="refusing to build"):
+            build_mod.build(out)
+        assert not out.exists()
+    link = tmp_path / "sneaky"
+    prod.mkdir()
+    link.symlink_to(prod)
+    with pytest.raises(ValueError, match="refusing to build"):
+        build_mod.build(link / "out")
+    assert list(prod.iterdir()) == []
+    assert build_mod.unsafe_output_dir(tmp_path / "elsewhere") is None
 
 
 def test_misnamed_file_is_flac_content(corpus_master):

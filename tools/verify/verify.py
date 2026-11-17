@@ -9,7 +9,8 @@ the library under test would not see in its own output.
 ``compare(master, work, mode, expected_genres) -> list[str]`` returns problems
 (empty list = pass):
 
-* ``mode="identical"``: ``work`` must be byte-identical with the same mode bits.
+* ``mode="identical"``: ``work`` must be byte-identical with the same file
+  type, mode bits, group, link count, xattrs and mtime.
 * ``mode="genres"``: only the stored genre values may differ, and they must
   equal ``expected_genres`` exactly (in order, one entry per Vorbis field /
   ID3v2.4 TCON value / MP4 ``data`` atom). ``expected_genres=None`` means the
@@ -17,39 +18,56 @@ the library under test would not see in its own output.
   master's genres, an unchanged file is a problem (a writer that skips files
   does not pass).
 
+Paths are examined with ``lstat``. A symlink must stay the same symlink and is
+never a valid genre-edit target (Gama refuses symlinks). Text that is compared
+is decoded losslessly (``text``), so a writer that turns invalid UTF-8 into
+U+FFFD is caught.
+
 What a "genres" comparison checks, per format:
 
-* all: file mode bits; container format; decoded-PCM and compressed-packet
-  md5 of the first audio stream (ffmpeg);
+* all: file type, mode bits, group, hard link count, xattrs (incl. POSIX ACLs;
+  skipped if the filesystem has none); container format; decoded-PCM and
+  compressed-packet md5 of the first audio stream (ffmpeg);
 * FLAC: prepended ID3 bytes, every metadata block except PADDING and
   VORBIS_COMMENT byte-for-byte (STREAMINFO, PICTURE incl. type/mime/desc,
   SEEKTABLE, ...), vendor string, non-genre comments in order (key case
   included), audio frames byte-identical;
 * MP3: ID3v2 frame inventory except TCON, decoded (handles tag-level and
   per-frame unsynchronisation, data-length indicators, compression, and decodes
-  each UTF-16 value on its own); the version may only go 2.3 -> 2.4, in which
-  case TYER/TDAT/TIME may become TDRC with the same date; ID3v1 fields decoded
-  and raw bytes; APEv2 items and raw bytes; the MPEG audio region
-  byte-identical (covers the Xing/LAME frame);
+  each UTF-16 value on its own; binary frames such as POPM/PRIV/UFID compared
+  as raw bytes); the version may only go 2.3 -> 2.4, in which case
+  TYER/TDAT/TIME may become TDRC with the same date and TORY may become TDOR
+  with the same value; ID3v1 fields decoded and raw bytes; APEv2 items and raw
+  bytes; the MPEG audio region byte-identical (covers the Xing/LAME frame);
 * MP4: every ``ilst`` item except ``©gen``/``gnre`` decoded (incl. freeform
-  ``----`` atoms and ``covr``), every non-``udta`` ``moov`` box except chunk
-  offset tables byte-identical (covers edit lists and sample tables), ``mdat``
-  payload byte-identical, fragmented-ness unchanged; a remaining ``gnre`` atom
-  is reported as genre value ``"<gnre N>"``;
-* Ogg Vorbis/Opus: page CRCs valid, identification/setup packets identical,
-  vendor, non-genre comments in order, genres as separate ``GENRE`` fields,
-  audio packets identical.
+  ``----`` atoms, ``covr`` and the ``data`` locale), the ``udta/meta/hdlr``,
+  every other box in the file except ``mdat``/``free``/``skip`` byte-identical
+  (``ftyp``, ``moov`` incl. edit lists and sample tables, ``moof``, ``mfra``,
+  ...); absolute offsets (``stco``/``co64``, ``tfhd`` base data offset,
+  ``tfra`` moof offset) must move by exactly the shift of the box they point
+  into; ``mdat`` payload byte-identical, top-level box order and
+  fragmented-ness unchanged; a remaining ``gnre`` atom is reported as genre
+  value ``"<gnre N>"``;
+* Ogg Vorbis/Opus: page CRCs valid, page sequence numbers contiguous from 0,
+  BOS/EOS on exactly the first/last page, identification/setup packets
+  identical, vendor, non-genre comments in order, bytes after the comment list
+  (Vorbis framing bit, which must be set; Opus trailing data) unchanged,
+  genres as separate ``GENRE`` fields, audio packets and audio page granule
+  positions/flags identical.
 
 ``compare_tree(master_root, work_root, expected)`` applies ``compare`` to a
 whole library: files listed in ``expected`` (relpath -> genres) use "genres"
-mode, all others must be identical; extra files (temp/backup leaks) and
-missing files are problems.
+mode, all others must be identical; extra or missing files and directories
+(temp/backup leaks), changed directory modes and split or new hard links are
+problems.
 """
 from __future__ import annotations
 
 import argparse
+import errno
 import hashlib
 import json
+import os
 import stat
 import struct
 import subprocess
@@ -59,7 +77,15 @@ from collections import Counter
 from collections.abc import Mapping
 from pathlib import Path
 
-ID3_DATE = {"TYER", "TDAT", "TIME", "TDRC", "TORY", "TDOR", "TRDA"}
+# Frames a 2.3 -> 2.4 upgrade may legitimately rewrite. They are left out of
+# the frame inventory on an upgrade and checked explicitly instead:
+# TYER/TDAT/TIME <-> TDRC by ``id3_date_string``, TORY <-> TDOR by
+# ``id3_original_date``. TRDA has no 2.4 equivalent and stays in the inventory
+# (dropping it is a loss the oracle reports).
+ID3_UPGRADE_DATE = {"TYER", "TDAT", "TIME", "TDRC", "TORY", "TDOR"}
+# Frames whose last field is a terminated string: at most one trailing
+# terminator is ignored. Every other non-text frame is compared as raw bytes.
+ID3_STRING_TAIL = {"USER", "OWNE", "LINK"}
 
 
 def sha(b: bytes) -> str:
@@ -164,21 +190,40 @@ def _split_enc(raw: bytes, enc: int) -> list[bytes]:
                 cur = bytearray()
             else:
                 cur += pair
+        cur += raw[len(raw) - len(raw) % 2:]  # keep a stray odd byte (lossless)
         parts.append(bytes(cur))
         return parts
     return raw.split(b"\0")
 
 
+def text(b: bytes, codec: str = "utf-8") -> str:
+    """Lossless decode for comparisons: distinct bytes always give distinct strings.
+
+    Never use ``errors="replace"`` for values that are compared: mutagen loads
+    invalid UTF-8 with ``replace`` and writes U+FFFD back, and a lossy oracle
+    would decode the original to the same U+FFFD and miss the damage. UTF-8 uses
+    ``surrogateescape``; other codecs fall back to a hex marker on bad input.
+    """
+    if codec == "utf-8":
+        return b.decode("utf-8", "surrogateescape")
+    if codec == "latin-1":
+        return b.decode("latin-1")
+    try:
+        return b.decode(codec)
+    except UnicodeDecodeError:
+        return f"<undecodable {codec}: {b.hex()}>"
+
+
 def _dec(b: bytes, enc: int) -> str:
     if enc == 0:
-        return b.decode("latin-1")
+        return text(b, "latin-1")
     if enc == 1:
         if b[:2] in (b"\xff\xfe", b"\xfe\xff"):
-            return b.decode("utf-16", "replace")
-        return b.decode("utf-16-le", "replace")  # BOM-less continuation, seen in the wild
+            return text(b, "utf-16")
+        return text(b, "utf-16-le")  # BOM-less continuation, seen in the wild
     if enc == 2:
-        return b.decode("utf-16-be", "replace")
-    return b.decode("utf-8", "replace")
+        return text(b, "utf-16-be")
+    return text(b, "utf-8")
 
 
 def id3_text_values(body: bytes) -> list[str]:
@@ -207,11 +252,11 @@ def id3_frame_view(fid: str, body: bytes) -> tuple:
     if fid.startswith("T"):
         return (fid, tuple(id3_text_values(body)))
     if fid in ("USLT", "COMM", "ULT", "COM"):
-        lang = body[1:4].decode("latin-1", "replace")
+        lang = text(body[1:4], "latin-1")
         parts = _split_enc(body[4:], enc)
         dlen = len(parts[0]) + (2 if enc in (1, 2) else 1)
-        text = _dec(body[4 + dlen:], enc).rstrip("\0")
-        return (fid, lang, _dec(parts[0], enc), text)
+        body_text = _dec(body[4 + dlen:], enc).rstrip("\0")
+        return (fid, lang, _dec(parts[0], enc), body_text)
     if fid == "APIC":
         mime_end = body.index(b"\0", 1)
         mime = body[1:mime_end].decode("latin-1")
@@ -220,8 +265,13 @@ def id3_frame_view(fid: str, body: bytes) -> tuple:
         parts = _split_enc(rest, enc)
         dlen = len(parts[0]) + (2 if enc in (1, 2) else 1)
         return (fid, mime, ptype, _dec(parts[0], enc), sha(rest[dlen:]))
-    # UFID, POPM, PRIV, GEOB, RVA2, MCDI, ...: raw body (optional trailing NULs ignored)
-    return (fid, sha(body.rstrip(b"\0")))
+    if fid.startswith("W") or fid in ID3_STRING_TAIL:
+        # URL frames and frames ending in a string: one optional terminator.
+        term = b"\0\0" if fid in ID3_STRING_TAIL and enc in (1, 2) else b"\0"
+        return (fid, sha(body[:-len(term)] if body.endswith(term) else body))
+    # UFID, POPM, PRIV, GEOB, RVA2, MCDI, ...: raw body. Trailing zero bytes are
+    # data here (POPM counter, PRIV DWORDs), so nothing is stripped.
+    return (fid, sha(body))
 
 
 def id3_genres(parsed: dict) -> list[str]:
@@ -230,6 +280,12 @@ def id3_genres(parsed: dict) -> list[str]:
         if fid in ("TCON", "TCO"):
             out.extend(id3_text_values(body))
     return out
+
+
+def id3_original_date(parsed: dict) -> str:
+    """Original release date: TDOR (2.4) or TORY (2.3, a year)."""
+    f = {fid: id3_text_values(b) for fid, b in parsed["frames"]}
+    return (f.get("TDOR") or f.get("TORY") or [""])[0]
 
 
 def id3_date_string(parsed: dict) -> str:
@@ -277,9 +333,9 @@ def ape_parse(data: bytes) -> dict | None:
     for _ in range(count):
         vlen, iflags = struct.unpack("<II", data[pos:pos + 8])
         kend = data.index(b"\0", pos + 8)
-        key = data[pos + 8:kend].decode("ascii", "replace")
+        key = text(data[pos + 8:kend])
         val = data[kend + 1:kend + 1 + vlen]
-        items[key.lower()] = (key, iflags, sha(val), val[:60].decode("utf-8", "replace"))
+        items[key.lower()] = (key, iflags, sha(val), text(val[:60]))
         pos = kend + 1 + vlen
     return {"start": start, "end": end, "raw": data[start:end], "items": items}
 
@@ -290,18 +346,23 @@ FLAC_BLOCK = {0: "STREAMINFO", 1: "PADDING", 2: "APPLICATION", 3: "SEEKTABLE",
               4: "VORBIS_COMMENT", 5: "CUESHEET", 6: "PICTURE"}
 
 
-def vorbis_comment_parse(b: bytes) -> tuple[str, list[str]]:
+def vorbis_comment_parse(b: bytes) -> tuple[str, list[str], int]:
+    """(vendor, comments, end offset). Strings are decoded losslessly (see ``text``)."""
     n = int.from_bytes(b[0:4], "little")
-    vendor = b[4:4 + n].decode("utf-8", "replace")
+    if 4 + n > len(b):
+        raise ValueError("Vorbis comment vendor runs past the end")
+    vendor = text(b[4:4 + n])
     i = 4 + n
     count = int.from_bytes(b[i:i + 4], "little")
     i += 4
     out = []
     for _ in range(count):
         ln = int.from_bytes(b[i:i + 4], "little")
-        out.append(b[i + 4:i + 4 + ln].decode("utf-8", "replace"))
+        if i + 4 + ln > len(b):
+            raise ValueError("Vorbis comment runs past the end")
+        out.append(text(b[i + 4:i + 4 + ln]))
         i += 4 + ln
-    return vendor, out
+    return vendor, out, i
 
 
 def flac_picture_view(b: bytes) -> tuple:
@@ -309,7 +370,7 @@ def flac_picture_view(b: bytes) -> tuple:
     mime = b[8:8 + mlen].decode("latin-1")
     i = 8 + mlen
     dlen = int.from_bytes(b[i:i + 4], "big")
-    desc = b[i + 4:i + 4 + dlen].decode("utf-8", "replace")
+    desc = text(b[i + 4:i + 4 + dlen])
     i += 4 + dlen
     w, h, depth, colors, ilen = struct.unpack(">IIIII", b[i:i + 20])
     return ("PICTURE", ptype, mime, desc, (w, h, depth, colors), sha(b[i + 20:i + 20 + ilen]))
@@ -335,7 +396,7 @@ def flac_parse(data: bytes) -> dict:
     vendor, comments = "", []
     for t, b in blocks:
         if t == 4:
-            vendor, comments = vorbis_comment_parse(b)
+            vendor, comments, _ = vorbis_comment_parse(b)
     return {"prefix": prefix, "blocks": blocks, "vendor": vendor, "comments": comments, "audio": data[pos:]}
 
 
@@ -350,7 +411,14 @@ def _genre_values(comments: list[str]) -> list[str]:
 # --------------------------------------------------------------------------- Ogg
 
 def ogg_parse(data: bytes) -> dict:
-    """Pages (with CRC check) and packets of the first logical stream."""
+    """Pages (with CRC check) and packets of the first logical stream.
+
+    ``audio_pages`` lists ``(granule, flags without the continuation bit)`` of
+    every page that starts after the last header packet; ``seqs`` the page
+    sequence numbers in file order; ``comment_tail`` the bytes after the
+    comment list in the comment packet (the Vorbis framing byte, or Opus
+    trailing data).
+    """
     from_crc = _ogg_crc
     pages, packets, cur, pos, bad_crc = [], [], b"", 0, 0
     serial = None
@@ -361,13 +429,16 @@ def ogg_parse(data: bytes) -> dict:
         lacing = data[pos + 27:pos + 27 + nseg]
         start = pos + 27 + nseg
         end = start + sum(lacing)
+        if end > len(data):
+            raise ValueError(f"Ogg page at {pos} runs past EOF")
         page = data[pos:end]
         if from_crc(page[:22] + b"\0\0\0\0" + page[26:]) != int.from_bytes(page[22:26], "little"):
             bad_crc += 1
         ser = data[pos + 14:pos + 18]
         serial = serial or ser
         if ser == serial:
-            pages.append({"granule": data[pos + 6:pos + 14], "flags": data[pos + 5]})
+            pages.append({"granule": data[pos + 6:pos + 14], "flags": data[pos + 5],
+                          "seq": int.from_bytes(data[pos + 18:pos + 22], "little"), "first_packet": len(packets)})
             off = start
             for lv in lacing:
                 cur += data[off:off + lv]
@@ -380,9 +451,12 @@ def ogg_parse(data: bytes) -> dict:
     nhdr = 2 if codec == "opus" else 3
     cpkt = packets[1]
     i = 8 if codec == "opus" else 7
-    vendor, comments = vorbis_comment_parse(cpkt[i:])
+    vendor, comments, cend = vorbis_comment_parse(cpkt[i:])
+    audio_pages = [(pg["granule"], pg["flags"] & ~0x01) for pg in pages if pg["first_packet"] >= nhdr]
     return {"codec": codec, "bad_crc": bad_crc, "packets": packets, "nhdr": nhdr,
-            "vendor": vendor, "comments": comments, "last_granule": pages[-1]["granule"] if pages else b""}
+            "vendor": vendor, "comments": comments, "comment_tail": cpkt[i + cend:],
+            "seqs": [pg["seq"] for pg in pages], "flags": [pg["flags"] for pg in pages],
+            "audio_pages": audio_pages, "last_granule": pages[-1]["granule"] if pages else b""}
 
 
 def _crc_table() -> list[int]:
@@ -407,7 +481,9 @@ def _ogg_crc(data: bytes) -> int:
 
 # --------------------------------------------------------------------------- MP4
 
-MP4_CONTAINERS = {b"moov", b"trak", b"mdia", b"minf", b"stbl", b"edts", b"dinf", b"mvex", b"udta"}
+MP4_CONTAINERS = {b"moov", b"trak", b"mdia", b"minf", b"stbl", b"edts", b"dinf", b"mvex", b"udta",
+                  b"moof", b"traf", b"mfra"}
+MP4_SKIP = {b"free", b"skip"}
 
 
 def mp4_atoms(buf: bytes, start: int, end: int):
@@ -426,12 +502,65 @@ def mp4_atoms(buf: bytes, start: int, end: int):
         i += size
 
 
+def _mp4_offset_box(t: bytes, box: bytes, hdr: int) -> tuple[bytes, list[int]]:
+    """(box with its absolute file offsets zeroed, the offsets) for stco/co64/tfhd/tfra."""
+    b = bytearray(box)
+    p = hdr
+    offs: list[int] = []
+
+    def take(pos: int, n: int) -> None:
+        if pos + n > len(b):
+            raise ValueError(f"MP4 {t!r} box truncated")
+        offs.append(int.from_bytes(b[pos:pos + n], "big"))
+        b[pos:pos + n] = bytes(n)
+    if t in (b"stco", b"co64"):
+        width = 4 if t == b"stco" else 8
+        count = int.from_bytes(b[p + 4:p + 8], "big")
+        for k in range(count):
+            take(p + 8 + k * width, width)
+    elif t == b"tfhd":
+        if int.from_bytes(b[p + 1:p + 4], "big") & 0x000001:  # base-data-offset-present
+            take(p + 8, 8)
+    elif t == b"tfra":
+        ver = b[p]
+        sizes = int.from_bytes(b[p + 8:p + 12], "big")
+        rest = ((sizes >> 4) & 3) + 1 + ((sizes >> 2) & 3) + 1 + (sizes & 3) + 1
+        count = int.from_bytes(b[p + 12:p + 16], "big")
+        w = 8 if ver == 1 else 4
+        q = p + 16
+        for _ in range(count):
+            take(q + w, w)  # moof_offset (after the time field)
+            q += 2 * w + rest
+    return bytes(b), offs
+
+
+MP4_OFFSET_BOXES = {b"stco", b"co64", b"tfhd", b"tfra"}
+
+
 def mp4_parse(data: bytes) -> dict:
+    """Comparable view of an MP4 file.
+
+    ``boxes``: (path, sha) of every box except mdat/free/skip, the ilst items
+    and the udta/meta hdlr; boxes holding absolute file offsets
+    (stco/co64/tfhd/tfra) are hashed with the offsets zeroed, and the offsets
+    are listed in ``offsets`` as (path, [offsets]). ``top``: top-level
+    (type, start, end) without free/skip, used to map offsets between files.
+    """
     top = list(mp4_atoms(data, 0, len(data)))
     mdat = b"".join(data[ps:e] for t, s, ps, e in top if t == b"mdat")
     fragmented = any(t == b"moof" for t, *_ in top)
     boxes: list[tuple[str, str]] = []
+    offsets: list[tuple[str, list[int]]] = []
     ilst: list[tuple[bytes, int, int]] = []
+    hdlr: list[str] = []
+
+    def leaf(name: str, t: bytes, s: int, ps: int, e: int) -> None:
+        if t in MP4_OFFSET_BOXES:
+            zeroed, offs = _mp4_offset_box(t, data[s:e], ps - s)
+            boxes.append((name, sha(zeroed)))
+            offsets.append((name, offs))
+        else:
+            boxes.append((name, sha(data[s:e])))
 
     def walk(start: int, end: int, path: str) -> None:
         nonlocal fragmented
@@ -445,22 +574,27 @@ def mp4_parse(data: bytes) -> dict:
                         for t3, s3, ps3, e3 in mp4_atoms(data, ps2 + 4, e2):
                             if t3 == b"ilst":
                                 ilst.append((t3, ps3, e3))
-                            elif t3 not in (b"free", b"hdlr"):
+                            elif t3 == b"hdlr":
+                                hdlr.append(sha(data[s3:e3]))
+                            elif t3 not in MP4_SKIP:
                                 boxes.append((name + "/meta/" + t3.decode("latin-1"), sha(data[s3:e3])))
-                    elif t2 != b"free":
+                    elif t2 not in MP4_SKIP:
                         boxes.append((name + "/" + t2.decode("latin-1"), sha(data[s2:e2])))
                 continue
             if t in MP4_CONTAINERS:
                 walk(ps, e, name)
-            elif t in (b"stco", b"co64", b"free", b"skip"):
-                continue  # chunk offsets move legitimately when the tag grows
-            else:
-                boxes.append((name, sha(data[s:e])))
+            elif t not in MP4_SKIP:
+                leaf(name, t, s, ps, e)
 
-    moov = [a for a in top if a[0] == b"moov"]
-    if not moov:
+    if not any(t == b"moov" for t, *_ in top):
         raise ValueError("no moov atom")
-    walk(moov[0][2], moov[0][3], "moov")
+    for t, s, ps, e in top:
+        if t in MP4_SKIP or t == b"mdat":
+            continue
+        if t in MP4_CONTAINERS:
+            walk(ps, e, t.decode("latin-1"))
+        else:
+            leaf(t.decode("latin-1"), t, s, ps, e)
     items: list[tuple] = []
     genres: list[str] = []
     for _, ps, e in ilst:
@@ -468,19 +602,23 @@ def mp4_parse(data: bytes) -> dict:
             datas, mean, name = [], "", ""
             for t2, s2, ps2, e2 in mp4_atoms(data, ips, ie):
                 if t2 == b"data":
-                    datas.append((int.from_bytes(data[ps2:ps2 + 4], "big"), sha(data[ps2 + 8:e2]), data[ps2 + 8:e2]))
+                    # (type, locale, sha(value), value)
+                    datas.append((int.from_bytes(data[ps2:ps2 + 4], "big"), data[ps2 + 4:ps2 + 8].hex(),
+                                  sha(data[ps2 + 8:e2]), data[ps2 + 8:e2]))
                 elif t2 == b"mean":
-                    mean = data[ps2 + 4:e2].decode("utf-8", "replace")
+                    mean = text(data[ps2 + 4:e2])
                 elif t2 == b"name":
-                    name = data[ps2 + 4:e2].decode("utf-8", "replace")
+                    name = text(data[ps2 + 4:e2])
             if t == b"\xa9gen":
-                genres.extend(d[2].decode("utf-8", "replace") for d in datas)
+                genres.extend(text(d[3]) for d in datas)
             elif t == b"gnre":
-                genres.extend(f"<gnre {int.from_bytes(d[2], 'big')}>" for d in datas)
+                genres.extend(f"<gnre {int.from_bytes(d[3], 'big')}>" for d in datas)
             else:
                 key = t.decode("latin-1") + (f":{mean}:{name}" if t == b"----" else "")
-                items.append((key, tuple((d[0], d[1]) for d in datas)))
-    return {"mdat": mdat, "fragmented": fragmented, "boxes": boxes, "items": items, "genres": genres}
+                items.append((key, tuple(d[:3] for d in datas)))
+    return {"mdat": mdat, "fragmented": fragmented, "boxes": boxes, "items": items, "genres": genres,
+            "offsets": offsets, "meta_hdlr": hdlr[0] if hdlr else None,
+            "top": [(t, s, e) for t, s, ps, e in top if t not in MP4_SKIP]}
 
 
 # --------------------------------------------------------------------------- generic
@@ -578,13 +716,16 @@ def _compare_mp3(m: bytes, w: bytes, allow_id3v1_genre_change: bool) -> tuple[li
         if vm is not None and vm != iw["version"] and not (vm == 3 and iw["version"] == 4):
             probs.append(f"ID3v2 version changed 2.{vm} -> 2.{iw['version']} (only 2.3 -> 2.4 is allowed)")
         upgraded = vm == 3 and iw["version"] == 4
-        excl = {"TCON", "TCO"} | (ID3_DATE if upgraded else set())
+        excl = {"TCON", "TCO"} | (ID3_UPGRADE_DATE if upgraded else set())
 
         def inv(p):
             return [id3_frame_view(fid, b) for fid, b in p["frames"] if fid not in excl] if p else []
         probs += _diff_lists("ID3v2 frames (excl. TCON)", sorted(inv(im), key=repr), sorted(inv(iw), key=repr))
         if upgraded and id3_date_string(im) != id3_date_string(iw):
             probs.append(f"ID3 date changed in 2.3->2.4 upgrade: {id3_date_string(im)!r} -> {id3_date_string(iw)!r}")
+        if upgraded and id3_original_date(im) != id3_original_date(iw):
+            probs.append(f"ID3 original release date (TORY/TDOR) changed in 2.3->2.4 upgrade: "
+                         f"{id3_original_date(im)!r} -> {id3_original_date(iw)!r}")
     v1m, v1w = id3v1_parse(m), id3v1_parse(w)
     if (v1m is None) != (v1w is None):
         probs.append(f"ID3v1 tag {'added' if v1m is None else 'removed'}")
@@ -594,7 +735,9 @@ def _compare_mp3(m: bytes, w: bytes, allow_id3v1_genre_change: bool) -> tuple[li
             if v1m[k] != v1w[k] and not (k == "genre" and allow_id3v1_genre_change):
                 probs.append(f"ID3v1 {k} changed: {v1m[k]!r} -> {v1w[k]!r}")
                 field_changed = True
-        if not field_changed and v1m["raw"] != v1w["raw"] and not allow_id3v1_genre_change:
+        # With a permitted genre change only the genre byte (the last one) may differ.
+        raw_m, raw_w = (v1m["raw"][:-1], v1w["raw"][:-1]) if allow_id3v1_genre_change else (v1m["raw"], v1w["raw"])
+        if not field_changed and raw_m != raw_w:
             probs.append("ID3v1 raw bytes changed")
     am, aw = ape_parse(m), ape_parse(w)
     if (am is None) != (aw is None):
@@ -617,8 +760,28 @@ def _compare_mp4(m: bytes, w: bytes) -> tuple[list[str], list[str]]:
         probs.append("MP4 mdat payload changed")
     if pm["fragmented"] != pw["fragmented"]:
         probs.append("MP4 fragmentation changed")
-    probs += _diff_lists("MP4 moov boxes (excl. udta, chunk offsets)", pm["boxes"], pw["boxes"])
+    probs += _diff_lists("MP4 boxes (excl. mdat, ilst, offsets)", pm["boxes"], pw["boxes"])
     probs += _diff_lists("MP4 ilst items (excl. ©gen/gnre)", sorted(pm["items"]), sorted(pw["items"]))
+    if pm["meta_hdlr"] is not None and pm["meta_hdlr"] != pw["meta_hdlr"]:
+        probs.append("MP4 udta/meta hdlr changed")
+    tm, tw = pm["top"], pw["top"]
+    if [t for t, *_ in tm] != [t for t, *_ in tw]:
+        probs.append(f"MP4 top-level box order changed: {[t for t, *_ in tm]} -> {[t for t, *_ in tw]}")
+        return probs, pw["genres"]
+
+    def moved(o: int) -> int:
+        """Where master offset ``o`` must be in the work file (same position in the same box)."""
+        for (t, ms, me), (_, ws, _we) in zip(tm, tw):
+            if ms <= o < me and t != b"moov":
+                return o - ms + ws
+        return o  # outside any movable box (or into moov): must not change
+    if [p for p, _ in pm["offsets"]] == [p for p, _ in pw["offsets"]]:
+        for (path, om), (_, ow) in zip(pm["offsets"], pw["offsets"]):
+            want = [moved(o) for o in om]
+            if ow != want:
+                bad = next(i for i, (a, b) in enumerate(zip(want, ow)) if a != b) if len(ow) == len(want) else None
+                probs.append(f"MP4 absolute offsets in {path} wrong"
+                             + (f" (entry {bad}: {ow[bad]} != expected {want[bad]})" if bad is not None else ""))
     return probs, pw["genres"]
 
 
@@ -638,30 +801,92 @@ def _compare_ogg(m: bytes, w: bytes) -> tuple[list[str], list[str]]:
         probs.append(f"Ogg vendor changed: {pm['vendor']!r} -> {pw['vendor']!r}")
     probs += _diff_lists("non-genre Ogg comments",
                          [c for c in pm["comments"] if not _is_genre(c)], [c for c in pw["comments"] if not _is_genre(c)])
+    if pm["comment_tail"] != pw["comment_tail"]:
+        probs.append(f"Ogg comment packet trailing bytes changed: {pm['comment_tail'][:16]!r} -> "
+                     f"{pw['comment_tail'][:16]!r}")
+    if pw["codec"] == "vorbis" and not (pw["comment_tail"][-1:] or b"\0")[0] & 1:
+        probs.append("Vorbis comment packet lacks its framing bit")
+    if pw["seqs"] != list(range(len(pw["seqs"]))):
+        probs.append("Ogg page sequence numbers are not contiguous from 0")
+    fl = pw["flags"]
+    if not fl or not fl[0] & 0x02 or any(f & 0x02 for f in fl[1:]):
+        probs.append("Ogg BOS flag not set on exactly the first page")
+    if not fl or not fl[-1] & 0x04 or any(f & 0x04 for f in fl[:-1]):
+        probs.append("Ogg EOS flag not set on exactly the last page")
     am, aw = pm["packets"][pm["nhdr"]:], pw["packets"][pw["nhdr"]:]
     if am != aw:
         probs.append(f"Ogg audio packets changed ({len(am)} -> {len(aw)} packets)")
+    if pm["audio_pages"] != pw["audio_pages"]:
+        probs.append("Ogg audio pages changed (granule positions or flags)")
     if pm["last_granule"] != pw["last_granule"]:
         probs.append("Ogg final granule position changed")
     return probs, _genre_values(pw["comments"])
 
 
+def xattrs(path: Path) -> dict[str, bytes] | None:
+    """All extended attributes (incl. POSIX ACLs) of ``path`` itself; None if unsupported."""
+    try:
+        names = os.listxattr(path, follow_symlinks=False)
+        return {n: os.getxattr(path, n, follow_symlinks=False) for n in sorted(names)}
+    except OSError as e:
+        if e.errno in (errno.ENOTSUP, errno.EOPNOTSUPP):
+            return None
+        raise
+
+
+def _attr_problems(ms: os.stat_result, ws: os.stat_result, master: Path, work: Path) -> list[str]:
+    """Mode, group, link count and xattrs (preserved per plan 1.6 step 5)."""
+    probs: list[str] = []
+    mm, mw = stat.S_IMODE(ms.st_mode), stat.S_IMODE(ws.st_mode)
+    if mm != mw:
+        probs.append(f"file mode changed: {oct(mm)} -> {oct(mw)}")
+    if ms.st_gid != ws.st_gid:
+        probs.append(f"group changed: {ms.st_gid} -> {ws.st_gid}")
+    if ms.st_nlink != ws.st_nlink:
+        probs.append(f"hard link count changed: {ms.st_nlink} -> {ws.st_nlink} (hard link split or added)")
+    xm, xw = xattrs(master), xattrs(work)
+    if xm is not None and xw is not None and xm != xw:
+        lost = sorted(set(xm) - set(xw))
+        changed = sorted(k for k in set(xm) & set(xw) if xm[k] != xw[k])
+        added = sorted(set(xw) - set(xm))
+        probs.append(f"xattrs changed: lost {lost} changed {changed} added {added}")
+    return probs
+
+
 def compare(master: Path, work: Path, mode: str = "genres", expected_genres: list[str] | None = None,
-            *, allow_id3v1_genre_change: bool = False, check_audio: bool = True) -> list[str]:
-    """Problems found in ``work`` relative to ``master`` (empty list = pass)."""
+            *, allow_id3v1_genre_change: bool = False, check_audio: bool = True,
+            check_mtime: bool = True) -> list[str]:
+    """Problems found in ``work`` relative to ``master`` (empty list = pass).
+
+    Both paths are examined with ``lstat``: a symlink must stay the same
+    symlink (same target) and is never a valid genre-edit target; a regular
+    file must stay a regular file with the same mode, group, link count and
+    xattrs. ``identical`` mode also requires the same mtime (``check_mtime``).
+    """
     master, work = Path(master), Path(work)
     if mode not in ("genres", "identical"):
         raise ValueError(f"unknown mode {mode!r}")
-    if not work.exists():
+    if not os.path.lexists(work):
         return ["file missing"]
-    probs: list[str] = []
-    mm, mw = stat.S_IMODE(master.stat().st_mode), stat.S_IMODE(work.stat().st_mode)
-    if mm != mw:
-        probs.append(f"file mode changed: {oct(mm)} -> {oct(mw)}")
+    ms, ws = master.lstat(), work.lstat()
+    if stat.S_IFMT(ms.st_mode) != stat.S_IFMT(ws.st_mode):
+        return [f"file type changed: {_ftype(ms)} -> {_ftype(ws)}"]
+    if stat.S_ISLNK(ms.st_mode):
+        probs = []
+        if os.readlink(master) != os.readlink(work):
+            probs.append(f"symlink target changed: {os.readlink(master)!r} -> {os.readlink(work)!r}")
+        if mode == "genres" and expected_genres is not None:
+            probs.append("symlink listed as a genre-edit target (symlinks must be refused)")
+        return probs
+    if not stat.S_ISREG(ms.st_mode):
+        return [] if mode == "identical" else [f"not a regular file: {_ftype(ms)}"]
+    probs = _attr_problems(ms, ws, master, work)
     m, w = master.read_bytes(), work.read_bytes()
     if mode == "identical":
         if m != w:
             probs.append("file content changed (expected byte-identical)")
+        elif check_mtime and ms.st_mtime_ns != ws.st_mtime_ns:
+            probs.append("mtime changed on a file that should be untouched")
         return probs
     fmt = detect(m)
     master_genres = raw_genres(master)
@@ -697,32 +922,77 @@ def compare(master: Path, work: Path, mode: str = "genres", expected_genres: lis
     return probs
 
 
+def _ftype(st: os.stat_result) -> str:
+    m = st.st_mode
+    return ("symlink" if stat.S_ISLNK(m) else "regular file" if stat.S_ISREG(m)
+            else "directory" if stat.S_ISDIR(m) else f"type {oct(stat.S_IFMT(m))}")
+
+
+def _scan(root: Path) -> tuple[dict[str, os.stat_result], dict[str, os.stat_result]]:
+    """({relpath: lstat} of non-directories, {relpath: lstat} of directories); symlinks not followed."""
+    files, dirs = {}, {}
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        d = Path(dirpath)
+        for n in dirnames:
+            st = (d / n).lstat()
+            # A symlink to a directory is listed in dirnames but is a link, not a directory.
+            (files if stat.S_ISLNK(st.st_mode) else dirs)[str((d / n).relative_to(root))] = st
+        for n in filenames:
+            files[str((d / n).relative_to(root))] = (d / n).lstat()
+    return files, dirs
+
+
+def _link_groups(files: dict[str, os.stat_result]) -> set[frozenset[str]]:
+    """Sets of relpaths that are hard links to one inode (only groups of 2+)."""
+    by_ino: dict[tuple[int, int], set[str]] = {}
+    for rel, st in files.items():
+        if stat.S_ISREG(st.st_mode):
+            by_ino.setdefault((st.st_dev, st.st_ino), set()).add(rel)
+    return {frozenset(g) for g in by_ino.values() if len(g) > 1}
+
+
 def compare_tree(master_root: Path, work_root: Path, expected: Mapping[str, list[str] | None] | None = None,
                  **kw) -> dict[str, list[str]]:
     """Compare two library trees. Returns {relpath: problems} for failing paths only.
 
     Files named in ``expected`` (relpath -> genres, None = unchanged genres)
     are compared in "genres" mode; every other file must be identical. Extra
-    files in ``work_root`` (leftover temp or backup files) are problems.
+    files or directories in ``work_root`` (leftover temp or backup files),
+    missing ones, changed directory modes and split or new hard links are
+    problems.
     """
     expected = dict(expected or {})
     master_root, work_root = Path(master_root), Path(work_root)
-
-    def files(root: Path) -> set[str]:
-        return {str(p.relative_to(root)) for p in root.rglob("*") if p.is_file() or p.is_symlink()}
-    mf, wf = files(master_root), files(work_root)
+    mf, md = _scan(master_root)
+    wf, wd = _scan(work_root)
     out: dict[str, list[str]] = {}
+    ident_kw = {k: v for k, v in kw.items() if k == "check_mtime"}
     for rel in sorted(mf):
         if rel in expected:
             probs = compare(master_root / rel, work_root / rel, "genres", expected[rel], **kw)
         else:
-            probs = compare(master_root / rel, work_root / rel, "identical")
+            probs = compare(master_root / rel, work_root / rel, "identical", **ident_kw)
         if probs:
             out[rel] = probs
-    for rel in sorted(wf - mf):
+    for rel in sorted(set(wf) - set(mf)):
         out[rel] = ["unexpected extra file (leftover temp/backup?)"]
-    for rel in sorted(set(expected) - mf):
+    for rel in sorted(set(expected) - set(mf)):
         out[rel] = ["expected file not present in master"]
+    for rel in sorted(set(md) | set(wd)):
+        if rel not in wd:
+            out.setdefault(rel, []).append("directory missing")
+        elif rel not in md:
+            out.setdefault(rel, []).append("unexpected extra directory (leftover temp?)")
+        elif stat.S_IMODE(md[rel].st_mode) != stat.S_IMODE(wd[rel].st_mode):
+            out.setdefault(rel, []).append(
+                f"directory mode changed: {oct(stat.S_IMODE(md[rel].st_mode))} -> {oct(stat.S_IMODE(wd[rel].st_mode))}")
+    gm, gw = _link_groups(mf), _link_groups(wf)
+    for g in sorted(gm ^ gw, key=sorted):
+        what = "hard link group split" if g in gm else "new hard link group"
+        for rel in sorted(g):
+            msg = f"{what}: {sorted(g)}"
+            if msg not in out.get(rel, []):
+                out.setdefault(rel, []).append(msg)
     return out
 
 

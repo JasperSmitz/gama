@@ -11,20 +11,23 @@ Usage::
 
     python tools/fixtures/build.py <out_dir>
 
-Writes ``<out_dir>/library/...`` and ``<out_dir>/manifest.json``. Importable:
+Writes ``<out_dir>/library/...`` and ``<out_dir>/manifest.json``. Refuses an
+``out_dir`` at or under the production collection or a ``GAMA_LIBRARY_ROOTS`` root. Importable:
 ``build(out_dir) -> dict`` returns the same manifest.
 
 Manifest entries (keyed by path relative to ``library/``)::
 
     {"format": "flac|mp3|mp4|ogg-vorbis|ogg-opus|wav|broken",
      "group": "album|format|broken",
-     "genres": [...stored genre values in order...] | None,
+     "genres": [...stored genre values in order...] | None,   # None: no genre stored
+                                                              # (broken group: not asserted)
      "props": [...short property labels the inventory test checks...]}
 """
 from __future__ import annotations
 
 import base64
 import json
+import os
 import random
 import shutil
 import struct
@@ -34,6 +37,22 @@ import tempfile
 from pathlib import Path
 
 AUDIO_SECONDS = 1.5
+
+# The real collection. The builder refuses to write at or under these, and
+# under any root named in GAMA_LIBRARY_ROOTS.
+PRODUCTION_ROOTS = (Path("/storage/music"),)
+
+
+def unsafe_output_dir(out_dir: Path) -> Path | None:
+    """The production/library root that ``out_dir`` resolves into, or None if it is safe."""
+    out = Path(out_dir).expanduser().resolve(strict=False)
+    roots = list(PRODUCTION_ROOTS)
+    roots += [Path(r) for r in os.environ.get("GAMA_LIBRARY_ROOTS", "").split(os.pathsep) if r.strip()]
+    for root in roots:
+        for r in {root.expanduser(), root.expanduser().resolve(strict=False)}:
+            if out == r or out.is_relative_to(r):
+                return root
+    return None
 
 
 # --------------------------------------------------------------------------- helpers
@@ -276,12 +295,17 @@ def ogg_set_comments(path: Path, comments: list[str], vendor: str | None = None)
     Audio pages are copied byte-for-byte except for their sequence numbers
     (renumbered when the header grows to more pages) and CRCs.
     """
-    data = path.read_bytes()
-    codec, packets, nhdr = ogg_header_packets(data)
-    pages = ogg_pages(data)
+    codec, packets, _ = ogg_header_packets(path.read_bytes())
     vendor = ogg_vendor(packets[1]) if vendor is None else vendor
+    ogg_set_comment_packet(path, vorbis_comment_packet(codec, vendor, comments))
+
+
+def ogg_set_comment_packet(path: Path, new_comment: bytes) -> None:
+    """Replace the comment packet (packet 1) of an Ogg Vorbis/Opus file with raw bytes."""
+    data = path.read_bytes()
+    _codec, packets, nhdr = ogg_header_packets(data)
+    pages = ogg_pages(data)
     serial = pages[0]["serial"]
-    new_comment = vorbis_comment_packet(codec, vendor, comments)
     out = [ogg_page_bytes(pages[0]["flags"], pages[0]["granule"], serial, 0, pages[0]["lacing"], pages[0]["body"])]
     rest_headers = [new_comment] + packets[2:]
     out += _paginate(rest_headers, serial, 1, 0)
@@ -290,6 +314,33 @@ def ogg_set_comments(path: Path, comments: list[str], vendor: str | None = None)
         out.append(ogg_page_bytes(pg["flags"], pg["granule"], pg["serial"], seq, pg["lacing"], pg["body"]))
         seq += 1
     path.write_bytes(b"".join(out))
+
+
+def flac_set_raw_comments(path: Path, comments: list[bytes]) -> None:
+    """Replace the comment list of a FLAC's VORBIS_COMMENT block with raw byte strings.
+
+    Keeps the vendor string and the block's position; the file grows or
+    shrinks (audio frames are not touched). For fixtures with non-UTF-8 bytes,
+    which metaflac will not write.
+    """
+    data = path.read_bytes()
+    if data[:4] != b"fLaC":
+        raise ValueError("flac_set_raw_comments needs a plain FLAC (no ID3 prefix)")
+    pos = 4
+    while True:
+        hdr = data[pos]
+        blen = int.from_bytes(data[pos + 1:pos + 4], "big")
+        if hdr & 0x7F == 4:
+            old = data[pos + 4:pos + 4 + blen]
+            vlen = int.from_bytes(old[:4], "little")
+            body = old[:4 + vlen] + struct.pack("<I", len(comments))
+            body += b"".join(struct.pack("<I", len(c)) + c for c in comments)
+            path.write_bytes(data[:pos] + bytes([hdr]) + len(body).to_bytes(3, "big") + body
+                             + data[pos + 4 + blen:])
+            return
+        if hdr & 0x80:
+            raise ValueError("no VORBIS_COMMENT block")
+        pos += 4 + blen
 
 
 def flac_picture_block(img: bytes, mime: str, ptype: int, desc: str, w: int = 64, h: int = 64) -> bytes:
@@ -622,6 +673,12 @@ class Builder:
         prefix = id3v2_tag([("TIT2", id3_text_body(["Prepended ID3v2"], 0))], 3, padding=16)
         src.write_bytes(prefix + src.read_bytes())
         self.record(rel, "flac", "format", ["Electronic"], "id3-prefix")
+        # FLAC with a latin-1 (invalid UTF-8) comment, as old rippers wrote them.
+        rel = F + "flac_latin1_comment.flac"
+        self.flac(rel, t(genres=["Jazz"]))
+        flac_set_raw_comments(self.lib / rel, [c.encode() for c in self.vorbis_comments(t(genres=["Jazz"]))]
+                              + [b"COMMENT=caf\xe9 au lait"])
+        self.record(rel, "flac", "format", ["Jazz"], "non-utf8-comment")
 
         # ---- MP3
         rel = F + "mp3_v24_full.mp3"
@@ -691,7 +748,7 @@ class Builder:
         rel = F + "m4a_fragmented.m4a"
         ffmpeg("-i", str(self.base["m4a"]), "-c", "copy", "-metadata", "genre=Rock",
                "-movflags", "frag_keyframe+empty_moov", str(self._dest(rel)))
-        self.record(rel, "mp4", "format", None, "fragmented")
+        self.record(rel, "mp4", "format", ["Rock"], "fragmented")
 
         # ---- Ogg
         rel = F + "ogg_vorbis_multi_genre.ogg"
@@ -743,6 +800,9 @@ class Builder:
 
 
 def build(out_dir: Path) -> dict:
+    bad = unsafe_output_dir(out_dir)
+    if bad is not None:
+        raise ValueError(f"refusing to build fixtures in {out_dir}: it is at or under library root {bad}")
     missing = tools_available()
     if missing:
         raise RuntimeError(f"missing tools: {missing}")
