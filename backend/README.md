@@ -147,6 +147,21 @@ boxes, including edit lists).
     - the ffmpeg audio packet md5.
   - `tests/conformance/test_writers.py` runs every writable corpus file × add/remove/replace through the oracle and
     the verifier.
+- **M5 (safe write engine): done.** The engine lives in `gama.safewrite` and imports no Django.
+  - Backups (`backups.py`): content-addressed (`<data_dir>/backups/sha256/ab/<sha>`, read-only). They are written with
+    `O_EXCL`, re-hashed, and never overwritten or deleted.
+  - Journal (`journal.py`): one `O_EXCL` JSONL file per job in `<data_dir>/journal/`, fsynced after every record.
+  - `preflight.py` checks each file and the free space.
+  - `writer.run_apply` runs Phase A (back up everything, then verify every backup) and Phase B (per file: temp copy
+    from the backup, mutate child, verify, attributes, re-hash, rename, re-hash). Batch policy: stop-and-rollback, or
+    continue.
+  - `restore.run_restore` and `recovery.recover` handle restores and crash recovery. Outcomes are decided by hash,
+    never by the journaled state alone.
+  - A global `flock` allows one write job at a time.
+  - Failpoints (`fsutil.failpoint`) are used by the crash tests, which run the engine in a real subprocess and end it
+    with `os._exit`.
+  - **What is atomic:** each file is replaced atomically by rename(2). A multi-file job is not atomic; recovery and
+    restore undo partial jobs. Durability depends on the filesystem honouring fsync.
 
 ### Known, accepted limitations
 - **Frames hidden after ID3 padding.** An ID3v2 frame placed after zero padding is invisible to mutagen and to Gama's
