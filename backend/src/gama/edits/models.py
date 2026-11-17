@@ -59,6 +59,10 @@ class PlanItem(models.Model):
     reason = models.CharField(max_length=64, null=True, blank=True)
     warnings = models.JSONField(default=list)
     error = models.TextField(null=True, blank=True)
+    force = models.BooleanField(default=False, help_text="Restore plans: overwrite a later version "
+                                                       "(it is backed up first)")
+    source_item = models.ForeignKey("JobItem", null=True, blank=True, on_delete=models.SET_NULL,
+                                    related_name="restore_plan_items")
 
     class Meta:
         ordering = ["seq"]
@@ -88,6 +92,9 @@ class EditJob(models.Model):
     started_at = models.DateTimeField(null=True, blank=True)
     finished_at = models.DateTimeField(null=True, blank=True)
     error = models.TextField(blank=True)
+    recovery_pending = models.BooleanField(default=False, help_text="The journal is still open: recovery waits "
+                                                                   "for a library root or an operator decision")
+    recovery_note = models.TextField(blank=True)
 
     class Meta:
         ordering = ["-created_at"]

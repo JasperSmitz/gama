@@ -330,6 +330,8 @@ def test_running_job_without_journal_is_closed_at_startup(applier):
     confirm(applier, plan)
     job = services.next_queued()
     services.claim(job.id)
+    # The worker died: its heartbeat is stale (a live pid with a fresh heartbeat would be left alone).
+    EditJob.objects.filter(id=job.id).update(heartbeat_at=timezone.now() - timedelta(minutes=5), worker_pid=None)
     services.worker_startup()
     job.refresh_from_db()
     assert job.status == "interrupted" and "nothing was written" in job.error

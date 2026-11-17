@@ -19,6 +19,10 @@ def _explain():
     out.update(WARNINGS)
     out.update(NOTES)
     out.update(PLAN_SKIPS)
+    out.update({"backup-bad": "The backup is missing or damaged; the file is not touched",
+                "missing": "The file is not there any more; it is never recreated",
+                "unreadable": "The file cannot be read",
+                "changed-since-edit": "The file changed after Gama's edit; it is not overwritten unless forced"})
     return out
 
 
@@ -54,8 +58,19 @@ def create_plan(request):
     return redirect("edits:plan", plan_id=ep.id)
 
 
+def _plans(user):
+    """Plans and jobs are personal; staff and superusers see everyone's."""
+    qs = EditPlan.objects.all()
+    return qs if (user.is_staff or user.is_superuser) else qs.filter(created_by=user)
+
+
+def _jobs(user):
+    qs = EditJob.objects.all()
+    return qs if (user.is_staff or user.is_superuser) else qs.filter(created_by=user)
+
+
 def plan(request, plan_id):
-    ep = get_object_or_404(EditPlan, id=plan_id)
+    ep = get_object_or_404(_plans(request.user), id=plan_id)
     groups: dict[str, dict] = {}
     for it in ep.items.all():
         g = groups.setdefault(it.album_key, {"label": it.album_label, "items": []})
@@ -70,7 +85,7 @@ def plan(request, plan_id):
 def confirm(request, plan_id):
     if not request.user.has_perm(PERM):
         raise PermissionDenied("You may preview edits but not apply them.")
-    ep = get_object_or_404(EditPlan, id=plan_id)
+    ep = get_object_or_404(_plans(request.user), id=plan_id)
     policy = "continue" if request.POST.get("continue_on_error") == "yes" else "stop_rollback"
     try:
         job = services.confirm_plan(ep, request.user, request.POST.get("digest", ""), policy=policy,
@@ -83,7 +98,7 @@ def confirm(request, plan_id):
 
 @require_POST
 def refresh(request, plan_id):
-    ep = get_object_or_404(EditPlan, id=plan_id)
+    ep = get_object_or_404(_plans(request.user), id=plan_id)
     try:
         new = services.refresh_plan(ep, request.user)
     except PlanError as e:
@@ -94,8 +109,40 @@ def refresh(request, plan_id):
 
 
 def job(request, job_id):
-    j = get_object_or_404(EditJob.objects.select_related("plan"), id=job_id)
-    items = j.items.select_related("plan_item")
+    from .models import Backup
+    j = get_object_or_404(_jobs(request.user).select_related("plan", "created_by"), id=job_id)
+    items = list(j.items.select_related("plan_item"))
+    backups = {b.sha256: b for b in Backup.objects.filter(sha256__in=[i.backup_sha for i in items if i.backup_sha])}
+    for ji in items:
+        ji.backup = backups.get(ji.backup_sha)
+    restorable = set(services.restorable_items(j).values_list("id", flat=True)) if j.kind == "apply" else set()
     return render(request, "edits/job.html", {
         "job": j, "items": items, "stale": services.heartbeat_stale(j), "explain": _explain(),
-        "auto_refresh": j.status in ("queued", "running")})
+        "auto_refresh": j.status in ("queued", "running") and not j.recovery_pending,
+        "restorable": restorable, "can_apply": request.user.has_perm(PERM),
+        "restore_jobs": _jobs(request.user).filter(plan__source_job=j).order_by("created_at"),
+        "data_dir": str(services.settings.GAMA.data_dir)})
+
+
+def history(request):
+    from django.core.paginator import Paginator
+    jobs = _jobs(request.user).select_related("plan", "created_by").order_by("-created_at")
+    page = Paginator(jobs, 50).get_page(request.GET.get("page"))
+    # Pending recoveries concern the whole library, so everyone is told about them.
+    pending = EditJob.objects.filter(recovery_pending=True)
+    return render(request, "edits/history.html", {
+        "page": page, "pending": pending, "store_size": services.backup_store_size()})
+
+
+@require_POST
+def restore(request, job_id):
+    j = get_object_or_404(_jobs(request.user), id=job_id)
+    ids = None
+    if request.POST.get("scope") == "selected":
+        ids = [int(v) for v in request.POST.getlist("item") if v.isdigit()]
+    try:
+        ep = services.create_restore_plan(request.user, j, ids, force=request.POST.get("force") == "yes")
+    except PlanError as e:
+        messages.error(request, f"Cannot build the restore preview: {e}")
+        return redirect("edits:job", job_id=j.id)
+    return redirect("edits:plan", plan_id=ep.id)

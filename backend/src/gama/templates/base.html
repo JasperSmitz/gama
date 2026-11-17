@@ -28,6 +28,7 @@
         <a href="{% url 'library:albums' %}">Albums</a>
         <a href="{% url 'library:basket' %}">Selection ({{ basket_albums|length }})</a>
         <a href="{% url 'edits:operation' %}">Edit genres</a>
+        <a href="{% url 'edits:history' %}">History</a>
       </nav>
       <div>{{ user.get_username }}
         <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Log out</button></form>

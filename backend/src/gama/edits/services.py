@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import asdict
+from datetime import timedelta
 from pathlib import Path
 
 from django.conf import settings
@@ -101,9 +102,12 @@ def recompute_digest(ep: EditPlan) -> str:
 
 
 def refresh_plan(ep: EditPlan, user, *, reader=None) -> EditPlan:
-    """A new plan for the same albums and request; the old one is superseded."""
+    """A new plan for the same albums and request. The old one is superseded when it is
+    a draft, or when its job ended in a conflict (plan 1.5.4)."""
     new = create_plan(user, list(ep.album_ids), ep.operation, list(ep.genres), reader=reader)
-    EditPlan.objects.filter(id=ep.id, status="draft").update(status="superseded")
+    job = EditJob.objects.filter(plan=ep).first()
+    if ep.status == "draft" or (job is not None and job.status == "conflict"):
+        EditPlan.objects.filter(id=ep.id).update(status="superseded")
     return new
 
 
@@ -127,11 +131,13 @@ def confirm_plan(ep: EditPlan, user, posted_digest: str, *, policy: str = "stop_
             n = EditPlan.objects.filter(id=ep.id, status="draft").update(status="confirmed")
             if n != 1:
                 raise ConfirmError("this plan was confirmed already")
-            job = EditJob.objects.create(plan=ep, kind="apply", created_by=user, policy=policy,
+            kind = "restore" if ep.operation == "restore" else "apply"
+            work = "restore" if kind == "restore" else "change"
+            job = EditJob.objects.create(plan=ep, kind=kind, created_by=user, policy=policy,
                                          total=ep.n_change)
             JobItem.objects.bulk_create([
                 JobItem(job=job, plan_item=i, sha_before=i.sha_before or "", genres_requested=i.genres_after or [])
-                for i in ep.items.filter(action="change")])
+                for i in ep.items.filter(action=work)])
     except IntegrityError:
         raise ConfirmError("this plan was confirmed already") from None
     return job
@@ -185,19 +191,60 @@ class _Mirror:
                     "last_verified_at": now})
             ji.save()
             done = sum(1 for x in self.by_seq.values()
-                       if x.state in ("committed", "failed", "conflict", "skipped", "missing"))
+                       if x.state in ("committed", "failed", "conflict", "skipped", "missing", "restored",
+                                      "restore_failed", "restore_conflict", "nothing_to_do"))
             EditJob.objects.filter(id=self.job.id).update(done=done, heartbeat_at=now,
                                                           current=ji.plan_item.relpath)
         else:
             EditJob.objects.filter(id=self.job.id).update(heartbeat_at=now)
 
 
+HEARTBEAT_INTERVAL = 10.0
+
+
+class _Heartbeat:
+    """Keeps job.heartbeat_at fresh while a job runs, also in phases that write no
+    journal record (snapshot reads, preflight hashing, backup verification)."""
+
+    def __init__(self, job_id, interval: float = HEARTBEAT_INTERVAL):
+        import threading
+        self.job_id, self.interval = job_id, interval
+        self.stop = threading.Event()
+        self.thread = threading.Thread(target=self._run, daemon=True, name="gama-heartbeat")
+
+    def _run(self) -> None:
+        from django.db import connection
+        try:
+            while not self.stop.wait(self.interval):
+                try:
+                    EditJob.objects.filter(id=self.job_id, status="running").update(heartbeat_at=timezone.now())
+                except Exception:  # noqa: BLE001 - a busy database must not stop the job
+                    pass
+        finally:
+            connection.close()
+
+    def __enter__(self):
+        self.thread.start()
+        return self
+
+    def __exit__(self, *exc):
+        self.stop.set()
+        self.thread.join(timeout=30)
+
+
 def run_job(job: EditJob, *, env: WriteEnv | None = None, reader=None) -> EditJob:
-    """Run a claimed (running) apply job synchronously, then re-index the touched files."""
+    """Run a claimed (running) job synchronously, then re-index the touched files."""
+    with _Heartbeat(job.id):
+        return _run_job(job, env=env, reader=reader)
+
+
+def _run_job(job: EditJob, *, env: WriteEnv | None = None, reader=None) -> EditJob:
     from gama.metadata.readproc import read_files
     from gama.safewrite.writer import WriteItem, run_apply
 
     env = env or make_env()
+    if job.kind == "restore":
+        return _run_restore_job(job, env, reader)
     items = list(job.plan.items.filter(action="change"))
     stray = {i.root_path for i in items} - set(configured_root_paths())
     if stray:
@@ -210,6 +257,8 @@ def run_job(job: EditJob, *, env: WriteEnv | None = None, reader=None) -> EditJo
     witems = [WriteItem(i.seq, i.root_path, i.relpath, i.format, i.sha_before, list(i.genres_before or []),
                         list(i.genres_after or [])) for i in items]
     res = run_apply(witems, env, job_id=job.journal_id, policy=job.policy, observer=_Mirror(job, env))
+    if res.lock_busy:
+        return requeue(job, "another write or restore job was running (for example gama_restore); will retry")
     sync_recovered(res.recovered, reader=reader)
     for r in res.items:
         JobItem.objects.filter(job=job, plan_item__seq=r.n).update(
@@ -218,8 +267,83 @@ def run_job(job: EditJob, *, env: WriteEnv | None = None, reader=None) -> EditJo
     EditJob.objects.filter(id=job.id).update(journal_path=res.journal_path or "")
     status = "interrupted" if res.status == "aborted" else res.status
     job = _finish(job, status, res.error or "")
-    reindex_job(job, reader=reader)
+    safe_reindex(job, reader=reader)
     return job
+
+
+def requeue(job: EditJob, why: str) -> EditJob:
+    """Put a job back in the queue (nothing was written)."""
+    EditJob.objects.filter(id=job.id).update(status="queued", worker_pid=None, started_at=None,
+                                             error=why[:4000])
+    job.refresh_from_db()
+    return job
+
+
+def safe_reindex(job: EditJob, *, reader=None) -> None:
+    """Re-index after a job; a failure is recorded on the job, never raised."""
+    try:
+        reindex_job(job, reader=reader)
+    except Exception as e:  # noqa: BLE001
+        _append_error(job, f"re-reading the files into the index failed ({type(e).__name__}: {e}); "
+                           "run manage.py gama_scan")
+
+
+def _append_error(job: EditJob, msg: str) -> None:
+    cur = EditJob.objects.filter(id=job.id).values_list("error", flat=True).first() or ""
+    EditJob.objects.filter(id=job.id).update(error=(cur + ("\n" if cur else "") + msg)[:4000])
+
+
+def handle_job_error(job: EditJob, exc: BaseException, env: WriteEnv | None = None) -> EditJob:
+    """The worker hit an unexpected error while running ``job``: make its record honest.
+
+    With a finished journal the job is synced from it. With an open journal (or none)
+    the job is marked interrupted; the next recovery (worker start or next job)
+    resolves its files by hash and re-syncs it.
+    """
+    env = env or make_env()
+    msg = f"worker error: {type(exc).__name__}: {exc}"
+    path = Path(env.journal_dir) / f"{job.journal_id}.jsonl"
+    try:
+        if path.exists():
+            sync_from_journal(job, str(path))
+            job.refresh_from_db()
+        if job.status in ("running", "queued"):
+            _finish(job, "interrupted", "")
+            msg += "; the files will be checked by content at the next recovery"
+        _append_error(job, msg)
+        job.refresh_from_db()
+    except Exception:  # noqa: BLE001 - the database itself may be the problem; recovery will settle it
+        pass
+    return job
+
+
+def work_once(env: WriteEnv | None = None, *, reader=None) -> EditJob | None:
+    """Claim and run the oldest queued job. Never raises; returns the job (or None)."""
+    job = next_queued()
+    if job is None or not claim(job.id):
+        return None
+    job.refresh_from_db()
+    try:
+        return run_job(job, env=env, reader=reader)
+    except Exception as e:  # noqa: BLE001 - the worker loop must survive
+        return handle_job_error(job, e, env)
+
+
+class WorkerBusy(RuntimeError):
+    pass
+
+
+def worker_lock(env: WriteEnv | None = None):
+    """Process-lifetime lock: only one gama_worker may run. Returns the open fd (keep it)."""
+    import fcntl
+    env = env or make_env()
+    fd = os.open(os.path.join(env.lock_dir, "worker.lock"), os.O_RDWR | os.O_CREAT, 0o600)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        os.close(fd)
+        raise WorkerBusy("another gama_worker is already running") from None
+    return fd
 
 
 def _finish(job: EditJob, status: str, error: str) -> EditJob:
@@ -250,12 +374,19 @@ def sync_recovered(reports: list[dict], *, reader=None) -> None:
     """Mirror recovery outcomes (journal + hashes) into the jobs they belong to, and
     re-read their files so the index shows what is really on disk."""
     for rep in reports:
-        if rep.get("status") != "interrupted" or not rep.get("job"):
+        if not rep.get("job"):
             continue
         job = EditJob.objects.filter(id=_uuid(rep["job"])).first()
         if job is None:
             continue
+        if rep.get("status") in ("pending", "damaged"):
+            EditJob.objects.filter(id=job.id).update(recovery_pending=True,
+                                                     recovery_note=rep.get("error") or rep["status"])
+            continue
+        if rep.get("status") != "interrupted":
+            continue
         sync_from_journal(job, rep["journal"])
+        EditJob.objects.filter(id=job.id).update(recovery_pending=False, recovery_note="")
         reindex_job(job, reader=reader)
 
 
@@ -267,13 +398,17 @@ def _uuid(hex_id: str):
         return None
 
 
+DONE_STATES = ("committed", "failed", "conflict", "skipped", "missing")
+
+
 def sync_from_journal(job: EditJob, journal_path: str) -> None:
     """Set the job and item states from its journal (after recovery has resolved it)."""
     try:
         s = summarize(load(journal_path))
     except (OSError, JournalError) as e:
-        EditJob.objects.filter(id=job.id).update(error=f"journal unreadable: {e}")
+        _append_error(job, f"journal unreadable: {e}")
         return
+    done = 0
     for ji in job.items.select_related("plan_item"):
         it = s["items"].get(ji.plan_item.seq)
         if it:
@@ -282,39 +417,81 @@ def sync_from_journal(job: EditJob, journal_path: str) -> None:
             ji.stage = it.get("stage") or ji.stage
             ji.error = it.get("error") or ji.error
             ji.sha_after = it.get("sha_after") or ji.sha_after
+            if it.get("verification"):
+                ji.verification = it["verification"]
+            if it.get("backup"):
+                ji.backup_sha = ji.sha_before  # the store is content-addressed
             ji.save()
+        done += ji.state in DONE_STATES
     status = s["status"] if s["status"] in TERMINAL_JOB else job.status
-    EditJob.objects.filter(id=job.id).update(status=status, journal_path=journal_path,
+    EditJob.objects.filter(id=job.id).update(status=status, journal_path=journal_path, done=done,
                                              finished_at=job.finished_at or timezone.now())
 
 
+def _alive(pid: int | None) -> bool:
+    if not pid:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
 def worker_startup(env: WriteEnv | None = None, *, reader=None) -> list[dict]:
-    """Run recovery, then settle jobs a dead worker left as 'running'."""
+    """Run recovery, then settle jobs a dead worker left as 'running'.
+
+    The caller holds the worker lock (one worker at a time). As a second line of
+    defence, a running job whose worker process is alive with a fresh heartbeat is
+    left alone.
+    """
+    from gama.safewrite.env import LockBusy
     from gama.safewrite.recovery import recover
 
     env = env or make_env()
-    reports = recover(env)
+    try:
+        reports = recover(env)
+    except LockBusy:
+        return []  # a write job is running right now (e.g. gama_restore); recovery runs before every job anyway
     sync_recovered(reports, reader=reader)
+    for rep in reports:  # mirror pending / damaged recoveries onto their jobs
+        if rep.get("status") in ("pending", "damaged") and rep.get("job"):
+            job = EditJob.objects.filter(id=_uuid(rep["job"])).first()
+            if job is not None:
+                _append_error(job, f"recovery {rep['status']}: {rep.get('error', '')}")
     for job in EditJob.objects.filter(status="running"):
+        if _alive(job.worker_pid) and not heartbeat_stale(job):
+            continue
         path = Path(env.journal_dir) / f"{job.journal_id}.jsonl"
         if path.exists():
             sync_from_journal(job, str(path))
             job.refresh_from_db()
             if job.status == "running":  # journal still open: recovery is pending (e.g. root not mounted)
-                EditJob.objects.filter(id=job.id).update(error="recovery pending; see the worker log")
+                _append_error(job, "recovery pending; see the worker log")
                 continue
         else:
             _finish(job, "interrupted", "the worker stopped before the job started writing; nothing was written")
-        reindex_job(job, reader=reader)
+        safe_reindex(job, reader=reader)
     return reports
 
 
 def heartbeat_stale(job: EditJob) -> bool:
     """True when no worker seems to be handling an unfinished job ("worker not running")."""
     if job.status == "queued":
+        # A queued job waits behind a running one: the worker is alive if that job's heartbeat is fresh.
+        cutoff = timezone.now() - timedelta(seconds=HEARTBEAT_STALE_SECONDS)
+        if EditJob.objects.filter(status="running", heartbeat_at__gte=cutoff).exists():
+            return False
         ref = job.created_at
     elif job.status == "running":
         ref = job.heartbeat_at
     else:
         return False
     return ref is None or (timezone.now() - ref).total_seconds() > HEARTBEAT_STALE_SECONDS
+
+
+def backup_store_size() -> int:
+    from django.db.models import Sum
+    return Backup.objects.aggregate(n=Sum("size"))["n"] or 0

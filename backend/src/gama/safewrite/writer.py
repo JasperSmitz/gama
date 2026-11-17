@@ -89,6 +89,7 @@ class ApplyResult:
     journal_path: str | None = None
     error: str | None = None
     recovered: list[dict] = field(default_factory=list)
+    lock_busy: bool = False  # another write/restore job held the lock: nothing was attempted, retry later
 
     @property
     def written(self) -> list[ItemResult]:
@@ -321,7 +322,7 @@ def run_apply(items: list[WriteItem], env: WriteEnv, *, job_id: str | None = Non
                 j.close()
             return ApplyResult(job_id, status, list(results.values()), j.path, error, recovered)
     except LockBusy as e:
-        return ApplyResult(job_id, "failed", list(results.values()), None, str(e))
+        return ApplyResult(job_id, "failed", list(results.values()), None, str(e), lock_busy=True)
 
 
 def _run_locked(items: list[WriteItem], env: WriteEnv, j: Journal, job_id: str, policy: str,

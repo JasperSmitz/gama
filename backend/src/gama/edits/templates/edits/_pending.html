@@ -1,0 +1,15 @@
+{% if pending_jobs %}
+<div class="bad" role="alert" style="border:1px solid #a00;padding:.5rem;margin:.5rem 0">
+  <strong>Recovery pending.</strong> These jobs were interrupted and Gama could not yet check their files:
+  <ul>
+  {% for p in pending_jobs %}
+    <li><a href="{% url 'edits:job' p.id %}">job {{ p.id|stringformat:"s"|slice:":8" }}</a>: {{ p.recovery_note }}</li>
+  {% endfor %}
+  </ul>
+  <p>Usually a library disk is not mounted. Mount it and restart the worker (<code>manage.py gama_worker</code>):
+    recovery then checks every file by its content. If a library folder was retired or renamed for good, an
+    administrator can close the job after a re-check: <code>manage.py gama_recover --resolve JOURNAL_ID</code>
+    (add <code>--confirm-missing</code> to record files that are gone). New edits of the affected files are refused
+    until then.</p>
+</div>
+{% endif %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}History · Gama{% endblock %}
+{% block content %}
+<h2>Edit history</h2>
+{% include "edits/_pending.html" with pending_jobs=pending %}
+<p class="muted">Backups are kept for good. Backup store: {{ store_size|filesizeformat }}.</p>
+<table>
+  <thead><tr><th>When</th><th>Job</th><th>Operation</th><th>By</th><th>Status</th><th>Files</th></tr></thead>
+  <tbody>
+  {% for j in page %}
+    <tr>
+      <td>{{ j.created_at|date:"Y-m-d H:i:s" }}</td>
+      <td><a href="{% url 'edits:job' j.id %}">{{ j.id|stringformat:"s"|slice:":8" }}</a></td>
+      <td>{{ j.plan.get_operation_display }}{% if j.plan.genres %} “{{ j.plan.genres|join:"”, “" }}”{% endif %}
+        {% if j.plan.source_job_id %}<span class="muted">(of job {{ j.plan.source_job_id|stringformat:"s"|slice:":8" }})</span>{% endif %}</td>
+      <td>{{ j.created_by.get_username }}</td>
+      <td>{{ j.status }}{% if j.recovery_pending %} <span class="bad">recovery pending</span>{% endif %}</td>
+      <td>{{ j.done }} / {{ j.total }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6">No edits yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% if page.has_other_pages %}<p>
+  {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">Newer</a>{% endif %}
+  Page {{ page.number }} of {{ page.paginator.num_pages }}
+  {% if page.has_next %}<a href="?page={{ page.next_page_number }}">Older</a>{% endif %}</p>{% endif %}
+{% endblock %}

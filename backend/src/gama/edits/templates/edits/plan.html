@@ -2,9 +2,15 @@
 {% load gama_extras %}
 {% block title %}Preview · Gama{% endblock %}
 {% block content %}
+{% if plan.operation == "restore" %}
+<h2>Restore preview{% if plan.source_job_id %} for <a href="{% url 'edits:job' plan.source_job_id %}">job {{ plan.source_job_id|stringformat:"s"|slice:":8" }}</a>{% endif %}</h2>
+<p>Nothing has been written. <strong>{{ plan.n_change }}</strong> file(s) will be restored from their backups,
+  <strong>{{ plan.n_nochange }}</strong> are already the original, <strong>{{ plan.n_skip }}</strong> are conflicts and stay untouched.</p>
+{% else %}
 <h2>Preview: {{ plan.get_operation_display }}{% if plan.genres %} “{{ plan.genres|join:"”, “" }}”{% endif %}</h2>
 <p>Nothing has been written. <strong>{{ plan.n_change }}</strong> file(s) will change,
   <strong>{{ plan.n_nochange }}</strong> need no change, <strong>{{ plan.n_skip }}</strong> will be skipped.</p>
+{% endif %}
 {% if plan.status == "superseded" %}<p class="warn">This preview is out of date and was replaced by a newer one.</p>{% endif %}
 {% if job %}<p>Confirmed: <a href="{% url 'edits:job' job.id %}">see the job</a>.</p>{% endif %}
 {% for w in plan.warnings %}<p class="warn">{{ w }}</p>{% endfor %}
@@ -19,9 +25,9 @@
       <td class="muted">{{ it.relpath }}</td>
       <td>{% if it.genres_before is not None %}{{ it.genres_before|join:" | "|default:"(none)" }}
           <span class="muted">({{ it.style }})</span>{% else %}—{% endif %}</td>
-      <td>{% if it.action == "change" %}<strong>{{ it.genres_after|join:" | "|default:"(field deleted)" }}</strong>
-          {% elif it.action == "nochange" %}unchanged{% else %}—{% endif %}</td>
-      <td>{% if it.action == "change" %}change{% elif it.action == "nochange" %}no change{% else %}<span class="bad">skipped</span>{% endif %}</td>
+      <td>{% if it.action == "change" or it.action == "restore" %}<strong>{{ it.genres_after|join:" | "|default:"(field deleted)" }}</strong>
+          {% elif it.action == "nochange" or it.action == "nothing" %}unchanged{% else %}—{% endif %}</td>
+      <td>{% if it.action == "change" %}change{% elif it.action == "restore" %}restore{% if it.force %} (forced){% endif %}{% elif it.action == "nochange" %}no change{% elif it.action == "nothing" %}nothing to do{% elif it.action == "conflict" %}<span class="bad">conflict: not touched</span>{% else %}<span class="bad">skipped</span>{% endif %}</td>
       <td>{% if it.reason %}<span class="bad">{{ it.reason }}:</span> {{ explain|get_item:it.reason|default:"" }}<br>{% endif %}
         {% for w in it.warnings %}<span class="warn" title="{{ explain|get_item:w|default:w }}">{{ w }}</span> {% endfor %}
         {% if it.error %}<span class="muted">{{ it.error }}</span>{% endif %}</td>
@@ -43,7 +49,7 @@
       Continue with the other files if one fails (default: stop and restore the files already changed).</label></p>
     <p class="muted">Each file is backed up, edited on a copy, verified and then swapped in. A job with several files is
       not atomic: other programs can see it half done while it runs, and a failure is undone from the backups.</p>
-    <button type="submit">Apply {{ plan.n_change }} change(s)</button>
+    <button type="submit">{% if plan.operation == "restore" %}Restore {{ plan.n_change }} file(s){% else %}Apply {{ plan.n_change }} change(s){% endif %}</button>
   </form>
   {% elif not can_apply %}
   <p class="muted">You can preview edits, but your account may not apply them.</p>

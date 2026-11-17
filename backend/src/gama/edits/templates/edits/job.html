@@ -3,9 +3,22 @@
 {% block title %}Job · Gama{% endblock %}
 {% block content %}
 {% if auto_refresh %}<meta http-equiv="refresh" content="2">{% endif %}
-<h2>Job: {{ job.plan.get_operation_display }}{% if job.plan.genres %} “{{ job.plan.genres|join:"”, “" }}”{% endif %}</h2>
-<p>Status: <strong>{{ job.status }}</strong> · {{ job.done }} of {{ job.total }} file(s) done
-  {% if job.current and auto_refresh %}· now: <span class="muted">{{ job.current }}</span>{% endif %}</p>
+<h2>{% if job.kind == "restore" %}Restore{% else %}{{ job.plan.get_operation_display }}{% if job.plan.genres %} “{{ job.plan.genres|join:"”, “" }}”{% endif %}{% endif %}</h2>
+{% if job.recovery_pending %}{% include "edits/_pending.html" with pending_jobs=job|as_list %}{% endif %}
+
+<dl class="record">
+  <dt>Status</dt><dd><strong>{{ job.status }}</strong> · {{ job.done }} of {{ job.total }} file(s) done
+    {% if job.current and auto_refresh %}· now: <span class="muted">{{ job.current }}</span>{% endif %}</dd>
+  <dt>Job id</dt><dd><code>{{ job.id }}</code> (journal id <code>{{ job.journal_id }}</code>)</dd>
+  <dt>Plan</dt><dd><a href="{% url 'edits:plan' job.plan.id %}">{{ job.plan.id }}</a>
+    {% if job.plan.source_job_id %}· restores <a href="{% url 'edits:job' job.plan.source_job_id %}">job {{ job.plan.source_job_id }}</a>{% endif %}</dd>
+  <dt>Requested</dt><dd>{% if job.kind == "restore" %}restore the original files{% else %}{{ job.plan.get_operation_display }}: {{ job.plan.genres|join:", " }}{% endif %}
+    · policy: {{ job.get_policy_display }}</dd>
+  <dt>Albums</dt><dd>{{ job.plan.album_labels|join:"; " }}</dd>
+  <dt>By</dt><dd>{{ job.created_by.get_username }}</dd>
+  <dt>Times</dt><dd>created {{ job.created_at|date:"Y-m-d H:i:s" }}{% if job.started_at %}, started {{ job.started_at|date:"Y-m-d H:i:s" }}{% endif %}{% if job.finished_at %}, finished {{ job.finished_at|date:"Y-m-d H:i:s" }}{% endif %} (UTC)</dd>
+  <dt>Journal</dt><dd class="muted">{{ job.journal_path|default:"(not started)" }}</dd>
+</dl>
 {% if auto_refresh %}<progress max="{{ job.total }}" value="{{ job.done }}"></progress>{% endif %}
 {% if stale %}<p class="bad">Worker not running: start it with <code>manage.py gama_worker</code>.</p>{% endif %}
 {% if job.status == "conflict" %}
@@ -14,26 +27,55 @@
 {% elif job.status == "rolled_back" %}
   <p class="warn">A file failed, so the files already changed were restored from their backups.</p>
 {% elif job.status == "failed_partial" %}
-  <p class="bad">A file failed and not every changed file could be restored. See the items below.</p>
-{% elif job.status == "interrupted" %}
-  <p class="bad">The job was interrupted. Gama checked every file by its content; see the states below.</p>
+  <p class="bad">A file failed and not every changed file could be restored. See “rollback” below; the backups are kept.</p>
+{% elif job.status == "interrupted" and not job.recovery_pending %}
+  <p class="bad">The job was interrupted. Gama checked every file by its content; the states below are what is on disk.
+    Changed files can be restored from their backups below.</p>
 {% endif %}
 {% if job.error %}<pre class="muted">{{ job.error }}</pre>{% endif %}
+
 <table>
-  <thead><tr><th>File</th><th>State</th><th>Requested genres</th><th>Genres read back from disk</th><th>Verification</th><th>Error</th></tr></thead>
+  <thead><tr><th>File</th><th>Original genres</th><th>Requested</th><th>Read back from disk</th><th>State</th>
+    <th>Verification</th><th>Backup</th><th>Error</th></tr></thead>
   <tbody>
   {% for ji in items %}
     <tr>
       <td class="muted">{{ ji.plan_item.relpath }}</td>
-      <td>{{ ji.state }}{% if ji.stage %} <span class="muted">({{ ji.stage }})</span>{% endif %}
-        {% if ji.restore_state %}<br>rollback: {{ ji.restore_state }}{% endif %}</td>
+      <td>{% if job.kind == "restore" %}{{ ji.plan_item.genres_after|join:" | "|default:"(none)" }}{% else %}{{ ji.plan_item.genres_before|join:" | "|default:"(none)" }}{% endif %}</td>
       <td>{{ ji.genres_requested|join:" | "|default:"(none)" }}</td>
       <td>{% if ji.genres_read_back is not None %}{{ ji.genres_read_back|join:" | "|default:"(none)" }}{% else %}—{% endif %}</td>
+      <td>{{ ji.state }}{% if ji.stage %} <span class="muted">({{ ji.stage }})</span>{% endif %}
+        {% if ji.restore_state %}<br>rollback: {{ ji.restore_state }}{% endif %}</td>
       <td>{% if ji.verification %}{% if ji.verification.ok %}ok{% else %}<span class="bad">failed</span>{% endif %},
-          audio {{ ji.verification.audio }}{% endif %}</td>
+          audio {{ ji.verification.audio }}
+          {% if ji.verification.problems %}<details><summary>problems</summary><ul>{% for p in ji.verification.problems %}<li>{{ p }}</li>{% endfor %}</ul></details>{% endif %}
+          {% if ji.verification.notes %}<details><summary>notes</summary><ul>{% for p in ji.verification.notes %}<li>{{ p }}</li>{% endfor %}</ul></details>{% endif %}
+        {% else %}—{% endif %}</td>
+      <td class="muted">{% if ji.backup %}{{ data_dir }}/backups/{{ ji.backup.store_relpath }}{% elif ji.backup_sha %}{{ ji.backup_sha|slice:":12" }}…{% else %}—{% endif %}
+        <details><summary>hashes</summary>before {{ ji.sha_before|default:"—" }}<br>after {{ ji.sha_after|default:"—" }}</details>
+        {% if ji.snapshot_before %}<details><summary>original metadata snapshot</summary><pre>{{ ji.snapshot_before|pretty_json }}</pre></details>{% endif %}</td>
       <td class="bad">{{ ji.error }}</td>
     </tr>
   {% endfor %}
   </tbody>
 </table>
+
+{% if restore_jobs %}
+<h3>Restores of this job</h3>
+<ul>{% for r in restore_jobs %}<li><a href="{% url 'edits:job' r.id %}">{{ r.created_at|date:"Y-m-d H:i:s" }}</a>: {{ r.status }}</li>{% endfor %}</ul>
+{% endif %}
+
+{% if restorable and not auto_refresh %}
+<h3>Restore from backups</h3>
+<p class="muted">Builds a restore preview first: each file is checked against its backup and its current content.
+  Files changed by someone else after this edit are not overwritten unless you force it (their current version is
+  backed up first).</p>
+<form method="post" action="{% url 'edits:restore' job.id %}">{% csrf_token %}
+  <p><label><input type="radio" name="scope" value="all" checked> all changed files of this job</label>
+     <label><input type="radio" name="scope" value="selected"> only these:</label></p>
+  <ul>{% for ji in items %}{% if ji.id in restorable %}<li><label><input type="checkbox" name="item" value="{{ ji.id }}"> {{ ji.plan_item.relpath }}</label></li>{% endif %}{% endfor %}</ul>
+  <p><label><input type="checkbox" name="force" value="yes"> force: also restore files changed after this edit</label></p>
+  <button type="submit">Preview restore</button>
+</form>
+{% endif %}
 {% endblock %}
