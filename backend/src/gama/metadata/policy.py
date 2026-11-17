@@ -21,6 +21,13 @@ SKIP = {
     "mp4-gnre-and-gen": "MP4 has both a numeric gnre atom and a ©gen atom",
     "mixed-genre-style": "Genres mix separate values and ';'-joined values; refusing to guess",
     "irregular-delimiter": "';'-joined genre has irregular spacing that a rewrite would change",
+    "non-utf8-text": "Text is not valid UTF-8 (or its declared encoding) and would be rewritten lossily",
+    "lossy-comments": "Vorbis comments are malformed (bad key or no '='); mutagen would drop them on save",
+    "id3-frames-dropped": "Some ID3 frames cannot be parsed or are merged by mutagen and would be lost on save",
+    "id3v2.3-lossy-frames": "Upgrading this ID3v2.3 tag to v2.4 would drop or alter frames (e.g. RVAD, EQUA, TSIZ, "
+                            "TRDA, or a date mutagen cannot convert exactly)",
+    "id3v2.3-unknown-frames": "ID3v2.3 tag has frames mutagen does not know; they would be lost in the v2.4 upgrade",
+    "mp4-genre-unparsed": "MP4 genre atom (©gen/gnre) could not be parsed; a write would leave or hide it",
     "symlink": "Symbolic links are not written",
     "hardlink": "File has several hard links; replacing it would split them",
     "not-owner": "File is not owned by the Gama user, so ownership cannot be preserved",
@@ -29,7 +36,8 @@ SKIP = {
 # Warnings: the file can be written; the preview must say this.
 WARNINGS = {
     "no-id3-tag": "MP3 has no ID3 tag; a new ID3v2.4 tag containing only the genre will be created",
-    "id3v2.3-upgrade": "ID3v2.3 tag will be saved as ID3v2.4 (TYER/TDAT become TDRC; other frames kept)",
+    "id3v2.3-upgrade": ("ID3v2.3 tag will be saved as ID3v2.4: TYER/TDAT/TIME become TDRC, TORY becomes TDOR, "
+                        "IPLS becomes TIPL; Gama checked that nothing else is lost"),
     "id3v1-present": "ID3v1 trailer is kept byte-identical, so its genre may disagree with ID3v2",
     "apev2-genre": "APEv2 tag holds a Genre item, which Gama does not edit",
     "numeric-genre-reference": "Genre is stored as a numeric ID3 reference; a changed file stores the name",
@@ -56,7 +64,7 @@ def classify(det: Detection, tags: TrackTags, st: FileStat, euid: int) -> tuple[
             warnings.append("numeric-genre-reference")
     if any(k.lower() == "genre" for k in native.get("ape_keys", [])):
         warnings.append("apev2-genre")
-    if det.format == "mp4" and native.get("has_gnre"):
+    if det.format == "mp4" and native.get("has_gnre") and not native.get("text_problem") and g.values:
         warnings.append("mp4-gnre")
     if genres.has_duplicates(g):
         warnings.append("duplicate-genres")
@@ -84,6 +92,8 @@ def classify(det: Detection, tags: TrackTags, st: FileStat, euid: int) -> tuple[
         skip = "mp4-truncated"
     elif det.format == "mp4" and det.mp4.get("has_gnre") and det.mp4.get("has_gen"):
         skip = "mp4-gnre-and-gen"
+    elif native.get("text_problem"):
+        skip = native["text_problem"]
     elif g.style == "mixed":
         skip = "mixed-genre-style"
     elif not genres.delimited_round_trips(g):

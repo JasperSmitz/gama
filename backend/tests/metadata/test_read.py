@@ -31,6 +31,7 @@ EXPECTED = {
     Z + "flac_mixed_style.flac": (True, "flac", "mixed-genre-style", None),
     Z + "flac_no_genre.flac": (True, "flac", None, None),
     Z + "flac_with_id3v2_prefix.flac": (True, "flac", "flac-id3-prefix", None),
+    Z + "flac_latin1_comment.flac": (True, "flac", "non-utf8-text", None),
     Z + "mp3_v24_full.mp3": (True, "mp3", None, None),
     Z + "mp3_v23_slash_genre.mp3": (True, "mp3", None, None),
     Z + "mp3_v23_numeric_genre.mp3": (True, "mp3", None, None),

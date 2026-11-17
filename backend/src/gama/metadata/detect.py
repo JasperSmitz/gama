@@ -144,9 +144,13 @@ def _scan_moov(moov: bytes, facts: dict) -> None:
                     if t2 == b"meta":
                         for t3, s3, e3 in _children(moov, s2 + 4, e2):
                             if t3 == b"ilst":
-                                for t4, _, _ in _children(moov, s3, e3):
+                                for t4, s4, e4 in _children(moov, s3, e3):
                                     if t4 == b"gnre":
                                         facts["has_gnre"] = True
+                                        for t5, s5, e5 in _children(moov, s4, e4):
+                                            if t5 == b"data":
+                                                facts.setdefault("gnre_values", []).append(
+                                                    int.from_bytes(moov[s5 + 8:e5], "big"))
                                     if t4 == b"\xa9gen":
                                         facts["has_gen"] = True
     except ValueError:

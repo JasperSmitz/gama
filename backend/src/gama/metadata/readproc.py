@@ -73,8 +73,11 @@ def _run_child(paths: list[str], timeout: float, reader: str, sys_path: list[str
     """Run one child over ``paths``. Returns (results in order, failure or None)."""
     req = json.dumps({"sys_path": sys_path, "reader": reader, "paths": paths}) + "\n"
     with tempfile.TemporaryFile() as err:
-        proc = subprocess.Popen([sys.executable, "-I", "-c", _BOOTSTRAP], stdin=subprocess.PIPE,
-                                stdout=subprocess.PIPE, stderr=err)
+        try:
+            proc = subprocess.Popen([sys.executable, "-I", "-c", _BOOTSTRAP], stdin=subprocess.PIPE,
+                                    stdout=subprocess.PIPE, stderr=err)
+        except OSError as e:  # EAGAIN/ENOMEM/EMFILE on fork: the file in progress fails, nothing escapes
+            return [], ("reader-crashed", f"cannot start reader: {type(e).__name__}: {e}")
         done: list[dict] = []
         failure: tuple[str, str] | None = None
         try:
@@ -100,8 +103,9 @@ def _run_child(paths: list[str], timeout: float, reader: str, sys_path: list[str
                 while b"\n" in buf:
                     line, buf = buf.split(b"\n", 1)
                     d = json.loads(line)
-                    if len(done) >= len(paths) or d.get("path") != paths[len(done)]:
-                        failure = ("reader-crashed", "child returned a result for the wrong file")
+                    if (not isinstance(d, dict) or len(done) >= len(paths) or d.get("path") != paths[len(done)]
+                            or not _valid_result(d)):
+                        failure = ("reader-crashed", "child returned a malformed result or one for the wrong file")
                         eof = True
                         break
                     done.append(d)
@@ -125,6 +129,14 @@ def _run_child(paths: list[str], timeout: float, reader: str, sys_path: list[str
             tail = err.read()[-400:].decode("utf-8", "replace").strip()
             failure = ("reader-crashed", f"reader exited with {proc.returncode}: {tail}")
     return done, failure
+
+
+def _valid_result(d: dict) -> bool:
+    try:
+        ReadResult.from_dict(d)
+    except (KeyError, TypeError, AttributeError, ValueError):
+        return False
+    return True
 
 
 def child_main(req: dict) -> None:
