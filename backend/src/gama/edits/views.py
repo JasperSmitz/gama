@@ -117,11 +117,33 @@ def job(request, job_id):
         ji.backup = backups.get(ji.backup_sha)
     restorable = set(services.restorable_items(j).values_list("id", flat=True))
     return render(request, "edits/job.html", {
-        "job": j, "items": items, "stale": services.heartbeat_stale(j), "explain": _explain(),
+        "job": j, "items": items, "outcome": _outcome(j, items), "stale": services.heartbeat_stale(j), "explain": _explain(),
         "auto_refresh": j.status in ("queued", "running") and not j.recovery_pending,
         "restorable": restorable, "can_apply": request.user.has_perm(PERM),
         "restore_jobs": _jobs(request.user).filter(plan__source_job=j).order_by("created_at"),
         "data_dir": str(services.settings.GAMA.data_dir)})
+
+
+def _outcome(j, items) -> list[str]:
+    """One line per outcome for a finished job: what is changed on disk now, what was
+    rolled back, what failed and what was never attempted."""
+    if not j.finished or j.status == "conflict":
+        return []
+    done = "restored" if j.kind == "restore" else "changed"
+    counts = {}
+    for ji in items:
+        undone = ji.restore_state in ("restored", "nothing_to_do")
+        if ji.state in ("committed", "restored"):
+            key = f"{done} and rolled back" if undone else (
+                f"{done} (rollback failed: {ji.restore_state})" if ji.restore_state else done)
+        elif ji.state == "failed":
+            key = "failed (rolled back)" if ji.restore_state == "restored" else "failed"
+        elif ji.state in ("planned", "skipped"):
+            key = "not attempted"
+        else:
+            key = ji.state
+        counts[key] = counts.get(key, 0) + 1
+    return [f"{n} {k}" for k, n in counts.items()]
 
 
 def history(request):

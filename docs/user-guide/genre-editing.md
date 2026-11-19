@@ -48,6 +48,8 @@ and crashes.
    - By default, Gama stops at the first failure and restores the files it already changed (**stop and roll
      back**).
    - Tick *continue* to keep going past failures instead.
+   - When the job ends, an *Outcome* line on the job page counts the files changed, changed and rolled back,
+     failed, and not attempted (the files after a stop).
    - A plan can be confirmed once, and only exactly as it was shown.
 5. **The worker applies it.** The job page refreshes every two seconds and shows progress. If it says
    *Worker not running*, start `manage.py gama_worker`.

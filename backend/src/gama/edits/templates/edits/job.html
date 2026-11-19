@@ -32,6 +32,7 @@
   <p class="bad">The job was interrupted. Gama checked every file by its content; the states below are what is on disk.
     Changed files can be restored from their backups below.</p>
 {% endif %}
+{% if outcome %}<p>Outcome: <strong>{{ outcome|join:" · " }}</strong></p>{% endif %}
 {% if job.error %}<pre class="muted">{{ job.error }}</pre>{% endif %}
 
 <table>
